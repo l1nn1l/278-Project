@@ -1,0 +1,18 @@
+<button class="new-btn" (click)="isDropdownOpen = !isDropdownOpen">
+    <i class="material-icons">add</i> <span>New</span>
+</button>
+
+<div [class]="isDropdownOpen ? 'dropdown-menu dropdown-menu-active' : 'dropdown-menu'">
+    <ul>
+        <li class="menu-item" (click)="createNew()">
+            <i class="material-icons">create_new_folder</i> <span>New Folder</span>
+        </li>
+        <div class="divider"></div>
+        <li class="menu-item" (click)="upload('file')">
+            <i class="material-icons">upload_file</i> <span>File upload</span>
+        </li>
+        <li class="menu-item" (click)="upload('folder')">
+            <i class="material-icons">drive_folder_upload</i> <span>Folder upload</span>
+        </li>
+    </ul>
+</div>
