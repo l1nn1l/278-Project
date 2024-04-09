@@ -1,13 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+
 :root{
     --light-grey: #5f6368;
+    --dark-grey: #444746;
     --container-color: #E9EEF6;
+    --dark-blue: #0b57d0;
+    --blue: rgb(26, 115, 232);
 }
 
 html,
 body {
   height: 100%;
 }
+
+html{
+  font-size: 14px; 
+}
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
