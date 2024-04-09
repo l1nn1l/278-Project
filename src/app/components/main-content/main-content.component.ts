@@ -9,67 +9,36 @@ import { CommonModule } from '@angular/common';
   styleUrl: './main-content.component.css'
 })
 export class MainContentComponent {
+  showActions = false;
+  selectedItem = null;
   items = [
     { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    { name: 'COVID-1583.png', type: 'image', modified: '2:46 PM' },
-    
-    // ... add more items as needed
-  ];
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+    { name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
+
+      ];
+
+  toggleActions(item : any): void {
+    this.selectedItem = item;
+    this.showActions = !this.showActions;
+  }
+  closeActions(): void {
+    this.showActions = false;
+  }
 }
