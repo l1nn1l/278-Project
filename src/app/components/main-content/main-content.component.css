@@ -177,7 +177,7 @@ div.right > button:hover, div.right > button:active {
   margin-right: 10px;
 }
 
-.item {
+.content-grid > .item {
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -185,7 +185,7 @@ div.right > button:hover, div.right > button:active {
   overflow: hidden;
   width: 250px; 
 }
-.item:hover{
+.content-grid > .item:hover{
   background-color: #eae8e8;
 }
 
@@ -243,3 +243,53 @@ div.right > button:hover, div.right > button:active {
 .meta {
   font-size: 0.85rem;
 }
+
+.content-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.list-item {
+  display: grid;
+  grid-template-columns: auto 2fr 2fr 2fr 2fr auto;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.list-item:hover {
+  background-color: #eae8e8;
+}
+
+.item-icon i {
+  margin-left: 5px;
+  margin-right: 20px;
+  font-size: 20px; 
+  text-align: center;
+}
+
+.item-name,
+.item-reason,
+.item-owner,
+.item-location {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-actions {
+  justify-self: end;
+}
+
+.round-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.round-button i {
+  font-size: 24px; 
+}
+
