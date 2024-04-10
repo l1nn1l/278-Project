@@ -1,4 +1,6 @@
 .main-content {
+    display: flex; 
+    flex-direction: column;
     background-color: white;
     width: 1400px; 
     max-width: 100%;
@@ -250,12 +252,24 @@ div.right > button:hover, div.right > button:active {
   width: 100%;
 }
 
-.list-item {
+.list-header {
   display: grid;
-  grid-template-columns: auto 2fr 2fr 2fr 2fr auto;
+  grid-template-columns: auto 2fr 2fr 2fr 2fr 1fr auto;
   align-items: center;
   padding: 4px 0;
-  border-bottom: 1px solid #ddd;
+  background-color: var(--filter-button-color);
+  font-weight: bold;
+}
+
+.list-item {
+  display: grid;
+  grid-template-columns: auto 2fr 2fr 2fr 2fr 1fr auto;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.list-item:first-child {
+  border-top: 1px solid #ddd;
 }
 
 .list-item:hover {
@@ -280,16 +294,16 @@ div.right > button:hover, div.right > button:active {
 
 .item-actions {
   justify-self: end;
+  display: flex;
 }
 
-.round-button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
+
+.item-hover-menu {
+  display: none;
 }
 
-.round-button i {
-  font-size: 24px; 
+.list-item:hover .item-hover-menu {
+  display: flex;
+  flex-direction: row;
 }
 
