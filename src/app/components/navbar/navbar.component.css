@@ -1,6 +1,6 @@
 img {
-    width: 40px;
-    height: 40px;
+    width: 30%;
+    height: 30%;
 }
 
 .navbar{
@@ -23,7 +23,7 @@ img {
     position: relative;
     top: -15.5px;
     vertical-align: middle;
-    color: var(--light-grey);
+    color: var(--dark-grey);
 }
 
 .round-button{
@@ -48,19 +48,27 @@ i{
     color: var(--light-grey);
 }
 
-input{
+#search-bar-input{
     border: none;
     padding: 0px;
     margin: 0px;
     height: 100%;
-    width: 100%;
+    width: calc(100% - 40px);
     z-index: 1;
     background-color: transparent;
-    padding-left: 10px;
+    padding: 0 0 0 10px;
+    margin: 0;
     flex-grow: 1; 
     outline: none;
     font-size: 1em;
 }
+
+form {
+    display: flex;
+    flex-grow: 1; /* Make sure the form takes up all the space in .searchbar */
+    margin: 0; 
+}
+
 
 .searchbar{
     display: flex;
@@ -79,6 +87,173 @@ input{
     box-shadow: 0 2px 6px rgba(32, 33, 36, 0.28);
 }
 
-form{
+
+.modal {
+    display: flex; /* Use flex for centering the content */
+    position: fixed;
+    inset: 55px auto auto 256px;
+    z-index: 1; /* higher than other content */
+    left: 0;
+    top: 0;
+    right: 0; /* Ensure it spans the full width */
+    bottom: 0;
+    justify-content: center; /* Center the modal content horizontally */
+    align-items: flex-start; 
+    padding-top: 60px;
+    background-color: rgba(0,0,0,0.32);
+    transition: background-color 0.3s;
+
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    margin-top: 20px; 
+    padding: 20px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    width: 80%; 
+    max-width: 700px; /* Maximum width of the modal */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    z-index: 1001; /* higher than the .modal background */
+  }
+  
+
+  /* The Close Button */
+  .close {
+    color: var(--dark-grey);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+#advanced-search-form{
     display: flex;
+    flex-direction: column;
+}  
+
+.form-group {
+    display: flex;
+    align-items: center; /* aligns items vertically */
+    margin-bottom: 1rem; /* space between form groups */
+  }
+  
+  .form-group > label {
+    flex-basis: 20%; /* label width */
+    flex-shrink: 0; /* prevents label from shrinking */
+    margin-right: 1rem; /* space between label and input */
+    font-weight: 700;
+  }
+  
+  .form-group > input,
+  .form-group > select {
+    flex-basis: 80%; /* input/select field width */
+    flex-grow: 1; /* allows input/select to grow if extra space is available */
+  }
+
+  .col-group{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bottom-buttons{
+    display: flex;
+    justify-content: flex-end;
+  }
+
+#reset-button{
+  border: none;
+  background-color: transparent;
+  margin-right: .8rem;
+  color: var(--dark-blue);
+  font-size: 14px;
+}
+
+#search-button{
+  border-radius: 20px;
+  border: 1px solid transparent; 
+  background-color: var(--dark-blue);
+  color: #fff;
+  padding: 0 24px 0 24px;
+  height: 36px;
+  font-size: 14px;
+}
+
+.select-box{
+  border: 1px solid #747775;
+  padding: 0 .75em;
+  border-radius: .25rem;
+  box-sizing: border-box;
+
+}
+
+.select-box:focus{
+  border: 1px solid var(--dark-blue);
+}
+
+p-dropdown{
+  width: 100%;
+}
+
+:host ::ng-deep .p-dropdown .p-component .p-inputwrapper {
+  width: 16rem !important;
+}
+
+.radio-options {
+  display: flex;
+  align-items: center;
+  margin-top: .5rem;
+}
+
+.radio-options p-radioButton {
+  margin-right: 1rem; 
+}
+
+#advanced-search-form > div:nth-child(5){
+  align-items: start;
+}
+
+#advanced-search-form > div:nth-child(5) > label{
+  margin-top: 1rem;
+}
+
+@media only screen and (max-width: 1024px) {
+  .navbar-side, .searchbar {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .navbar .logo, .navbar-side .user-account {
+    margin-bottom: 10px;
+  }
+}
+
+@media only screen and (max-width: 660px) {
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+  }
+  .searchbar {
+    max-width: 100%;
+  }
+  .searchbar input {
+    width: 90%;
+  }
+  
+}
+
+@media only screen and (max-width: 480px) {
+  .bottom-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  #reset-button, #search-button {
+    width: 100%;
+    margin-top: 10px;
+  }
 }
