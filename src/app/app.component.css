@@ -1,3 +1,10 @@
-main{
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+}.main{
     background-color: #f7f9fc;
 }
+
+  

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common'; 
 
 @Component({
   selector: 'app-side-bar',
@@ -8,5 +9,4 @@ import { Component } from '@angular/core';
   styleUrl: './side-bar.component.css'
 })
 export class SideBarComponent {
-
 }

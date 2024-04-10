@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { MainContentComponent } from '../main-content/main-content.component';
 import { SideBarComponent } from '../side-bar/side-bar.component';
+import { UploadButtonComponent } from '../upload-button/upload-button.component';
 
 @Component({
   selector: 'app-main-page',
   standalone: true,
-  imports: [NavbarComponent, MainContentComponent, SideBarComponent],
+  imports: [NavbarComponent, MainContentComponent, SideBarComponent, UploadButtonComponent],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.css'
 })

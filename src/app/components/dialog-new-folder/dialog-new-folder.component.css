@@ -1,0 +1,46 @@
+.create-folder-dialog {
+    font-family: 'Arial', sans-serif;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    background: white;
+    width: 300px;
+    margin: auto;
+}
+
+.create-folder-dialog h2 {
+    margin-bottom: 20px;
+    margin-top: 0%;
+    font-weight: normal;
+
+}
+
+
+.input-field input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 0.9em;
+}
+
+.dialog-actions {
+    text-align: right;
+    background-color: white;
+}
+
+.dialog-actions .cancel-button,
+.dialog-actions .create-button {
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    color: #1a73e8;
+    background-color: transparent;
+}
+
+.dialog-actions button:hover {
+    background-color: #f0f0f0;
+    border-radius: 30px;
+}

@@ -1,1 +1,58 @@
-<p>main-content works!</p>
+<div class="main-content">
+  <div class="filter-header">
+    <div class="filter-item">
+      <button class="filter-button"> <i class="material-icons">topic</i>Type<i
+          class="material-icons">arrow_drop_down</i></button>
+    </div>
+    <div class="filter-item">
+      <button class="filter-button"> <i class="material-icons">person</i>People<i
+          class="material-icons">arrow_drop_down</i></button>
+    </div>
+    <div class="filter-item">
+      <button class="filter-button"> <i class="material-icons">calendar_today</i>Modified<i
+          class="material-icons">arrow_drop_down</i></button>
+    </div>
+    <div class="filter-item">
+      <button class="filter-button"> <i class="material-icons">folder</i>Location<i
+          class="material-icons">arrow_drop_down</i></button>
+    </div>
+  </div>
+  <div *ngIf="!showActions" class="tab-section">
+    <div class="left">
+      <span>Suggested</span>
+      <button class="type-button"><i class="material-icons">check</i>Files</button>
+      <button class="type-button"><i class="material-icons">folder_open</i>Folders</button>
+    </div>
+
+    <div class="right">
+      <button class="layout-button"><i class="material-icons">menu</i></button>
+      <button class="layout-button"><i class="material-icons">check</i><i class="material-icons">apps</i></button>
+    </div>
+  </div>
+  <div *ngIf="showActions" class="actions-section">
+    <div class="actions">
+      <button class="round-button" (click)="closeActions()"><i class="material-icons">close</i></button>
+      <button class="round-button"><i class="material-icons">person_add</i></button>  
+      <button class="round-button"><i class="material-icons">download</i></button>  
+      <button class="round-button"><i class="material-icons">input</i></button>  
+      <button class="round-button"><i class="material-icons">delete</i></button>  
+      <button class="round-button"><i class="material-icons">link</i></button>  
+      <button class="round-button"><i class="material-icons">more_vert</i></button>  
+      </div>
+  </div>
+  <div class="content-grid">
+    <div class="item" *ngFor="let item of items" (click)="toggleActions(item)">
+      <div class="item-header">
+        <i class="material-icons">picture_as_pdf</i>
+        <div class="filename">{{ item.name }}</div>
+        <button class="round-button"><i class="material-icons">more_vert</i></button>
+      </div>
+      <div class="item-image">
+        <img  alt="File image">
+      </div>
+      <div class="item-info">
+        <div class="meta">{{ item.modified | date:'medium' }}</div>
+      </div>
+    </div>
+  </div>
+</div>
