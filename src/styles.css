@@ -13,6 +13,7 @@
 html,
 body {
   height: 100%;
+  margin: 0;
 }
 
 html{
@@ -20,9 +21,8 @@ html{
 }
 
 body {
-  margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-color: #f7f9fc;
-  margin-left: 25px;
-  margin-right: 25px;
+  margin-left: 10px;
+  margin-right: 10px;
 }

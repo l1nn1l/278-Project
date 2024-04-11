@@ -1,95 +1,106 @@
 <div class="main-content">
-  <div class="filter-header">
-    <!-- Filter options -->
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">topic</i>Type<i class="material-icons">arrow_drop_down</i></button>
+  <div class="fixed-header">
+    <div class="filter-header">
+      <!-- Filter options -->
+      <div class="filter-item">
+        <button class="filter-button"><i class="material-icons">topic</i>Type<i
+            class="material-icons">arrow_drop_down</i></button>
+      </div>
+      <div class="filter-item">
+        <button class="filter-button"><i class="material-icons">person</i>People<i
+            class="material-icons">arrow_drop_down</i></button>
+      </div>
+      <div class="filter-item">
+        <button class="filter-button"><i class="material-icons">calendar_today</i>Modified<i
+            class="material-icons">arrow_drop_down</i></button>
+      </div>
+      <div class="filter-item">
+        <button class="filter-button"><i class="material-icons">folder</i>Location<i
+            class="material-icons">arrow_drop_down</i></button>
+      </div>
     </div>
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">person</i>People<i class="material-icons">arrow_drop_down</i></button>
+
+    <div *ngIf="!showActions" class="tab-section">
+      <!-- Tab navigation -->
+      <div class="left">
+        <span>Suggested</span>
+        <button class="type-button"><i class="material-icons">check</i>Files</button>
+        <button class="type-button"><i class="material-icons">folder_open</i>Folders</button>
+      </div>
+      <div class="right">
+        <!-- Layout switch buttons -->
+        <button class="layout-button" (click)="setListView()"><i *ngIf="!isGridView" class="material-icons">check</i><i
+            class="material-icons">menu</i></button>
+        <button class="layout-button" (click)="setGridView()"><i *ngIf="isGridView" class="material-icons">check</i><i
+            class="material-icons">apps</i></button>
+      </div>
     </div>
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">calendar_today</i>Modified<i class="material-icons">arrow_drop_down</i></button>
+
+    <div *ngIf="showActions" class="actions-section">
+      <!-- Actions when an item is selected -->
+      <div class="actions">
+        <button class="round-button" (click)="closeActions()"><i class="material-icons">close</i></button>
+        <!-- Additional action buttons -->
+        <button class="round-button"><i class="material-icons">person_add</i></button>
+        <button class="round-button"><i class="material-icons">download</i></button>
+        <button class="round-button"><i class="material-icons">input</i></button>
+        <button class="round-button"><i class="material-icons">delete</i></button>
+        <button class="round-button"><i class="material-icons">link</i></button>
+        <button class="round-button"><i class="material-icons">more_vert</i></button>
+      </div>
     </div>
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">folder</i>Location<i class="material-icons">arrow_drop_down</i></button>
-    </div>
+
   </div>
-  
-  <div *ngIf="!showActions" class="tab-section">
-    <!-- Tab navigation -->
-    <div class="left">
-      <span>Suggested</span>
-      <button class="type-button"><i class="material-icons">check</i>Files</button>
-      <button class="type-button"><i class="material-icons">folder_open</i>Folders</button>
-    </div>
-    <div class="right">
-      <!-- Layout switch buttons -->
-      <button class="layout-button" (click)="setListView()"><i *ngIf="!isGridView" class="material-icons">check</i><i class="material-icons">menu</i></button>
-      <button class="layout-button" (click)="setGridView()"><i *ngIf="isGridView" class="material-icons">check</i><i class="material-icons">apps</i></button>
-    </div>
-  </div>
-  
-  <div *ngIf="showActions" class="actions-section">
-    <!-- Actions when an item is selected -->
-    <div class="actions">
-      <button class="round-button" (click)="closeActions()"><i class="material-icons">close</i></button>
-      <!-- Additional action buttons -->
-      <button class="round-button"><i class="material-icons">person_add</i></button>
-      <button class="round-button"><i class="material-icons">download</i></button>
-      <button class="round-button"><i class="material-icons">input</i></button>
-      <button class="round-button"><i class="material-icons">delete</i></button>
-      <button class="round-button"><i class="material-icons">link</i></button>
-      <button class="round-button"><i class="material-icons">more_vert</i></button>
-    </div>
-  </div>
-  
-  <!-- Main content area with conditional grid or list view -->
-  <div class="content-area" [ngClass]="{'content-grid': isGridView, 'content-list': !isGridView}">    
-    <!-- Headers for the list view -->
-    <div *ngIf="!isGridView" class="list-header">
+
+  <div class="scrollable-content">
+    <!-- Main content area with conditional grid or list view -->
+    <div class="content-area" [ngClass]="{'content-grid': isGridView, 'content-list': !isGridView}">
+      <!-- Headers for the list view -->
+      <div *ngIf="!isGridView" class="list-header">
         <div class="item-icon-header"></div> <!-- Empty for the icon header -->
         <div class="item-name-header">Name</div>
         <div class="item-reason-header">Reason Suggested</div>
         <div class="item-owner-header">Owner</div>
         <div class="item-location-header">Location</div>
         <div class="item-actions-header"></div> <!-- Empty for the actions header -->
-    </div>
-
-    <!-- Items for grid or list view -->
-    <div class="item" *ngFor="let item of items" (click)="toggleActions(item)">
-      <!-- Grid view -->
-      <div *ngIf="isGridView" class="content-grid">
-        <div class="item-header">
-          <i class="material-icons">picture_as_pdf</i>
-          <div class="filename">{{ item.name }}</div>
-          <button class="round-button"><i class="material-icons">more_vert</i></button>
-        </div>
-        <div class="item-image">
-          <img alt="File image">
-        </div>
-        <div class="item-info">
-          <div class="meta">{{ item.modified | date:'medium' }}</div>
-        </div>
       </div>
-      
-      <!-- List view -->
-      <div *ngIf="!isGridView" class="content-list">
-        <div class="list-item">
-          <div class="item-icon">
-            <i class="material-icons">insert_drive_file</i>
-          </div>
-          <div class="item-name">{{ item.name }}</div>
-          <div class="item-reason">{{ item.name }}</div>
-          <div class="item-owner">{{ item.name }}</div>
-          <div class="item-location">{{ item.name }}</div>
-          <div class="item-actions">
-            <div class="item-hover-menu">
-              <button class="round-button"><i class="material-icons">share</i></button>
-              <button class="round-button"><i class="material-icons">download</i></button>
-              <button class="round-button"><i class="material-icons">edit</i></button>
-              <button class="round-button"><i class="material-icons">star</i></button>
-            </div>
+
+      <!-- Items for grid or list view -->
+      <div class="item" *ngFor="let item of items" (click)="toggleActions(item)">
+        <!-- Grid view -->
+        <div *ngIf="isGridView" class="content-grid">
+          <div class="item-header">
+            <i class="material-icons">picture_as_pdf</i>
+            <div class="filename">{{ item.name }}</div>
             <button class="round-button"><i class="material-icons">more_vert</i></button>
+          </div>
+          <div class="item-image">
+            <img alt="File image">
+          </div>
+          <div class="item-info">
+            <div class="meta">{{ item.modified | date:'medium' }}</div>
+          </div>
+        </div>
+
+        <!-- List view -->
+        <div *ngIf="!isGridView" class="content-list">
+          <div class="list-item">
+            <div class="item-icon">
+              <i class="material-icons">insert_drive_file</i>
+            </div>
+            <div class="item-name">{{ item.name }}</div>
+            <div class="item-reason">{{ item.name }}</div>
+            <div class="item-owner">{{ item.name }}</div>
+            <div class="item-location">{{ item.name }}</div>
+            <div class="item-actions">
+              <div class="item-hover-menu">
+                <button class="round-button"><i class="material-icons">share</i></button>
+                <button class="round-button"><i class="material-icons">download</i></button>
+                <button class="round-button"><i class="material-icons">edit</i></button>
+                <button class="round-button"><i class="material-icons">star</i></button>
+              </div>
+              <button class="round-button"><i class="material-icons">more_vert</i></button>
+            </div>
           </div>
         </div>
       </div>
