@@ -163,8 +163,16 @@ div.left > button:hover, div.left > button:active {
   background-color: #e6e6e6;
 }
 
-div.right > button:hover, div.right > button:active {
+div.right > button:hover {
   background-color: #e6e6e6;
+}
+
+.type-button.active {
+  background-color: rgb(178, 212, 254) !important; 
+}
+
+.layout-button.active {
+  background-color: rgb(178, 212, 254) !important; 
 }
 
 .actions-section{
@@ -312,4 +320,16 @@ div.right > button:hover, div.right > button:active {
   display: flex;
   flex-direction: row;
 }
+.mat-menu-panel.customize-panel {
+  background-color: white; /* Custom background color */
+  width: 300px; /* Custom width */
+}
 
+.mat-menu-item.customize-item:hover {
+  background-color: #ececec; /* Custom background color for hover state */
+}
+
+.mat-menu-item.customize-item span {
+  color: black; /* Custom text color */
+  font-size: small; /* Custom font size */
+}

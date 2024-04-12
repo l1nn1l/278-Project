@@ -15,7 +15,7 @@
             class="material-icons">arrow_drop_down</i></button>
       </div>
       <div class="filter-item">
-        <button class="filter-button"><i class="material-icons">folder</i>Location<i
+        <button class="filter-button"><i class="material-icons">folder_open</i>Location<i
             class="material-icons">arrow_drop_down</i></button>
       </div>
     </div>
@@ -24,16 +24,22 @@
       <!-- Tab navigation -->
       <div class="left">
         <span>Suggested</span>
-        <button class="type-button"><i class="material-icons">check</i>Files</button>
-        <button class="type-button"><i class="material-icons">folder_open</i>Folders</button>
+        <button class="type-button" [ngClass]="{'active': contentType === 'files'}" (click)="toggleContentType('files')">
+          <i class="material-icons">{{ contentType === 'files' ? 'check' : 'description' }}</i>Files
+        </button>
+        <button class="type-button" [ngClass]="{'active': contentType === 'folders'}" (click)="toggleContentType('folders')">
+          <i class="material-icons">{{ contentType === 'folders' ? 'check' : 'folder_open' }}</i>Folders
+        </button>
       </div>
       <div class="right">
         <!-- Layout switch buttons -->
-        <button class="layout-button" (click)="setListView()"><i *ngIf="!isGridView" class="material-icons">check</i><i
-            class="material-icons">menu</i></button>
-        <button class="layout-button" (click)="setGridView()"><i *ngIf="isGridView" class="material-icons">check</i><i
-            class="material-icons">apps</i></button>
-      </div>
+        <button class="layout-button" [ngClass]="{'active': !isGridView}" (click)="setListView()">
+          <i class="material-icons">{{ !isGridView ? 'check' : 'menu' }}</i>
+        </button>
+        <button class="layout-button" [ngClass]="{'active': isGridView}" (click)="setGridView()">
+          <i class="material-icons">{{ isGridView ? 'check' : 'apps' }}</i>
+        </button>
+      </div>      
     </div>
 
     <div *ngIf="showActions" class="actions-section">
@@ -66,14 +72,33 @@
       </div>
 
       <!-- Items for grid or list view -->
-      <div class="item" *ngFor="let item of items" (click)="toggleActions(item)">
+      <div class="item" *ngFor="let item of displayedItems; let i = index"  (click)="toggleActions(item)">
         <!-- Grid view -->
         <div *ngIf="isGridView" class="content-grid">
           <div class="item-header">
             <i class="material-icons">picture_as_pdf</i>
             <div class="filename">{{ item.name }}</div>
-            <button class="round-button"><i class="material-icons">more_vert</i></button>
-          </div>
+            <button  class="round-button" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+              <i class="material-icons">more_vert</i>
+            </button>
+          
+            <!-- Kebab menu structure -->
+            <mat-menu #menu="matMenu" class="customize-panel">
+              <button mat-menu-item class="customize-item" (click)="openWith(item)">
+                <span>Open with</span>
+              </button>
+              <button mat-menu-item class="customize-item" (click)="download(item)">
+                <span>Download</span>
+              </button>
+              <!-- ... other menu items ... -->
+              <button mat-menu-item class="customize-item" (click)="moveToTrash(item)">
+                <span>Move to Trash</span>
+              </button>
+              <button mat-menu-item class="customize-item" (click)="viewDetails(item)">
+                <span>File Information</span>
+              </button>
+            </mat-menu>
+           </div>
           <div class="item-image">
             <img alt="File image">
           </div>
