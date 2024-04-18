@@ -12,10 +12,9 @@
     height: calc(100vh - 90px);
   }
 
-  .fixed-header {
+.fixed-header {
     background-color: white; /* Match the main content background */
     padding-bottom: 0.3rem; /* Optional: space below the tab-section */
-    z-index: 10; /* Ensures it stays above the scrollable content */
 }
 
 .scrollable-content {

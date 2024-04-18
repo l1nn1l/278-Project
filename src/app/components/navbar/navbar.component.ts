@@ -4,18 +4,51 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { UserService, UserProfile } from '../../services/user.service';
+import { UserProfilePopupComponent } from "../user-profile-popup/user-profile-popup.component";
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-navbar',
-  standalone: true,
-  imports: [CommonModule, DropdownModule, ReactiveFormsModule, InputTextModule, RadioButtonModule],
-  templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+    selector: 'app-navbar',
+    standalone: true,
+    templateUrl: './navbar.component.html',
+    styleUrl: './navbar.component.css',
+    imports: [CommonModule, DropdownModule, ReactiveFormsModule, InputTextModule, RadioButtonModule, UserProfilePopupComponent]
 })
 export class NavbarComponent {
   showModal: boolean = false;
+  public userProfile!: UserProfile;
+  private dialogRef: MatDialogRef<UserProfilePopupComponent> | null = null;
 
-  constructor() { }
+  constructor(private userService: UserService, public dialog: MatDialog) {  
+    this.userService.getUserInfo().subscribe(profile => {
+      this.userProfile = profile; 
+    });
+  }
+
+  openUserProfileDialog(): void {
+    if (this.dialogRef) {
+      // Dialog is currently opened, close it
+      this.dialogRef.close();
+      this.dialogRef = null; // Reset the reference
+    } else {
+      // Dialog is not opened, open it
+      this.dialogRef = this.dialog.open(UserProfilePopupComponent, {
+        width: '250px',
+        hasBackdrop: false,
+        panelClass: 'custom-dialog-container',
+        position: {
+          top: '65px'
+        },
+        data: this.userProfile // Pass the entire user profile as data
+      });
+
+      // Reset the reference when the dialog is closed
+      this.dialogRef.afterClosed().subscribe(() => {
+        this.dialogRef = null;
+      });
+    }
+  }
 
   toggleModal(): void {
     this.showModal = !this.showModal;

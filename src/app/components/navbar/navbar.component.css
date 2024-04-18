@@ -38,6 +38,7 @@ img {
     background: none;
     color: #1f1f1f;
     margin: 0px 2px;
+    cursor: pointer;
 }
 
 .round-button:hover{
@@ -256,4 +257,20 @@ p-dropdown{
     width: 100%;
     margin-top: 10px;
   }
+}
+
+.user-account{
+  cursor: pointer;
+}
+
+.custom-dialog-container {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  right: 20px !important; 
+}
+
+::ng-deep .cdk-overlay-pane {
+  position: fixed;
+  right: 0; 
+  top: 0; 
 }

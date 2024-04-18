@@ -1,0 +1,87 @@
+::ng-deep .cdk-overlay-pane {
+  position: fixed !important;
+  right: 20px !important;
+  width: auto !important;
+  max-width: 300px;
+}
+
+.mat-mdc-dialog-actions {
+  justify-content: end;
+}
+
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: var(--container-color);
+}
+
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__title {
+  color: #1f1f1f;
+  text-align: center;
+}
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__content {
+  color: #1f1f1f;
+  padding-bottom: 0px !important;
+  padding-top: 10px;
+
+}
+
+.top-cont{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+img{
+  border: 0;
+  border-radius: 50%;
+  height: 80px;
+  width: 80px;
+}
+
+::ng-deep .mat-dialog-content{
+  display: flex;
+  justify-content: center;
+}
+
+.round-button{
+  display: inline-flex;
+  justify-content: center; 
+  align-items: center; 
+  align-content: center;
+  width: 40px;
+  height: 40px; 
+  border-radius: 50%;
+  border: 1px solid transparent; 
+  background: none;
+  color: #1f1f1f;
+  margin: 0px 2px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.round-button:hover{
+  background-color: rgba(60, 64, 67, .08);
+}
+
+.profile-picture{
+  display: flex;
+  justify-content: center;
+}
+
+.logout-button{
+  color: #1f1f1f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid white;
+  border-radius: 20px;
+  background-color: white;
+  margin: 0px 2px 10px 2px;
+  width: 13rem;
+  align-self: center;
+  cursor: pointer;
+}
+
+::ng-deep .mat-mdc-dialog-container > div > div > app-user-profile-popup > button > i{
+  margin-right: 6px;
+}
+

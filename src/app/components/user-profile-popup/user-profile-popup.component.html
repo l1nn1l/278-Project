@@ -1,0 +1,13 @@
+<div class="top-cont">
+  <p>{{ userEmail }}</p>
+  <mat-dialog-actions>
+    <button mat-dialog-close class="round-button"><i class="material-icons">close</i></button>
+  </mat-dialog-actions>
+</div>
+<mat-dialog-content>
+  <div class="profile-picture">
+    <img [src]="profilePictureUrl" alt="Profile Picture">
+  </div>
+  <h2 mat-dialog-title>Hi, {{ userName }}!</h2>
+</mat-dialog-content>
+<button class="logout-button"><i class="material-icons">logout</i>Sign out</button>
