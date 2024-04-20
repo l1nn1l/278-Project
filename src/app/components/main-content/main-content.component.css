@@ -162,8 +162,16 @@ div.left > button:hover, div.left > button:active {
   background-color: #e6e6e6;
 }
 
-div.right > button:hover, div.right > button:active {
+div.right > button:hover {
   background-color: #e6e6e6;
+}
+
+.type-button.active {
+  background-color: rgb(178, 212, 254) !important; 
+}
+
+.layout-button.active {
+  background-color: rgb(178, 212, 254) !important; 
 }
 
 .actions-section{
@@ -312,3 +320,36 @@ div.right > button:hover, div.right > button:active {
   flex-direction: row;
 }
 
+ .mat-menu-content {
+  background-color: red !important;
+ width: 450px !important;
+  height: 200px !important; }
+
+  .mat-menu-item span:last-child {
+    display: none;
+    font-weight: bold;
+  }
+  
+  .mat-menu-item:hover span:last-child {
+    display: inline;
+  }
+
+  .selection-box {
+    position: fixed;
+    z-index: 1000;
+    border: 1px dashed #666;
+    background-color: rgba(128, 128, 128, 0.3);
+    pointer-events: none;
+  }
+  
+  .item.selected {
+    background-color: #e3f2fd; /* Light blue background for selected items */
+    /* Add any other styling for selected items here */
+  }
+  
+  /* ... Rest of your existing CSS */
+  
+  /* This style will be applied when an item is being selected */
+  .item.being-selected {
+    background-color: rgba(128, 128, 128, 0.5);
+  }
