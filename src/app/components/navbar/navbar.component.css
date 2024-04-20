@@ -274,3 +274,7 @@ p-dropdown{
   right: 0; 
   top: 0; 
 }
+
+::ng-deep span{
+  margin-right: 0 !important;
+}

@@ -1,0 +1,27 @@
+<div class="surface-card p-4 shadow-2 border-round w-full lg:w-6" [formGroup]="signupForm">
+    <div class="text-center mb-5">
+      <img src="assets/images/logo.png" alt="Logo" height="50" class="mb-3">
+      <div class="text-900 text-3xl font-medium mb-3">Sign Up</div>
+    </div>
+  
+    <div>
+      <input id="firstName" type="text" placeholder="First Name" pInputText class="w-full mb-3" formControlName="firstName">
+      <input id="lastName" type="text" placeholder="Last Name" pInputText class="w-full mb-3" formControlName="lastName">
+  
+      <p-calendar id="birthDate" inputId="birthDate" formControlName="birthDate" [showIcon]="true" placeholder="Birth Date" class="w-full mb-3"></p-calendar>
+  
+      <p-dropdown id="gender" [options]="[{label:'Male', value:'Male'}, {label:'Female', value:'Female'}]" placeholder="Select Gender" formControlName="gender" class="w-full mb-3"></p-dropdown>
+  
+      <input id="email" type="email" placeholder="Email" pInputText class="w-full mb-3" formControlName="email">
+  
+      <input id="password" [type]="showPassword ? 'text' : 'password'" placeholder="Password" pInputText class="w-full mb-3" formControlName="password">
+      <input id="confirmPassword" [type]="showPassword ? 'text' : 'password'" placeholder="Confirm Password" pInputText class="w-full mb-3" formControlName="confirmPassword">
+  
+      <div class="flex align-items-center justify-content-between mb-3">
+        <p-checkbox label="Show Password" [binary]="true" styleClass="mr-2" (onChange)="toggleShowPassword()"></p-checkbox>
+      </div>
+  
+      <button pButton pRipple label="Sign Up" icon="pi pi-user" class="w-full" (click)="onSignUp()"></button>
+    </div>
+  </div>
+  

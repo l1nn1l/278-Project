@@ -1,0 +1,14 @@
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+#email{
+    margin-top: 1rem !important;
+}
+
+p-calendar{
+    margin-right: 1rem !important;
+}
