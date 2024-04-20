@@ -320,16 +320,37 @@ div.right > button:hover {
   display: flex;
   flex-direction: row;
 }
-.mat-menu-panel.customize-panel {
-  background-color: white; /* Custom background color */
-  width: 300px; /* Custom width */
-}
 
-.mat-menu-item.customize-item:hover {
-  background-color: #ececec; /* Custom background color for hover state */
-}
+ .mat-menu-content {
+  background-color: red !important;
+ width: 450px !important;
+  height: 200px !important; }
 
-.mat-menu-item.customize-item span {
-  color: black; /* Custom text color */
-  font-size: small; /* Custom font size */
-}
+  .mat-menu-item span:last-child {
+    display: none;
+    font-weight: bold;
+  }
+  
+  .mat-menu-item:hover span:last-child {
+    display: inline;
+  }
+
+  .selection-box {
+    position: fixed;
+    z-index: 1000;
+    border: 1px dashed #666;
+    background-color: rgba(128, 128, 128, 0.3);
+    pointer-events: none;
+  }
+  
+  .item.selected {
+    background-color: #e3f2fd; /* Light blue background for selected items */
+    /* Add any other styling for selected items here */
+  }
+  
+  /* ... Rest of your existing CSS */
+  
+  /* This style will be applied when an item is being selected */
+  .item.being-selected {
+    background-color: rgba(128, 128, 128, 0.5);
+  }
