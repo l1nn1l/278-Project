@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient , HttpHeaders} from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { LoginDTO } from '../../assets/Models/DTO/LoginDTO';
+import { ApiResponse } from '../../assets/Models/DTO/ApiResponse';
 
 export interface UserProfile {
   email: string;
@@ -13,7 +15,10 @@ export interface UserProfile {
 })
 export class UserService {
 
+
+  constructor(private http: HttpClient) {}
   private baseUrl: string = 'https://googledriveclonebackend.onrender.com';
+  private signInUrl:string='https://googledriveclonebackend.onrender.com'
 
   private user: UserProfile = {
     email: 'user@example.com',
@@ -25,6 +30,15 @@ export class UserService {
 
   getUserInfo(): Observable<UserProfile> {
     return of(this.user);
+  }
+
+  signIn(username: string, password: string): Observable<any> {
+    var loginDTO = new LoginDTO(username, password);
+
+    return this.http.post<ApiResponse>(
+      `${this.baseUrl}${this.signInUrl}`,
+      loginDTO
+    );
   }
 
 }
