@@ -1,10 +1,7 @@
-export class ApiResponse{
 
-    public responseData:any;
-    
-    constructor(public message:string, public StatusCode: number,data:any){
-    
-        this.responseData=data;
-    }
-    
-    }
+  export interface ApiResponse {
+    status: number;
+    message: string;
+    data: any; // Now strictly typed to expect specific user data
+  }
+  

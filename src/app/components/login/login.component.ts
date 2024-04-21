@@ -5,9 +5,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router'; 
+import { AuthService } from '../../services/auth.service';
 import { ApiResponse } from '../../../assets/Models/DTO/ApiResponse';
+import { AuthInterceptor } from '../../interceptors/auth.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 @Component({
@@ -19,16 +21,18 @@ import { ApiResponse } from '../../../assets/Models/DTO/ApiResponse';
     CheckboxModule,
     ButtonModule,
     RippleModule,
-    ReactiveFormsModule,
-    RouterModule,
-  ],
+    ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
+  providers: [
+    AuthService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ]
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder,  private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -40,51 +44,23 @@ export class LoginComponent implements OnInit {
 
   onSignIn() {
     if (this.loginForm.valid) {
-      console.log(this.loginForm.value);
-      // this.onLoginClick(this.loginForm.value.email, this.loginForm.value.password)
+      const email = this.loginForm.value.email;
+      const password = this.loginForm.value.password;
+      
+      this.authService.signIn(email, password).subscribe(
+        (response: any) => {
+          console.log('Sign-in response:', response); // Log the response to see its structure
+          if (response && response.message === 'Login Successful') {
+            localStorage.setItem('Access_Token', response.data.token);
+            this.router.navigate(['/home']);
+          } else {
+            console.error('Login failed:', response);
+          }
+        },
+        (error: any) => {
+          console.error('Login error:', error);
+        }
+      );
     }
   }
-
-
-  // onLoginClick(email:string, password:string) {
-  //   console.log('Button Clicked');
-    
-  //   this.userService.signIn(email, password).subscribe(
-  //     (response) => {
-  //       console.log('Full response:', response); // Log the full response
-  
-  //       // Assuming the API response is directly the body if not use { observe: 'response' }
-        
-        
-  //         if(response.statusCode==401){
-  //           console.log('Token is invalid');
-  //         }
-
-
-  //         const apiResponse = new ApiResponse(
-  //         response.message,
-  //         response.statusCode,
-  //         response.data
-  //       );
-
-  //       if(apiResponse.StatusCode == 200){ 
-  //         //Here we save the tokens:
-  //         localStorage.setItem('Access_Token',apiResponse.responseData.tokens.access_token)
-  //         localStorage.setItem('Refresh_Token',apiResponse.responseData.tokens.refresh_token)
-  //         // this.router.navigate(['/main/welcome']);
-  //       }
-  //       else{
-      
-  //       }
-  //     },
-  //     (error) => {
-  //       // Handle any errors here
-  //       console.error('Login error:', error);
-  //     }
-  //   );
-  // }
-
-
-  
-
 }

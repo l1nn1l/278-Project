@@ -28,3 +28,7 @@ body {
   margin-left: 10px;
   margin-right: 10px;
 }
+
+.transparent-backdrop {
+  background-color: transparent !important; 
+}

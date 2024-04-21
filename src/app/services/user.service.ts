@@ -14,31 +14,14 @@ export interface UserProfile {
   providedIn: 'root'
 })
 export class UserService {
-
-
-  constructor(private http: HttpClient) {}
-  private baseUrl: string = 'https://googledriveclonebackend.onrender.com';
-  private signInUrl:string='https://googledriveclonebackend.onrender.com'
-
-  private user: UserProfile = {
-    email: 'user@example.com',
-    username: 'JohnDoe',
-    profilePictureUrl: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
-  };
-
-  // constructor(private http: HttpClient) { }
+//Manages user profile information 
 
   getUserInfo(): Observable<UserProfile> {
-    return of(this.user);
-  }
-
-  signIn(username: string, password: string): Observable<any> {
-    var loginDTO = new LoginDTO(username, password);
-
-    return this.http.post<ApiResponse>(
-      `${this.baseUrl}${this.signInUrl}`,
-      loginDTO
-    );
+    const email = localStorage.getItem('User_Email') || '';
+    const username = localStorage.getItem('User_Name') || '';
+    const profilePictureUrl = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'; // Default or fetched URL
+  
+    return of({ email, username, profilePictureUrl });
   }
 
 }

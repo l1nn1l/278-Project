@@ -9,22 +9,19 @@ import { UserProfilePopupComponent } from "../user-profile-popup/user-profile-po
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-    selector: 'app-navbar',
-    standalone: true,
-    templateUrl: './navbar.component.html',
-    styleUrl: './navbar.component.css',
-    imports: [CommonModule, DropdownModule, ReactiveFormsModule, InputTextModule, RadioButtonModule, UserProfilePopupComponent]
+  selector: 'app-navbar',
+  standalone: true,
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.css',
+  imports: [CommonModule, DropdownModule, ReactiveFormsModule, InputTextModule, RadioButtonModule, UserProfilePopupComponent]
 })
 export class NavbarComponent {
   showModal: boolean = false;
   public userProfile!: UserProfile;
   private dialogRef: MatDialogRef<UserProfilePopupComponent> | null = null;
 
-  constructor(private userService: UserService, public dialog: MatDialog) {  
-    this.userService.getUserInfo().subscribe(profile => {
-      this.userProfile = profile; 
-    });
-  }
+  constructor(private userService: UserService, public dialog: MatDialog) { }
+
 
   openUserProfileDialog(): void {
     if (this.dialogRef) {
@@ -32,20 +29,22 @@ export class NavbarComponent {
       this.dialogRef.close();
       this.dialogRef = null; // Reset the reference
     } else {
-      // Dialog is not opened, open it
-      this.dialogRef = this.dialog.open(UserProfilePopupComponent, {
-        width: '250px',
-        hasBackdrop: false,
-        panelClass: 'custom-dialog-container',
-        position: {
-          top: '65px'
-        },
-        data: this.userProfile // Pass the entire user profile as data
-      });
-
-      // Reset the reference when the dialog is closed
-      this.dialogRef.afterClosed().subscribe(() => {
-        this.dialogRef = null;
+      // Fetch the user profile every time the dialog is opened
+      this.userService.getUserInfo().subscribe(profile => {
+        this.dialogRef = this.dialog.open(UserProfilePopupComponent, {
+          width: '250px',
+          hasBackdrop: true,
+          backdropClass: 'transparent-backdrop',
+          panelClass: 'custom-dialog-container',
+          position: {
+            top: '65px'
+          },
+          data: profile  // Pass the fetched user profile as data
+        });
+        // Reset the reference when the dialog is closed
+        this.dialogRef.afterClosed().subscribe(() => {
+          this.dialogRef = null;
+        });
       });
     }
   }
