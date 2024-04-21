@@ -1,14 +1,19 @@
 <div class="sidebar">
     <ul>
         <li class="menu-item">
-            <i class="material-icons">home</i> <span>Home</span>
+            <a routerLink="/home" routerLinkActive="active">
+              <i class="material-icons">home</i> <span>Home</span>
+            </a>
         </li>
         <li class="menu-item">
-            <i class="material-icons">drive_eta</i> <span>My Drive</span>
+            <a routerLink="/My-Drive" routerLinkActive="active">
+              <i class="material-icons">drive_eta</i> <span>My Drive</span>
+            </a>
         </li>
-        <div class="divider"></div>
         <li class="menu-item">
-            <i class="material-icons">group</i> <span>Shared with me</span>
+            <a routerLink="/Shared-w-me" routerLinkActive="active">
+              <i class="material-icons">group</i> <span>Shared with me</span>
+            </a>
         </li>
         <!-- <li class="menu-item">
             <i class="material-icons">access_time</i> <span>Recent</span>
