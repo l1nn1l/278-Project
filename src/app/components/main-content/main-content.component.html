@@ -78,16 +78,16 @@
       </div>
 
       <!-- Items for grid or list view -->
-      <div class="item" *ngFor="let item of displayedItems"
-     [id]="'item-' + item.id"
-     [ngClass]="{'selected': isSelected(item)}"
-     (mousedown)="handleItemMouseDown($event, item)">
+      <div class="item" *ngFor="let document of documents"
+     [id]="'item-' + document.id"
+     [ngClass]="{'selected': isSelected(document)}"
+     (mousedown)="handleItemMouseDown($event, document)">
       <!-- Item content -->
          <!-- Grid view -->
         <div *ngIf="isGridView" class="content-grid">
           <div class="item-header">
             <i class="material-icons">picture_as_pdf</i>
-            <div class="filename">{{ item.name }}</div>
+            <div class="filename">{{ document.title }}</div>
             <button class="round-button" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
               <i class="material-icons">more_vert</i>
             </button>
@@ -98,13 +98,13 @@
                 <!-- Submenu for Name -->
                 <button mat-menu-item [matMenuTriggerFor]="nameSubMenu" matMenuTriggerData="{item: item}"
                   #trigger="matMenuTrigger" (mouseenter)="trigger.openMenu()" (mouseleave)="trigger.closeMenu()"
-                  (click)="getName(item)">
+                  (click)="getName(document)">
                   <span>Name</span>
                 </button>
                 <mat-menu #nameSubMenu="matMenu">
                   <ng-template matMenuContent >
                     <button mat-menu-item>
-                      {{ item.name }}
+                      {{ document.title }}
                     </button>
                   </ng-template>
                 </mat-menu>
@@ -112,13 +112,13 @@
                 <!-- Submenu for Owner -->
                 <button mat-menu-item [matMenuTriggerFor]="ownerSubMenu" matMenuTriggerData="{item: item}"
                   #ownerTrigger="matMenuTrigger" (mouseenter)="ownerTrigger.openMenu()"
-                  (mouseleave)="ownerTrigger.closeMenu()" (click)="getOwner(item)">
+                  (mouseleave)="ownerTrigger.closeMenu()" (click)="getOwner(document)">
                   <span>Owner</span>
                 </button>
                 <mat-menu #ownerSubMenu="matMenu">
                   <ng-template matMenuContent>
                     <button mat-menu-item>
-                      {{ item.name }}
+                      {{ document.title }}
                     </button>
                   </ng-template>
                 </mat-menu>
@@ -126,13 +126,13 @@
                 <!-- Submenu for Date -->
                 <button mat-menu-item [matMenuTriggerFor]="dateSubMenu" matMenuTriggerData="{item: item}"
                   #dateTrigger="matMenuTrigger" (mouseenter)="dateTrigger.openMenu()"
-                  (mouseleave)="dateTrigger.closeMenu()" (click)="getDate(item)">
+                  (mouseleave)="dateTrigger.closeMenu()" (click)="getDate(document)">
                   <span>Date</span>
                 </button>
                 <mat-menu #dateSubMenu="matMenu">
                   <ng-template matMenuContent >
                     <button mat-menu-item>
-                      {{ item.modified | date:'medium' }}
+                      {{ document.uploadDate| date:'medium' }}
                     </button>
                   </ng-template>
                 </mat-menu>
@@ -140,19 +140,19 @@
                 <!-- Submenu for Location -->
                 <button mat-menu-item [matMenuTriggerFor]="locationSubMenu" matMenuTriggerData="{item: item}"
                   #locationTrigger="matMenuTrigger" (mouseenter)="locationTrigger.openMenu()"
-                  (mouseleave)="locationTrigger.closeMenu()" (click)="getLocation(item)">
+                  (mouseleave)="locationTrigger.closeMenu()" (click)="getLocation(document)">
                   <span>Location</span>
                 </button>
                 <mat-menu #locationSubMenu="matMenu">
                   <ng-template matMenuContent >
                     <button mat-menu-item>
-                      {{ item.name }}
+                      {{ document.title }}
                     </button>
                   </ng-template>
                 </mat-menu>
 
                 <!-- Button for Move to Trash -->
-                <button mat-menu-item (click)="moveToTrash(item)">
+                <button mat-menu-item (click)="moveToTrash(document)">
                   <span>Move to Trash</span>
                 </button>
               </ng-template>
@@ -164,7 +164,7 @@
             <img alt="File image">
           </div>
           <div class="item-info">
-            <div class="meta">{{ item.modified | date:'medium' }}</div>
+            <div class="meta">{{ document.uploadDate| date:'medium' }}</div>
           </div>
         </div>
 
@@ -174,10 +174,10 @@
             <div class="item-icon">
               <i class="material-icons">insert_drive_file</i>
             </div>
-            <div class="item-name">{{ item.name }}</div>
-            <div class="item-reason">{{ item.name }}</div>
-            <div class="item-owner">{{ item.name }}</div>
-            <div class="item-location">{{ item.name }}</div>
+            <div class="item-name">{{ document.title }}</div>
+            <div class="item-reason">{{ document.title }}</div>
+            <div class="item-owner">{{ owner }}</div>
+            <div class="item-location">{{ document.title }}</div>
             <div class="item-actions">
               <div class="item-hover-menu">
                 <button class="round-button"><i class="material-icons">share</i></button>

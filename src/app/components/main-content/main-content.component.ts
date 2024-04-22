@@ -2,6 +2,11 @@ import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewEnca
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
+import { DocumentService } from '../../services/document.service';
+import { AuthInterceptor } from '../../interceptors/auth.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
+import { Router } from '@angular/router';
 
 
 interface Item {
@@ -19,6 +24,10 @@ interface Item {
   templateUrl: './main-content.component.html',
   styleUrl: './main-content.component.css',
   encapsulation: ViewEncapsulation.None,
+  providers: [
+    DocumentService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ]
 
 })
 export class MainContentComponent {
@@ -26,7 +35,7 @@ export class MainContentComponent {
   selectedItem: Item | null = null;
   isGridView: boolean = true;
   contentType: 'files' | 'folders' = 'files';
-  selectedItems: Item[] = [];
+  selectedItems: DocumentDTO[] = [];
   isSelecting: boolean = false;
   selectionBoxStyle = {};
   startSelectionPosition = { x: 0, y: 0 };
@@ -52,9 +61,16 @@ export class MainContentComponent {
     { id: 19, name: 'Assignment19.ipynb', type: 'file', modified: 'Mar 30, 2024' },
     { id: 20, name: 'Assignment20.ipynb', type: 'file', modified: 'Mar 30, 2024' },
   ];
+
+  documents: DocumentDTO[]=[];
+  owner= localStorage.getItem('User_Email');
   
 
-  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef) { }
+  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService:DocumentService, private router:Router) { }
+
+  ngOnInit() {
+   this.getDocuments();
+  }
 
   setListView(): void {
     this.isGridView = false;
@@ -123,7 +139,7 @@ export class MainContentComponent {
     console.log('Selection cleared. Current selectedItems:', this.selectedItems);
   }
 
-  isSelected(item: Item): boolean {
+  isSelected(item: DocumentDTO): boolean {
     return this.selectedItems.some(selectedItem => selectedItem.id === item.id);
   }
   startSelection(event: MouseEvent): void {
@@ -177,7 +193,7 @@ export class MainContentComponent {
     };
   
     // Filter the items to find which ones intersect with the selection box
-    this.selectedItems = this.items.filter(item => {
+    this.selectedItems = this.documents.filter(item => {
       const itemElement = document.getElementById(`item-${item.id}`);
       if (itemElement) {
         const rect = itemElement.getBoundingClientRect();
@@ -202,7 +218,7 @@ export class MainContentComponent {
   }
   
 
-  handleItemMouseDown(event: MouseEvent, item: Item): void {
+  handleItemMouseDown(event: MouseEvent, item: DocumentDTO): void {
     event.stopPropagation();
   
     const isSelected = this.isSelected(item);
@@ -224,8 +240,34 @@ export class MainContentComponent {
 
   logSelectedItems(): void {
     this.selectedItems.forEach(item => {
-      console.log('Selected Item Name:', item.name);
+      console.log('Selected Item Name:', item.title);
     });
   }
+
+
+  //HERE WE GETT ALL THE DOCUMENTS:
+  getDocuments() {
+    // this.isLoading = true;
+    this.documentService.getOwnedDocuments(localStorage.getItem('id')).subscribe(
+      (response) => {
+        console.log('Response:', response);
+        this.documents = response.data;
+        // this.isLoading = false;
+        console.log('These are the Documents from the database', this.documents);
+      },
+      (error) => {
+        if (error.status == 401) {
+          console.error('Error:', error);
+          console.log('Authentication Token Expired');
+          console.log('Redirecting to Login Page');
+          this.router.navigate(['/login']);
+        }
+
+        // this.isLoading = false;
+      }
+    );
+  }
+  
+
 }
 
