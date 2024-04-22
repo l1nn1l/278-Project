@@ -52,7 +52,8 @@ export class MainContentComponent {
     { id: 19, name: 'Assignment19.ipynb', type: 'file', modified: 'Mar 30, 2024' },
     { id: 20, name: 'Assignment20.ipynb', type: 'file', modified: 'Mar 30, 2024' },
   ];
-  
+
+
 
   constructor(public dialog: MatDialog, private cd: ChangeDetectorRef) { }
 
