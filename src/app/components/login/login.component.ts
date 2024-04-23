@@ -15,6 +15,9 @@ import { AuthService } from '../../services/auth.service';
 import { ApiResponse } from '../../../assets/Models/DTO/ApiResponse';
 import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { routes } from '../../app.routes';
+import { RouterModule } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +29,9 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
     ButtonModule,
     RippleModule,
     ReactiveFormsModule,
+    RouterModule,
+    RouterOutlet
+    
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -63,7 +69,7 @@ export class LoginComponent implements OnInit {
             localStorage.setItem('Access_Token', response.data.token);
             localStorage.setItem('id', response.data.id);
             // console.log(response.data.token);
-            this.router.navigate(['/home']);
+            this.router.navigate(['/main/home']);
           } else {
             console.error('Login failed:', response);
           }

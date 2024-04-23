@@ -1,6 +1,4 @@
-    app-main-content {
-    display: flex; 
-    flex-direction: column;
+app-my-drive {
     background-color: white;
     width: 100%;
     border-radius: 20px;
@@ -10,40 +8,35 @@
     margin-bottom: 20px;
     overflow: hidden;
     height: calc(100vh - 90px);
-    overflow-y: scroll; /* This part will scroll */
-    flex-grow: 1; /* Takes up the remaining space */
+    overflow-y: scroll; 
+    flex-grow: 1;
   }
-
-.fixed-header {
-    background-color: white; /* Match the main content background */
-    padding-bottom: 0.3rem; /* Optional: space below the tab-section */
-}
-
-.scrollable-content {
-    overflow-y: auto; /* This part will scroll */
-    flex-grow: 1; /* Takes up the remaining space */
-}
+  
+  .scrollable-content {
+    overflow-y: scroll;
+    flex-grow: 1; 
+  }
   
   .content-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 16px;
   }
-
+  
   .filter-header {
-    justify-content: center; 
+    justify-content: start; 
     background-color: white;
     display: flex;
     gap: 1rem; 
-    padding: 1rem; 
+    padding-bottom: 10px;
   }
-
-.filter-item {
+  
+  .filter-item {
   display: flex; 
   align-items: center;
   justify-content: center; 
-}
-.filter-button {
+  }
+  .filter-button {
   display: flex; 
   align-items: center;
   background-color: #f7f9fc; 
@@ -54,39 +47,41 @@
   outline: none; 
   box-shadow: none;
   cursor: pointer; 
-}
-.filter-button:active, .filter-button:hover {
+  }
+  .filter-button:active, .filter-button:hover {
     background-color: #e6e6e6; 
-}
-i {
+  }
+  i {
   margin-right: 15px;
   font-size: 20px; 
   color: #5f6368;
-}
-
-button > i:nth-child(2){
+  }
+  
+  button > i:nth-child(2){
   margin: 0%;
   margin-left: 10px;
-}
-
-.tab-section{
+  }
+  
+  .tab-section{
   display: flex;
   direction: row;
-}
-
-.left {
+  height: 40px;
+  margin-bottom: 15px;
+  }
+  
+  .left {
   display: flex;
   padding: 1rem;
   align-items: center;
   gap: 0;
-}
-
-
-span{
-margin-right: 0.8em;}
-
-
-div.left > button:nth-child(2) {
+  }
+  
+  
+  span{
+  margin-right: 0.8em;}
+  
+  
+  div.left > button:nth-child(2) {
   display: flex;
   align-items: center;
   background-color: #f7f9fc;
@@ -100,17 +95,17 @@ div.left > button:nth-child(2) {
   outline: none;
   box-shadow: none;
   height: 35px;
-}
-
-.right {
+  }
+  
+  .right {
   display: flex;
   margin-left: auto;
   padding: 1rem;
   align-items: center;
   gap: 0;
-}
-
-div.left > button:nth-child(3) {
+  }
+  
+  div.left > button:nth-child(3) {
   display: flex;
   align-items: center;
   background-color: #f7f9fc;
@@ -123,9 +118,9 @@ div.left > button:nth-child(3) {
   outline: none;
   box-shadow: none;
   height: 35px;
-}
-
-div.right > button:nth-child(1) {
+  }
+  
+  div.right > button:nth-child(1) {
   display: flex;
   align-items: center;
   background-color: #f7f9fc;
@@ -139,9 +134,9 @@ div.right > button:nth-child(1) {
   outline: none;
   box-shadow: none;
   height: 35px;
-}
-
-div.right > button:nth-child(2) {
+  }
+  
+  div.right > button:nth-child(2) {
   display: flex;
   align-items: center;
   background-color: #f7f9fc;
@@ -154,68 +149,70 @@ div.right > button:nth-child(2) {
   outline: none;
   box-shadow: none;
   height: 35px;
-}
-
-div.right > button:nth-child(2) > i:nth-child(1){  
+  }
+  
+  div.right > button:nth-child(2) > i:nth-child(1){  
   margin: 0%;
-}
-
-div.left > button:hover, div.left > button:active {
+  }
+  
+  div.left > button:hover, div.left > button:active {
   background-color: #e6e6e6;
-}
-
-div.right > button:hover {
+  }
+  
+  div.right > button:hover {
   background-color: #e6e6e6;
-}
-
-.type-button.active {
+  }
+  
+  .type-button.active {
   background-color: rgb(178, 212, 254) !important; 
-}
-
-.layout-button.active {
+  }
+  
+  .layout-button.active {
   background-color: rgb(178, 212, 254) !important; 
-}
-
-.actions-section{
+  }
+  
+  .actions-section{
   background-color: transparent;
   border-radius: 10px;
-  height: 40px;
-  margin-bottom: 0.3rem;
-}
-
-.actions{
-  align-items: center;
+  padding-left: 10px;
+  }
+  
+  .actions{
   display: flex;
+  align-items: center;
   flex-direction: row ;
   background-color: #f7f9fc;
-  height: 35px;
   border-radius: 20px;
-}
- div.actions-section > div > .round-button{
-  margin-right: 10px;
-}
-
-.content-grid > .item {
+  height: 40px;
+  margin-bottom: 15px;
+  }
+  div.actions-section > div > .round-button{
+  margin-right: 30px;
+  }
+  
+  
+  .content-grid > .item {
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   background-color: #f7f9fc;
   max-width: 100%;
-}
-.content-grid > .item:hover{
+  }
+  .content-grid > .item:hover{
   background-color: #eae8e8;
-}
-
-.item-header {
+  }
+  
+  .item-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding: 10px;
-}
-
-.filename {
-  text-align: center;
-}
-.round-button{
+  }
+  
+  .filename {
+  margin: 0%;
+  }
+  .round-button{
   display: inline-flex;
   justify-content: center; 
   align-items: center; 
@@ -226,21 +223,21 @@ div.right > button:hover {
   border: 1px solid transparent; 
   background: none;
   color: #1f1f1f;
-
-}
-.round-button > i {
+  
+  }
+  .round-button > i {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0; 
-}
-
-.round-button:hover{
+  }
+  
+  .round-button:hover{
   background-color: rgba(60, 64, 67, .08);
-}
-
-
-.item-image img {
+  }
+  
+  
+  .item-image img {
   margin: auto;  
   background-color: white;
   flex-grow: 1; 
@@ -250,83 +247,85 @@ div.right > button:hover {
   width: 95%;
   height: 160px;
   border-radius: 10px;
-}
-
-.item-info {
+  }
+  
+  .item-info {
   padding: 10px;
   text-align: center;
-}
-
-.meta {
+  }
+  
+  .meta {
   font-size: 0.85rem;
-}
-
-.content-list {
+  }
+  
+  .content-list {
   display: flex;
   flex-direction: column;
   width: 100%;
-}
-
-.list-header {
+  }
+  
+  .list-header {
   display: grid;
   grid-template-columns: auto 2fr 2fr 2fr 2fr 1fr auto;
   align-items: center;
   padding: 4px 0;
   background-color: var(--filter-button-color);
   font-weight: bold;
-}
-
-.list-item {
+  }
+  
+  .list-item {
   display: grid;
   grid-template-columns: auto 2fr 2fr 2fr 2fr 1fr auto;
   align-items: center;
   padding: 4px 0;
-}
-
-.list-item:first-child {
+  }
+  
+  .list-item:first-child {
   border-top: 1px solid #ddd;
-}
-
-.list-item:hover {
+  }
+  
+  .list-item:hover {
   background-color: #eae8e8;
-}
-
-.item-icon i {
+  }
+  
+  .item-icon i {
   margin-left: 5px;
   margin-right: 20px;
   font-size: 20px; 
   text-align: center;
-}
-
-.item-name,
-.item-reason,
-.item-owner,
-.item-location {
+  }
+  
+  
+  
+  .item-name,
+  .item-reason,
+  .item-owner,
+  .item-location {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.item-actions {
+  }
+  
+  .item-actions {
   justify-self: end;
   display: flex;
-}
-
-
-.item-hover-menu {
+  }
+  
+  
+  .item-hover-menu {
   display: none;
-}
-
-.list-item:hover .item-hover-menu {
+  }
+  
+  .list-item:hover .item-hover-menu {
   display: flex;
   flex-direction: row;
-}
-
- .mat-menu-content {
+  }
+  
+  .mat-menu-content {
   background-color: red !important;
- width: 450px !important;
+  width: 450px !important;
   height: 200px !important; }
-
+  
   .mat-menu-item span:last-child {
     display: none;
     font-weight: bold;
@@ -335,7 +334,7 @@ div.right > button:hover {
   .mat-menu-item:hover span:last-child {
     display: inline;
   }
-
+  
   .selection-box {
     position: fixed;
     z-index: 1000;
@@ -345,13 +344,46 @@ div.right > button:hover {
   }
   
   .item.selected {
-    background-color: #e3f2fd; /* Light blue background for selected items */
-    /* Add any other styling for selected items here */
+    background-color: #e3f2fd; 
   }
   
-  /* ... Rest of your existing CSS */
   
-  /* This style will be applied when an item is being selected */
   .item.being-selected {
     background-color: rgba(128, 128, 128, 0.5);
   }
+  
+  .content-grid .files-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  
+  .content-list .files-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .span {
+    padding-bottom: 10px;  
+    padding-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333; 
+  }
+  
+  .MyDrive {
+    background-color: white; 
+    color: black; 
+    padding: 10px 20px;
+    font-size: 25px; 
+    text-align: center; 
+    display: inline-block; 
+    cursor: pointer;
+  border: none;}
+  
+  /* .MyDrive:hover {
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1); 
+      background-color: #f8f8f8;
+      border-radius: 10px; 
+      border: 1px solid #e0e0e0; 
+  } */
