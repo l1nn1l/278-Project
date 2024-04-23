@@ -8,6 +8,8 @@ export class DocumentDTO {
     public uploadDate: string,
     public fileSize: number,
     public sharedWith: any[],
-    public deleted: boolean
+    public deleted: boolean,
+    public type: string
+
   ) {}
 }

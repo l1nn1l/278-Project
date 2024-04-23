@@ -172,9 +172,15 @@ app-my-drive {
   }
   
   .actions-section{
-  background-color: transparent;
-  border-radius: 10px;
-  padding-left: 10px;
+    background-color: transparent;
+    border-radius: 10px;
+    padding-left: 10px;
+    color: var(--dark-grey);
+  }
+  
+  .actions-section-content{
+    display: flex;
+    align-items: center;
   }
   
   .actions{

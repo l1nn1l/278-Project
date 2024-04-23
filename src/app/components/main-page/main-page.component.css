@@ -9,7 +9,6 @@
     flex-direction: column;
 }
 
-app-main-content {
-    flex-grow: 1; 
-    overflow-y: auto;
+router-outlet{
+    width: auto;
 }
