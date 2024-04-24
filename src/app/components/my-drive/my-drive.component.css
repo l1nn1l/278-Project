@@ -155,9 +155,9 @@ app-my-drive {
   margin: 0%;
   }
   
-  div.left > button:hover, div.left > button:active {
+  /* div.left > button:hover, div.left > button:active {
   background-color: #e6e6e6;
-  }
+  } */
   
   div.right > button:hover {
   background-color: #e6e6e6;

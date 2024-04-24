@@ -1,7 +1,5 @@
 <div (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)" (mouseup)="endSelection($event)">
-    <div *ngIf="isSelecting" [ngStyle]="selectionBoxStyle" class="selection-box"></div>
-  </div>
-  
+    <div *ngIf="isSelecting" [ngStyle]="selectionBoxStyle" class="selection-box"></div> 
   <div *ngIf="!showActions" class="tab-section">
     <!-- Layout switch buttons -->
     <div class="left">
@@ -284,3 +282,4 @@
     </div>
     </div>
   </div>
+</div>
