@@ -24,4 +24,8 @@ goToMyDrive(){
     this.router.navigate(['/main/home']);
     }
 
+    goToSharedWithMe(){
+      this.router.navigate(['/main/sharedwithme']);
+      }
+
 }
