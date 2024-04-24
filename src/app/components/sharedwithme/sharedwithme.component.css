@@ -16,6 +16,20 @@ app-sharedwithme {
     overflow-y: scroll;
     flex-grow: 1; 
   }
+
+  .date-separator {
+    grid-column: 1 / -1; /* Makes the separator span all columns */
+    font-size: 18px;
+    padding: 16px;
+    border-radius: 4px;
+  }
+  
+  /* Use a pseudo-element for the 'Yesterday', 'Earlier this week' labels */
+  .date-separator::before {
+    content: attr(data-date-label);
+    font-weight: bold;
+    display: block;
+  }
   
   .content-grid {
     display: grid;
@@ -136,6 +150,10 @@ app-sharedwithme {
   height: 35px;
   }
   
+  .main-content-shared{
+    height: 100vh;
+  }
+  
   div.right > button:nth-child(2) {
   display: flex;
   align-items: center;
@@ -153,10 +171,6 @@ app-sharedwithme {
   
   div.right > button:nth-child(2) > i:nth-child(1){  
   margin: 0%;
-  }
-  
-  div.left > button:hover, div.left > button:active {
-  background-color: #e6e6e6;
   }
   
   div.right > button:hover {
@@ -377,7 +391,7 @@ app-sharedwithme {
     color: #333; 
   }
   
-  .MyDrive {
+  .Shared-w-me {
     background-color: white; 
     color: black; 
     padding: 10px 20px;
@@ -387,9 +401,3 @@ app-sharedwithme {
     cursor: pointer;
   border: none;}
   
-  /* .MyDrive:hover {
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1); 
-      background-color: #f8f8f8;
-      border-radius: 10px; 
-      border: 1px solid #e0e0e0; 
-  } */

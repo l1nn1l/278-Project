@@ -9,12 +9,6 @@ import { Router } from '@angular/router';
 import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
-interface Item {
-  id: number;
-  name: string;
-  type: 'file' | 'folder';
-  modified: string;
-}
 
 @Component({
   selector: 'app-sharedwithme',
@@ -30,42 +24,23 @@ interface Item {
 })
 export class SharedwithmeComponent {
   showActions: boolean = false;
-  selectedItem: Item | null = null;
+  selectedItem: DocumentDTO | null = null;
   isGridView: boolean = true;
   contentType: 'files' | 'folders' = 'files';
-  selectedItems: Item[] = [];
+  selectedItems: DocumentDTO[] = [];
   isSelecting: boolean = false;
   selectionBoxStyle = {};
   startSelectionPosition = { x: 0, y: 0 };
-  items: Item[] = [
-    { id: 1, name: 'Assignment1.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 2, name: 'Assignment2.ipynb', type: 'folder', modified: 'Mar 30, 2024' },
-    { id: 3, name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 4, name: 'Assignment4.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 5, name: 'Assignment5.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 6, name: 'Assignment6.ipynb', type: 'folder', modified: 'Mar 30, 2024' },
-    { id: 7, name: 'Assignment7.ipynb', type: 'folder', modified: 'Mar 30, 2024' },
-    { id: 8, name: 'Assignment8.ipynb', type: 'folder', modified: 'Mar 30, 2024' },
-    { id: 9, name: 'Assignment9.ipynb', type: 'folder', modified: 'Mar 30, 2024' },
-    { id: 10, name: 'Assignment10.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 11, name: 'Assignment11.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 12, name: 'Assignment12.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 13, name: 'Assignment13.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 14, name: 'Assignment14.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 15, name: 'Assignment15.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 16, name: 'Assignment16.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 17, name: 'Assignment17.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 18, name: 'Assignment18.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 19, name: 'Assignment19.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 20, name: 'Assignment20.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-  ];
 
   documents:DocumentDTO[]=[];
+  owner= localStorage.getItem('User_Email');
 
   constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService:DocumentService, private router:Router) { }
+
   ngOnInit() {
-    this.getDocuments();
-   }
+  this.getDocuments();
+  }
+  
   setListView(): void {
     this.isGridView = false;
   }
@@ -78,9 +53,9 @@ export class SharedwithmeComponent {
     this.contentType = type;
   }
 
-  get displayedItems(): Item[] {
-    return this.items; // Display all items without filtering
-  }
+  // get displayedItems(): Item[] {
+  //   return this.items; // Display all items without filtering
+  // }
   getOwner(item: any) {
     // Download logic
   }
@@ -106,19 +81,8 @@ export class SharedwithmeComponent {
     // Add any additional logic needed when the name is clicked
   }
 
-  
-  getFolders() {
-    return this.displayedItems.filter(item => item.type === 'folder');
-  }
-
-  // Method to filter files
-  getFiles() {
-    return this.displayedItems.filter(item => item.type === 'file');
-  }
-
-
-  toggleActions(item: Item): void {
-    console.log('Toggle actions for:', item.name);
+  toggleActions(item: DocumentDTO): void {
+    console.log('Toggle actions for:', item.title);
     if (this.selectedItem === item) {
       this.selectedItem = null;
       this.showActions = false;
@@ -142,8 +106,8 @@ export class SharedwithmeComponent {
     console.log('Selection cleared. Current selectedItems:', this.selectedItems);
   }
 
-  isSelected(item: Item): boolean {
-    return this.selectedItems.some(selectedItem => selectedItem.id === item.id);
+  isSelected(item: DocumentDTO): boolean {
+    return this.selectedItems.some(selectedItem => selectedItem._id === item._id);
   }
   startSelection(event: MouseEvent): void {
     this.isSelecting = true;
@@ -196,8 +160,8 @@ export class SharedwithmeComponent {
     };
   
     // Filter the items to find which ones intersect with the selection box
-    this.selectedItems = this.items.filter(item => {
-      const itemElement = document.getElementById(`item-${item.id}`);
+    this.selectedItems = this.documents.filter(item => {
+      const itemElement = document.getElementById(`item-${item._id}`);
       if (itemElement) {
         const rect = itemElement.getBoundingClientRect();
         return (
@@ -215,20 +179,20 @@ export class SharedwithmeComponent {
     this.showActions = this.selectedItems.length > 0;
     this.selectionBoxStyle = {}; // Reset the selection box style
     this.cd.detectChanges();
-    console.log('Selected items:', this.selectedItems.map(item => item.id));
+    console.log('Selected items:', this.selectedItems.map(item => item._id));
     // Optional: log selected items
     this.logSelectedItems();
   }
   
 
-  handleItemMouseDown(event: MouseEvent, item: Item): void {
+  handleItemMouseDown(event: MouseEvent, item: DocumentDTO): void {
     event.stopPropagation();
   
     const isSelected = this.isSelected(item);
   
     if (event.ctrlKey || event.metaKey) {
       if (isSelected) {
-        this.selectedItems = this.selectedItems.filter(selectedItem => selectedItem.id !== item.id);
+        this.selectedItems = this.selectedItems.filter(selectedItem => selectedItem._id !== item._id);
       } else {
         this.selectedItems = [...this.selectedItems, item];
       }
@@ -243,9 +207,48 @@ export class SharedwithmeComponent {
 
   logSelectedItems(): void {
     this.selectedItems.forEach(item => {
-      console.log('Selected Item Name:', item.name);
+      console.log('Selected Item Name:', item.title);
     });
   }
+
+  sortItemsByModifiedDate(): void {
+    this.documents.sort((a, b) => {
+      // Convert to date objects to compare
+      const dateA = new Date(a.uploadDate);
+      const dateB = new Date(b.uploadDate);
+      // Sort in descending order
+      return dateB.getTime() - dateA.getTime();
+    });
+  }
+
+  getDateString(dateStr: string): string {
+    const date = new Date(dateStr);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1));
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const startOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    const startOfYear = new Date(today.getFullYear(), 0, 1);
+  
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today';
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
+    } else if (date >= startOfWeek) {
+      return 'Earlier this week';
+    } else if (date >= startOfMonth) {
+      return 'Earlier this month';
+    } else if (date < startOfMonth && date >= startOfLastMonth) {
+      return 'Last month';
+    } else if (date >= startOfYear) {
+      return 'Earlier this year';
+    } else {
+      return 'Older';
+    }
+  }
+  
 
   getDocuments() {
     // this.isLoading = true;
@@ -254,6 +257,7 @@ export class SharedwithmeComponent {
         console.log('Response:', response);
         this.documents = response.data;
         // this.isLoading = false;
+        this.sortItemsByModifiedDate(); // Sort after the documents are fetched
         console.log('These are the Documents from the database', this.documents);
       },
       (error) => {
