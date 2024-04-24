@@ -140,7 +140,7 @@ export class MainContentComponent {
   }
 
   isSelected(item: DocumentDTO): boolean {
-    return this.selectedItems.some(selectedItem => selectedItem.id === item.id);
+    return this.selectedItems.some(selectedItem => selectedItem._id === item._id);
   }
   startSelection(event: MouseEvent): void {
     this.isSelecting = true;
@@ -194,7 +194,7 @@ export class MainContentComponent {
   
     // Filter the items to find which ones intersect with the selection box
     this.selectedItems = this.documents.filter(item => {
-      const itemElement = document.getElementById(`item-${item.id}`);
+      const itemElement = document.getElementById(`item-${item._id}`);
       if (itemElement) {
         const rect = itemElement.getBoundingClientRect();
         return (
@@ -212,7 +212,7 @@ export class MainContentComponent {
     this.showActions = this.selectedItems.length > 0;
     this.selectionBoxStyle = {}; // Reset the selection box style
     this.cd.detectChanges();
-    console.log('Selected items:', this.selectedItems.map(item => item.id));
+    console.log('Selected items:', this.selectedItems.map(item => item._id));
     // Optional: log selected items
     this.logSelectedItems();
   }
@@ -225,7 +225,7 @@ export class MainContentComponent {
   
     if (event.ctrlKey || event.metaKey) {
       if (isSelected) {
-        this.selectedItems = this.selectedItems.filter(selectedItem => selectedItem.id !== item.id);
+        this.selectedItems = this.selectedItems.filter(selectedItem => selectedItem._id !== item._id);
       } else {
         this.selectedItems = [...this.selectedItems, item];
       }

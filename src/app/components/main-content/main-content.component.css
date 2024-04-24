@@ -12,6 +12,10 @@ app-main-content {
   flex-grow: 1;
 }
 
+.main-content-div{
+  height: 100vh;
+}
+
 
 .scrollable-content {
   overflow-y: scroll; /* This part will scroll */

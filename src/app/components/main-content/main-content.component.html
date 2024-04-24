@@ -1,4 +1,4 @@
-<div (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)" (mouseup)="endSelection($event)">
+<div class="main-content-div" (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)" (mouseup)="endSelection($event)">
   <div *ngIf="isSelecting" [ngStyle]="selectionBoxStyle" class="selection-box"></div>
     <div class="filter-header">
       <!-- Filter options -->
@@ -80,7 +80,7 @@
         </div>
 
         <!-- Items for grid or list view -->
-        <div class="item" *ngFor="let document of documents" [id]="'item-' + document.id"
+        <div class="item" *ngFor="let document of documents" [id]="'item-' + document._id"
           [ngClass]="{'selected': isSelected(document)}" (mousedown)="handleItemMouseDown($event, document)">
           <!-- Item content -->
           <!-- Grid view -->
