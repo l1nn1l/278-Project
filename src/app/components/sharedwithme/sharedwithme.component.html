@@ -81,7 +81,7 @@
           <!-- Grid view -->
           <div *ngIf="isGridView" class="content-grid">
             <div class="item-header">
-              <i class="material-icons">{{ document.type === 'file' ? 'picture_as_pdf' : 'folder' }}</i>
+              <i class="material-icons">{{ document.type !== 'folder' ? 'picture_as_pdf' : 'folder' }}</i>
               <div class="filename">{{ document.title }}</div>
               <button class="round-button" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
                 <i class="material-icons">more_vert</i>
@@ -92,8 +92,7 @@
                 <ng-template matMenuContent>
                   <!-- Submenu for Name -->
                   <button mat-menu-item [matMenuTriggerFor]="nameSubMenu" matMenuTriggerData="{item: item}"
-                    #trigger="matMenuTrigger" (mouseenter)="trigger.openMenu()" (mouseleave)="trigger.closeMenu()"
-                    (click)="getName(document)">
+                    #trigger="matMenuTrigger" (mouseenter)="trigger.openMenu()" (mouseleave)="trigger.closeMenu()">
                     <span>Name</span>
                   </button>
                   <mat-menu #nameSubMenu="matMenu">
@@ -107,13 +106,13 @@
                   <!-- Submenu for Owner -->
                   <button mat-menu-item [matMenuTriggerFor]="ownerSubMenu" matMenuTriggerData="{item: item}"
                     #ownerTrigger="matMenuTrigger" (mouseenter)="ownerTrigger.openMenu()"
-                    (mouseleave)="ownerTrigger.closeMenu()" (click)="getOwner(document)">
+                    (mouseleave)="ownerTrigger.closeMenu()">
                     <span>Owner</span>
                   </button>
                   <mat-menu #ownerSubMenu="matMenu">
                     <ng-template matMenuContent>
                       <button mat-menu-item>
-                        {{ document.title }}
+                        {{ owner }}
                       </button>
                     </ng-template>
                   </mat-menu>
@@ -121,7 +120,7 @@
                   <!-- Submenu for Date -->
                   <button mat-menu-item [matMenuTriggerFor]="dateSubMenu" matMenuTriggerData="{item: item}"
                     #dateTrigger="matMenuTrigger" (mouseenter)="dateTrigger.openMenu()"
-                    (mouseleave)="dateTrigger.closeMenu()" (click)="getDate(document)" *ngIf="document.type === 'file'">
+                    (mouseleave)="dateTrigger.closeMenu()" *ngIf="document.type !== 'folder'">
                     <span>Date</span>
                   </button>
                   <mat-menu #dateSubMenu="matMenu">
@@ -135,13 +134,13 @@
                   <!-- Submenu for Location -->
                   <button mat-menu-item [matMenuTriggerFor]="locationSubMenu" matMenuTriggerData="{item: item}"
                     #locationTrigger="matMenuTrigger" (mouseenter)="locationTrigger.openMenu()"
-                    (mouseleave)="locationTrigger.closeMenu()" (click)="getLocation(document)">
+                    (mouseleave)="locationTrigger.closeMenu()">
                     <span>Location</span>
                   </button>
                   <mat-menu #locationSubMenu="matMenu">
                     <ng-template matMenuContent>
                       <button mat-menu-item>
-                        {{ document.title }}
+                        {{ document.filePath }}
                       </button>
                     </ng-template>
                   </mat-menu>
@@ -155,10 +154,10 @@
 
 
             </div>
-            <div class="item-image" *ngIf="document.type === 'file'">
+            <div class="item-image" *ngIf="document.type !== 'folder'">
               <img alt="File image">
             </div>
-            <div class="item-info" *ngIf="document.type === 'file'">
+            <div class="item-info" *ngIf="document.type !== 'folder'">
               <div class="meta">{{ document.uploadDate | date:'medium' }}</div>
             </div>
           </div>
@@ -168,7 +167,7 @@
           <div *ngIf="!isGridView" class="content-list">
             <div class="list-item">
               <div class="item-icon">
-                <i class="material-icons">insert_drive_file</i>
+                <i class="material-icons">{{ document.type !== 'folder' ? 'picture_as_pdf' : 'folder' }}</i>
               </div>
               <div class="item-name">{{ document.title }}</div>
               <div class="item-reason">{{ document.title }}</div>

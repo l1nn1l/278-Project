@@ -32,15 +32,15 @@ export class SharedwithmeComponent {
   selectionBoxStyle = {};
   startSelectionPosition = { x: 0, y: 0 };
 
-  documents:DocumentDTO[]=[];
-  owner= localStorage.getItem('User_Email');
+  documents: DocumentDTO[] = [];
+  owner = localStorage.getItem('User_Email');
 
-  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService:DocumentService, private router:Router) { }
+  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService: DocumentService, private router: Router) { }
 
   ngOnInit() {
-  this.getDocuments();
+    this.getDocuments();
   }
-  
+
   setListView(): void {
     this.isGridView = false;
   }
@@ -53,20 +53,6 @@ export class SharedwithmeComponent {
     this.contentType = type;
   }
 
-  // get displayedItems(): Item[] {
-  //   return this.items; // Display all items without filtering
-  // }
-  getOwner(item: any) {
-    // Download logic
-  }
-
-  getDate(item: any) {
-    // Move to trash logic
-  }
-
-  getLocation(item: any) {
-    // View details logic
-  }
 
   moveToTrash(item: any) {
     // View details logic
@@ -74,23 +60,6 @@ export class SharedwithmeComponent {
 
   viewDetails(item: any) {
     // View details logic
-  }
-
-  getName(item: any): void {
-    console.log('Item Name:', item.name);
-    // Add any additional logic needed when the name is clicked
-  }
-
-  toggleActions(item: DocumentDTO): void {
-    console.log('Toggle actions for:', item.title);
-    if (this.selectedItem === item) {
-      this.selectedItem = null;
-      this.showActions = false;
-    } else {
-      this.selectedItem = item;
-      this.showActions = true;
-    }
-    console.log('Current state of selectedItem:', this.selectedItem);
   }
 
   closeActions(): void {
@@ -119,7 +88,7 @@ export class SharedwithmeComponent {
       width: '0px',
       height: '0px'
     };
-    event.preventDefault(); // Prevent text selection
+    event.preventDefault();
   }
 
   updateSelection(event: MouseEvent): void {
@@ -142,24 +111,21 @@ export class SharedwithmeComponent {
     if (!this.isSelecting) {
       console.log('Selection ended without starting');
       return;
-    }  
-    // Calculate the bounds of the selection box
+    }
     const selectionBounds = {
       x1: this.startSelectionPosition.x,
       y1: this.startSelectionPosition.y,
       x2: event.clientX,
       y2: event.clientY
     };
-  
-    // Normalize the coordinates to always have the smallest values in x1/y1
+
     const normalizedBounds = {
       x1: Math.min(selectionBounds.x1, selectionBounds.x2),
       y1: Math.min(selectionBounds.y1, selectionBounds.y2),
       x2: Math.max(selectionBounds.x1, selectionBounds.x2),
       y2: Math.max(selectionBounds.y1, selectionBounds.y2)
     };
-  
-    // Filter the items to find which ones intersect with the selection box
+
     this.selectedItems = this.documents.filter(item => {
       const itemElement = document.getElementById(`item-${item._id}`);
       if (itemElement) {
@@ -173,23 +139,20 @@ export class SharedwithmeComponent {
       }
       return false;
     });
-  
-    // Update the state to reflect the selection
+
     this.isSelecting = false;
     this.showActions = this.selectedItems.length > 0;
-    this.selectionBoxStyle = {}; // Reset the selection box style
+    this.selectionBoxStyle = {};
     this.cd.detectChanges();
     console.log('Selected items:', this.selectedItems.map(item => item._id));
-    // Optional: log selected items
-    this.logSelectedItems();
   }
-  
+
 
   handleItemMouseDown(event: MouseEvent, item: DocumentDTO): void {
     event.stopPropagation();
-  
+
     const isSelected = this.isSelected(item);
-  
+
     if (event.ctrlKey || event.metaKey) {
       if (isSelected) {
         this.selectedItems = this.selectedItems.filter(selectedItem => selectedItem._id !== item._id);
@@ -199,7 +162,7 @@ export class SharedwithmeComponent {
     } else {
       this.selectedItems = isSelected ? [] : [item];
     }
-  
+
     this.showActions = this.selectedItems.length > 0;
     this.cd.detectChanges();
   }
@@ -213,10 +176,8 @@ export class SharedwithmeComponent {
 
   sortItemsByModifiedDate(): void {
     this.documents.sort((a, b) => {
-      // Convert to date objects to compare
       const dateA = new Date(a.uploadDate);
       const dateB = new Date(b.uploadDate);
-      // Sort in descending order
       return dateB.getTime() - dateA.getTime();
     });
   }
@@ -231,7 +192,7 @@ export class SharedwithmeComponent {
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
     const startOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
     const startOfYear = new Date(today.getFullYear(), 0, 1);
-  
+
     if (date.toDateString() === today.toDateString()) {
       return 'Today';
     } else if (date.toDateString() === yesterday.toDateString()) {
@@ -248,7 +209,7 @@ export class SharedwithmeComponent {
       return 'Older';
     }
   }
-  
+
 
   getDocuments() {
     // this.isLoading = true;
@@ -267,10 +228,8 @@ export class SharedwithmeComponent {
           console.log('Redirecting to Login Page');
           this.router.navigate(['/login']);
         }
-
-        // this.isLoading = false;
       }
     );
   }
-  
+
 }
