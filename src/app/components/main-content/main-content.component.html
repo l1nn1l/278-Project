@@ -26,7 +26,7 @@
     <div class="left">
       <span></span>
       <button class="type-button" [ngClass]="{'active': contentType !== 'folder'}" (click)="toggleContentType('file')">
-        <i class="material-icons">{{ contentType === 'file' ? 'check' : 'description' }}</i>Files
+        <i class="material-icons">{{ contentType !== 'folder' ? 'check' : 'description' }}</i>Files
       </button>
       <button class="type-button" [ngClass]="{'active': contentType === 'folder'}"
         (click)="toggleContentType('folder')">
