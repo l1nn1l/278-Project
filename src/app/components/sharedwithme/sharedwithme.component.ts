@@ -252,13 +252,13 @@ export class SharedwithmeComponent {
 
   getDocuments() {
     // this.isLoading = true;
-    this.documentService.getOwnedDocuments(localStorage.getItem('id')).subscribe(
+    this.documentService.getSharedDocuments(localStorage.getItem('id')).subscribe(
       (response) => {
         console.log('Response:', response);
         this.documents = response.data;
         // this.isLoading = false;
         this.sortItemsByModifiedDate(); // Sort after the documents are fetched
-        console.log('These are the Documents from the database', this.documents);
+        console.log('These are the Shared Documents from the database', this.documents);
       },
       (error) => {
         if (error.status == 401) {

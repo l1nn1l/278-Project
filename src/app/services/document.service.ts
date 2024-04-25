@@ -26,5 +26,17 @@ export class DocumentService {
     return this.http.get<ApiResponse>(urlWithId, { headers: headers });
   }
 
+  getSharedDocuments(id: any): Observable<any> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${localStorage.getItem('Access_Token')}`
+    );
+    console.log("This is the access token before sending APi call",localStorage.getItem('Access_Token'));
+    // Use template literals to append the id to the getUserUrl
+    const urlWithId = `${this.baseUrl}${this.getSharedDocumentsUrl}${id}`;
+    console.log("This is the URL were sending the API to ", urlWithId)
+    return this.http.get<ApiResponse>(urlWithId, { headers: headers });
+  }
+
 
 }
