@@ -7,7 +7,7 @@ import { MainContentComponent } from './components/main-content/main-content.com
 import { SharedwithmeComponent } from './components/sharedwithme/sharedwithme.component';
 
 export const routes: Routes = [
-    {path: 'main', component: MainPageComponent,
+    {path: 'main', component: MainPageComponent, 
         children:[
             {path:'mydrive', component:MyDriveComponent},
             {path:'home', component:MainContentComponent},
