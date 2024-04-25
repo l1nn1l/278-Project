@@ -9,13 +9,12 @@ import {
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
+import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
+import { DocumentService } from '../../services/document.service';
+import { Router } from '@angular/router';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 
-interface Item {
-  id: number;
-  name: string;
-  type: 'file' | 'folder';
-  modified: string;
-}
 
 @Component({
   selector: 'app-my-drive',
@@ -24,140 +23,30 @@ interface Item {
   templateUrl: './my-drive.component.html',
   styleUrl: './my-drive.component.css',
   encapsulation: ViewEncapsulation.None,
+  providers: [
+    DocumentService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ]
 })
 export class MyDriveComponent {
   showActions: boolean = false;
-  selectedItem: Item | null = null;
+  selectedItem: DocumentDTO | null = null;
   isGridView: boolean = true;
-  contentType: 'files' | 'folders' = 'files';
-  selectedItems: Item[] = [];
+  contentType: 'file' | 'folder' = 'file';
+  selectedItems: DocumentDTO[] = [];
   isSelecting: boolean = false;
   selectionBoxStyle = {};
   startSelectionPosition = { x: 0, y: 0 };
-  items: Item[] = [
-    {
-      id: 1,
-      name: 'Assignment1.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 2,
-      name: 'Assignment2.ipynb',
-      type: 'folder',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 3,
-      name: 'Assignment3.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 4,
-      name: 'Assignment4.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 5,
-      name: 'Assignment5.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 6,
-      name: 'Assignment6.ipynb',
-      type: 'folder',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 7,
-      name: 'Assignment7.ipynb',
-      type: 'folder',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 8,
-      name: 'Assignment8.ipynb',
-      type: 'folder',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 9,
-      name: 'Assignment9.ipynb',
-      type: 'folder',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 10,
-      name: 'Assignment10.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 11,
-      name: 'Assignment11.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 12,
-      name: 'Assignment12.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 13,
-      name: 'Assignment13.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 14,
-      name: 'Assignment14.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 15,
-      name: 'Assignment15.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 16,
-      name: 'Assignment16.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 17,
-      name: 'Assignment17.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 18,
-      name: 'Assignment18.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 19,
-      name: 'Assignment19.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-    {
-      id: 20,
-      name: 'Assignment20.ipynb',
-      type: 'file',
-      modified: 'Mar 30, 2024',
-    },
-  ];
+  documents: DocumentDTO[] = [];
+  owner = localStorage.getItem('User_Email');
 
-  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef) {}
+
+  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService: DocumentService, private router: Router) { }
+
+
+  ngOnInit() {
+    this.getDocuments();
+  }
 
   setListView(): void {
     this.isGridView = false;
@@ -167,24 +56,14 @@ export class MyDriveComponent {
     this.isGridView = true;
   }
 
-  toggleContentType(type: 'files' | 'folders'): void {
+  toggleContentType(type: 'file' | 'folder'): void {
     this.contentType = type;
   }
 
-  get displayedItems(): Item[] {
-    return this.items; // Display all items without filtering
-  }
-  getOwner(item: any) {
-    // Download logic
+  get displayedItems(): DocumentDTO[] {
+    return this.documents;
   }
 
-  getDate(item: any) {
-    // Move to trash logic
-  }
-
-  getLocation(item: any) {
-    // View details logic
-  }
 
   moveToTrash(item: any) {
     // View details logic
@@ -194,31 +73,14 @@ export class MyDriveComponent {
     // View details logic
   }
 
-  getName(item: any): void {
-    console.log('Item Name:', item.name);
-    // Add any additional logic needed when the name is clicked
-  }
-
   getFolders() {
     return this.displayedItems.filter((item) => item.type === 'folder');
   }
 
-  // Method to filter files
   getFiles() {
-    return this.displayedItems.filter((item) => item.type === 'file');
+    return this.displayedItems.filter((item) => item.type !== 'folder');
   }
 
-  toggleActions(item: Item): void {
-    console.log('Toggle actions for:', item.name);
-    if (this.selectedItem === item) {
-      this.selectedItem = null;
-      this.showActions = false;
-    } else {
-      this.selectedItem = item;
-      this.showActions = true;
-    }
-    console.log('Current state of selectedItem:', this.selectedItem);
-  }
 
   closeActions(): void {
     this.selectedItem = null;
@@ -239,9 +101,9 @@ export class MyDriveComponent {
     );
   }
 
-  isSelected(item: Item): boolean {
+  isSelected(item: DocumentDTO): boolean {
     return this.selectedItems.some(
-      (selectedItem) => selectedItem.id === item.id
+      (selectedItem) => selectedItem._id === item._id
     );
   }
   startSelection(event: MouseEvent): void {
@@ -254,7 +116,7 @@ export class MyDriveComponent {
       width: '0px',
       height: '0px',
     };
-    event.preventDefault(); // Prevent text selection
+    event.preventDefault();
   }
 
   updateSelection(event: MouseEvent): void {
@@ -278,7 +140,6 @@ export class MyDriveComponent {
       console.log('Selection ended without starting');
       return;
     }
-    // Calculate the bounds of the selection box
     const selectionBounds = {
       x1: this.startSelectionPosition.x,
       y1: this.startSelectionPosition.y,
@@ -286,7 +147,6 @@ export class MyDriveComponent {
       y2: event.clientY,
     };
 
-    // Normalize the coordinates to always have the smallest values in x1/y1
     const normalizedBounds = {
       x1: Math.min(selectionBounds.x1, selectionBounds.x2),
       y1: Math.min(selectionBounds.y1, selectionBounds.y2),
@@ -294,9 +154,8 @@ export class MyDriveComponent {
       y2: Math.max(selectionBounds.y1, selectionBounds.y2),
     };
 
-    // Filter the items to find which ones intersect with the selection box
-    this.selectedItems = this.items.filter((item) => {
-      const itemElement = document.getElementById(`item-${item.id}`);
+    this.selectedItems = this.documents.filter((item) => {
+      const itemElement = document.getElementById(`item-${item._id}`);
       if (itemElement) {
         const rect = itemElement.getBoundingClientRect();
         return (
@@ -309,20 +168,17 @@ export class MyDriveComponent {
       return false;
     });
 
-    // Update the state to reflect the selection
     this.isSelecting = false;
     this.showActions = this.selectedItems.length > 0;
-    this.selectionBoxStyle = {}; // Reset the selection box style
+    this.selectionBoxStyle = {};
     this.cd.detectChanges();
     console.log(
       'Selected items:',
-      this.selectedItems.map((item) => item.id)
+      this.selectedItems.map((item) => item._id)
     );
-    // Optional: log selected items
-    this.logSelectedItems();
   }
 
-  handleItemMouseDown(event: MouseEvent, item: Item): void {
+  handleItemMouseDown(event: MouseEvent, item: DocumentDTO): void {
     event.stopPropagation();
 
     const isSelected = this.isSelected(item);
@@ -330,7 +186,7 @@ export class MyDriveComponent {
     if (event.ctrlKey || event.metaKey) {
       if (isSelected) {
         this.selectedItems = this.selectedItems.filter(
-          (selectedItem) => selectedItem.id !== item.id
+          (selectedItem) => selectedItem._id !== item._id
         );
       } else {
         this.selectedItems = [...this.selectedItems, item];
@@ -343,9 +199,25 @@ export class MyDriveComponent {
     this.cd.detectChanges();
   }
 
-  logSelectedItems(): void {
-    this.selectedItems.forEach((item) => {
-      console.log('Selected Item Name:', item.name);
-    });
+  //HERE WE GETT ALL THE DOCUMENTS:
+  getDocuments() {
+    this.documentService.getOwnedDocuments(localStorage.getItem('id')).subscribe(
+      (response) => {
+        console.log('Response:', response);
+        this.documents = response.data;
+        this.getFolders();
+        this.getFiles();
+        console.log('These are the Documents from the database', this.documents);
+      },
+      (error) => {
+        if (error.status == 401) {
+          console.error('Error:', error);
+          console.log('Authentication Token Expired');
+          console.log('Redirecting to Login Page');
+          this.router.navigate(['/login']);
+        }
+      }
+    );
   }
+
 }

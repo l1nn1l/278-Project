@@ -9,13 +9,6 @@ import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
 import { Router } from '@angular/router';
 
 
-interface Item {
-  id: number;
-  name: string;
-  type: 'file' | 'folder';
-  modified: string;
-}
-
 
 @Component({
   selector: 'app-main-content',
@@ -32,44 +25,23 @@ interface Item {
 })
 export class MainContentComponent {
   showActions: boolean = false;
-  selectedItem: Item | null = null;
+  selectedItem: DocumentDTO | null = null;
   isGridView: boolean = true;
-  contentType: 'files' | 'folders' = 'files';
+  contentType: 'file' | 'folder' = 'file';
   selectedItems: DocumentDTO[] = [];
   isSelecting: boolean = false;
   selectionBoxStyle = {};
   startSelectionPosition = { x: 0, y: 0 };
-  items: Item[] = [
-    { id: 1, name: 'Assignment1.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 2, name: 'Assignment2.ipynb', type: 'folder', modified: 'Mar 30, 2024' },
-    { id: 3, name: 'Assignment3.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 4, name: 'Assignment4.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 5, name: 'Assignment5.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 6, name: 'Assignment6.ipynb', type: 'folder', modified: 'Mar 30, 2024' },
-    { id: 7, name: 'Assignment7.ipynb', type: 'folder', modified: 'Mar 30, 2024' },
-    { id: 8, name: 'Assignment8.ipynb', type: 'folder', modified: 'Mar 30, 2024' },
-    { id: 9, name: 'Assignment9.ipynb', type: 'folder', modified: 'Mar 30, 2024' },
-    { id: 10, name: 'Assignment10.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 11, name: 'Assignment11.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 12, name: 'Assignment12.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 13, name: 'Assignment13.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 14, name: 'Assignment14.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 15, name: 'Assignment15.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 16, name: 'Assignment16.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 17, name: 'Assignment17.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 18, name: 'Assignment18.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 19, name: 'Assignment19.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-    { id: 20, name: 'Assignment20.ipynb', type: 'file', modified: 'Mar 30, 2024' },
-  ];
 
-  documents: DocumentDTO[]=[];
-  owner= localStorage.getItem('User_Email');
-  
 
-  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService:DocumentService, private router:Router) { }
+  documents: DocumentDTO[] = [];
+  owner = localStorage.getItem('User_Email');
+
+
+  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService: DocumentService, private router: Router) { }
 
   ngOnInit() {
-   this.getDocuments();
+    this.getDocuments();
   }
 
   setListView(): void {
@@ -80,25 +52,21 @@ export class MainContentComponent {
     this.isGridView = true;
   }
 
-  toggleContentType(type: 'files' | 'folders'): void {
+  toggleContentType(type: 'file' | 'folder'): void {
     this.contentType = type;
   }
 
-  get displayedItems(): Item[] {
-    return this.items.filter(item => this.contentType === 'files' ? item.type === 'file' : item.type === 'folder');
+  getDisplayedItems(): DocumentDTO[] {
+    console.log('All documents:', this.documents);
+    console.log('Current content type:', this.contentType);
+
+    const filteredItems = this.documents.filter(item =>
+      this.contentType === 'folder' ? item.type === 'folder' : item.type !== 'folder');
+
+    console.log('Filtered items:', filteredItems);
+    return filteredItems;
   }
 
-  getOwner(item: any) {
-    // Download logic
-  }
-
-  getDate(item: any) {
-    // Move to trash logic
-  }
-
-  getLocation(item: any) {
-    // View details logic
-  }
 
   moveToTrash(item: any) {
     // View details logic
@@ -106,24 +74,6 @@ export class MainContentComponent {
 
   viewDetails(item: any) {
     // View details logic
-  }
-
-  getName(item: any): void {
-    console.log('Item Name:', item.name);
-    // Add any additional logic needed when the name is clicked
-  }
-
-
-  toggleActions(item: Item): void {
-    console.log('Toggle actions for:', item.name);
-    if (this.selectedItem === item) {
-      this.selectedItem = null;
-      this.showActions = false;
-    } else {
-      this.selectedItem = item;
-      this.showActions = true;
-    }
-    console.log('Current state of selectedItem:', this.selectedItem);
   }
 
   closeActions(): void {
@@ -175,7 +125,7 @@ export class MainContentComponent {
     if (!this.isSelecting) {
       console.log('Selection ended without starting');
       return;
-    }  
+    }
     // Calculate the bounds of the selection box
     const selectionBounds = {
       x1: this.startSelectionPosition.x,
@@ -183,7 +133,7 @@ export class MainContentComponent {
       x2: event.clientX,
       y2: event.clientY
     };
-  
+
     // Normalize the coordinates to always have the smallest values in x1/y1
     const normalizedBounds = {
       x1: Math.min(selectionBounds.x1, selectionBounds.x2),
@@ -191,7 +141,7 @@ export class MainContentComponent {
       x2: Math.max(selectionBounds.x1, selectionBounds.x2),
       y2: Math.max(selectionBounds.y1, selectionBounds.y2)
     };
-  
+
     // Filter the items to find which ones intersect with the selection box
     this.selectedItems = this.documents.filter(item => {
       const itemElement = document.getElementById(`item-${item._id}`);
@@ -206,7 +156,7 @@ export class MainContentComponent {
       }
       return false;
     });
-  
+
     // Update the state to reflect the selection
     this.isSelecting = false;
     this.showActions = this.selectedItems.length > 0;
@@ -216,13 +166,13 @@ export class MainContentComponent {
     // Optional: log selected items
     this.logSelectedItems();
   }
-  
+
 
   handleItemMouseDown(event: MouseEvent, item: DocumentDTO): void {
     event.stopPropagation();
-  
+
     const isSelected = this.isSelected(item);
-  
+
     if (event.ctrlKey || event.metaKey) {
       if (isSelected) {
         this.selectedItems = this.selectedItems.filter(selectedItem => selectedItem._id !== item._id);
@@ -232,7 +182,7 @@ export class MainContentComponent {
     } else {
       this.selectedItems = isSelected ? [] : [item];
     }
-  
+
     this.showActions = this.selectedItems.length > 0;
     this.cd.detectChanges();
   }
@@ -247,12 +197,11 @@ export class MainContentComponent {
 
   //HERE WE GETT ALL THE DOCUMENTS:
   getDocuments() {
-    // this.isLoading = true;
     this.documentService.getOwnedDocuments(localStorage.getItem('id')).subscribe(
       (response) => {
         console.log('Response:', response);
         this.documents = response.data;
-        // this.isLoading = false;
+        this.getDisplayedItems();
         console.log('These are the Documents from the database', this.documents);
       },
       (error) => {
@@ -262,12 +211,10 @@ export class MainContentComponent {
           console.log('Redirecting to Login Page');
           this.router.navigate(['/login']);
         }
-
-        // this.isLoading = false;
       }
     );
   }
-  
+
 
 }
 

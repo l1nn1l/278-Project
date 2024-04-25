@@ -9,7 +9,10 @@ export class DocumentDTO {
     public fileSize: number,
     public sharedWith: any[],
     public deleted: boolean,
-    public type: string
-
+    public type: string,
+    public starred: boolean,
+    public refDocs: any[],
+    public parentDir: string,
+    public dateOfLastModified: string
   ) {}
 }

@@ -1,196 +1,195 @@
-<div class="main-content-div" (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)" (mouseup)="endSelection($event)">
+<div class="main-content-div" (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)"
+  (mouseup)="endSelection($event)">
   <div *ngIf="isSelecting" [ngStyle]="selectionBoxStyle" class="selection-box"></div>
-    <div class="filter-header">
-      <!-- Filter options -->
-      <div class="filter-item">
-        <button class="filter-button"><i class="material-icons">topic</i>Type<i
-            class="material-icons">arrow_drop_down</i></button>
-      </div>
-      <div class="filter-item">
-        <button class="filter-button"><i class="material-icons">person</i>People<i
-            class="material-icons">arrow_drop_down</i></button>
-      </div>
-      <div class="filter-item">
-        <button class="filter-button"><i class="material-icons">calendar_today</i>Modified<i
-            class="material-icons">arrow_drop_down</i></button>
-      </div>
-      <div class="filter-item">
-        <button class="filter-button"><i class="material-icons">folder_open</i>Location<i
-            class="material-icons">arrow_drop_down</i></button>
-      </div>
+  <div class="filter-header">
+    <!-- Filter options -->
+    <div class="filter-item">
+      <button class="filter-button"><i class="material-icons">topic</i>Type<i
+          class="material-icons">arrow_drop_down</i></button>
     </div>
-
-    <div *ngIf="!showActions" class="tab-section">
-      <!-- Tab navigation -->
-      <div class="left">
-        <span></span>
-        <button class="type-button" [ngClass]="{'active': contentType === 'files'}"
-          (click)="toggleContentType('files')">
-          <i class="material-icons">{{ contentType === 'files' ? 'check' : 'description' }}</i>Files
-        </button>
-        <button class="type-button" [ngClass]="{'active': contentType === 'folders'}"
-          (click)="toggleContentType('folders')">
-          <i class="material-icons">{{ contentType === 'folders' ? 'check' : 'folder_open' }}</i>Folders
-        </button>
-      </div>
-      <div class="right">
-        <!-- Layout switch buttons -->
-        <button class="layout-button" [ngClass]="{'active': !isGridView}" (click)="setListView()">
-          <i class="material-icons">{{ !isGridView ? 'check' : 'menu' }}</i>
-        </button>
-        <button class="layout-button" [ngClass]="{'active': isGridView}" (click)="setGridView()">
-          <i class="material-icons">{{ isGridView ? 'check' : 'apps' }}</i>
-        </button>
-      </div>
+    <div class="filter-item">
+      <button class="filter-button"><i class="material-icons">person</i>People<i
+          class="material-icons">arrow_drop_down</i></button>
     </div>
-
-    <div *ngIf="showActions" class="actions-section">
-      <!-- Actions when an item is selected -->
-      <div class="actions">
-        <div *ngIf="selectedItems.length > 0" class="actions-section">
-          <div class="actions-section-content">
-            {{ selectedItems.length }} selected
-            <div>
-              <button class="round-button" (click)="clearSelection()"><i class="material-icons">close</i></button>
-              <!-- Additional action buttons -->
-              <button class="round-button"><i class="material-icons">person_add</i></button>
-              <button class="round-button"><i class="material-icons">download</i></button>
-              <button class="round-button"><i class="material-icons">input</i></button>
-              <button class="round-button"><i class="material-icons">delete</i></button>
-              <button class="round-button"><i class="material-icons">link</i></button>
-              <button class="round-button"><i class="material-icons">more_vert</i></button>
-            </div> 
-        </div>
-        </div>
-      </div>
-
+    <div class="filter-item">
+      <button class="filter-button"><i class="material-icons">calendar_today</i>Modified<i
+          class="material-icons">arrow_drop_down</i></button>
     </div>
+    <div class="filter-item">
+      <button class="filter-button"><i class="material-icons">folder_open</i>Location<i
+          class="material-icons">arrow_drop_down</i></button>
+    </div>
+  </div>
 
-    <div class="scrollable-content">
-      <!-- Main content area with conditional grid or list view -->
-      <div class="content-area" [ngClass]="{'content-grid': isGridView, 'content-list': !isGridView}">
-        <!-- Headers for the list view -->
-        <div *ngIf="!isGridView" class="list-header">
-          <div class="item-icon-header"></div> <!-- Empty for the icon header -->
-          <div class="item-name-header">Name</div>
-          <div class="item-reason-header">Reason Suggested</div>
-          <div class="item-owner-header">Owner</div>
-          <div class="item-location-header">Location</div>
-          <div class="item-actions-header"></div> <!-- Empty for the actions header -->
-        </div>
+  <div *ngIf="!showActions" class="tab-section">
+    <!-- Tab navigation -->
+    <div class="left">
+      <span></span>
+      <button class="type-button" [ngClass]="{'active': contentType !== 'folder'}" (click)="toggleContentType('file')">
+        <i class="material-icons">{{ contentType === 'file' ? 'check' : 'description' }}</i>Files
+      </button>
+      <button class="type-button" [ngClass]="{'active': contentType === 'folder'}"
+        (click)="toggleContentType('folder')">
+        <i class="material-icons">{{ contentType === 'folder' ? 'check' : 'folder_open' }}</i>Folders
+      </button>
+    </div>
+    <div class="right">
+      <!-- Layout switch buttons -->
+      <button class="layout-button" [ngClass]="{'active': !isGridView}" (click)="setListView()">
+        <i class="material-icons">{{ !isGridView ? 'check' : 'menu' }}</i>
+      </button>
+      <button class="layout-button" [ngClass]="{'active': isGridView}" (click)="setGridView()">
+        <i class="material-icons">{{ isGridView ? 'check' : 'apps' }}</i>
+      </button>
+    </div>
+  </div>
 
-        <!-- Items for grid or list view -->
-        <div class="item" *ngFor="let document of documents" [id]="'item-' + document._id"
-          [ngClass]="{'selected': isSelected(document)}" (mousedown)="handleItemMouseDown($event, document)">
-          <!-- Item content -->
-          <!-- Grid view -->
-          <div *ngIf="isGridView" class="content-grid">
-            <div class="item-header">
-              <i class="material-icons">{{ document.type === 'file' ? 'picture_as_pdf' : 'folder' }}</i>
-              <div class="filename">{{ document.title }}</div>
-              <button class="round-button" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
-                <i class="material-icons">more_vert</i>
-              </button>
-
-              <!-- Kebab Menu Structure -->
-              <mat-menu #menu="matMenu">
-                <ng-template matMenuContent>
-                  <!-- Submenu for Name -->
-                  <button mat-menu-item [matMenuTriggerFor]="nameSubMenu" matMenuTriggerData="{item: item}"
-                    #trigger="matMenuTrigger" (mouseenter)="trigger.openMenu()" (mouseleave)="trigger.closeMenu()"
-                    (click)="getName(document)">
-                    <span>Name</span>
-                  </button>
-                  <mat-menu #nameSubMenu="matMenu">
-                    <ng-template matMenuContent>
-                      <button mat-menu-item>
-                        {{ document.title }}
-                      </button>
-                    </ng-template>
-                  </mat-menu>
-
-                  <!-- Submenu for Owner -->
-                  <button mat-menu-item [matMenuTriggerFor]="ownerSubMenu" matMenuTriggerData="{item: item}"
-                    #ownerTrigger="matMenuTrigger" (mouseenter)="ownerTrigger.openMenu()"
-                    (mouseleave)="ownerTrigger.closeMenu()" (click)="getOwner(document)">
-                    <span>Owner</span>
-                  </button>
-                  <mat-menu #ownerSubMenu="matMenu">
-                    <ng-template matMenuContent>
-                      <button mat-menu-item>
-                        {{ document.title }}
-                      </button>
-                    </ng-template>
-                  </mat-menu>
-
-                  <!-- Submenu for Date -->
-                  <button mat-menu-item [matMenuTriggerFor]="dateSubMenu" matMenuTriggerData="{item: item}"
-                    #dateTrigger="matMenuTrigger" (mouseenter)="dateTrigger.openMenu()"
-                    (mouseleave)="dateTrigger.closeMenu()" (click)="getDate(document)" *ngIf="document.type === 'file'">
-                    <span>Date</span>
-                  </button>
-                  <mat-menu #dateSubMenu="matMenu">
-                    <ng-template matMenuContent>
-                      <button mat-menu-item>
-                        {{ document.uploadDate| date:'medium' }}
-                      </button>
-                    </ng-template>
-                  </mat-menu>
-
-                  <!-- Submenu for Location -->
-                  <button mat-menu-item [matMenuTriggerFor]="locationSubMenu" matMenuTriggerData="{item: item}"
-                    #locationTrigger="matMenuTrigger" (mouseenter)="locationTrigger.openMenu()"
-                    (mouseleave)="locationTrigger.closeMenu()" (click)="getLocation(document)">
-                    <span>Location</span>
-                  </button>
-                  <mat-menu #locationSubMenu="matMenu">
-                    <ng-template matMenuContent>
-                      <button mat-menu-item>
-                        {{ document.title }}
-                      </button>
-                    </ng-template>
-                  </mat-menu>
-
-                  <!-- Button for Move to Trash -->
-                  <button mat-menu-item (click)="moveToTrash(document)">
-                    <span>Move to Trash</span>
-                  </button>
-                </ng-template>
-              </mat-menu>
-
-
-            </div>
-            <div class="item-image" *ngIf="document.type === 'file'">
-              <img alt="File image">
-            </div>
-            <div class="item-info" *ngIf="document.type === 'file'">
-              <div class="meta">{{ document.uploadDate| date:'medium' }}</div>
-            </div>
+  <div *ngIf="showActions" class="actions-section">
+    <!-- Actions when an item is selected -->
+    <div class="actions">
+      <div *ngIf="selectedItems.length > 0" class="actions-section">
+        <div class="actions-section-content">
+          {{ selectedItems.length }} selected
+          <div>
+            <button class="round-button" (click)="clearSelection()"><i class="material-icons">close</i></button>
+            <!-- Additional action buttons -->
+            <button class="round-button"><i class="material-icons">person_add</i></button>
+            <button class="round-button"><i class="material-icons">download</i></button>
+            <button class="round-button"><i class="material-icons">input</i></button>
+            <button class="round-button"><i class="material-icons">delete</i></button>
+            <button class="round-button"><i class="material-icons">link</i></button>
+            <button class="round-button"><i class="material-icons">more_vert</i></button>
           </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="scrollable-content">
+    <!-- Main content area with conditional grid or list view -->
+    <div class="content-area" [ngClass]="{'content-grid': isGridView, 'content-list': !isGridView}">
+      <!-- Headers for the list view -->
+      <div *ngIf="!isGridView" class="list-header">
+        <div class="item-icon-header"></div> <!-- Empty for the icon header -->
+        <div class="item-name-header">Name</div>
+        <div class="item-reason-header">Reason Suggested</div>
+        <div class="item-owner-header">Owner</div>
+        <div class="item-location-header">Location</div>
+        <div class="item-actions-header"></div> <!-- Empty for the actions header -->
+      </div>
+
+      <!-- Items for grid or list view -->
+      <div class="item" *ngFor="let document of getDisplayedItems()" [id]="'item-' + document._id"
+        [ngClass]="{'selected': isSelected(document)}" (mousedown)="handleItemMouseDown($event, document)">
+        <!-- Item content -->
+        <!-- Grid view -->
+        <div *ngIf="isGridView" class="content-grid">
+          <div class="item-header">
+            <i class="material-icons">{{ document.type !== 'folder' ? 'picture_as_pdf' : 'folder' }}</i>
+            <div class="filename">{{ document.title }}</div>
+            <button class="round-button" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+              <i class="material-icons">more_vert</i>
+            </button>
+
+            <!-- Kebab Menu Structure -->
+            <mat-menu #menu="matMenu">
+              <ng-template matMenuContent>
+                <!-- Submenu for Name -->
+                <button mat-menu-item [matMenuTriggerFor]="nameSubMenu" matMenuTriggerData="{item: item}"
+                  #trigger="matMenuTrigger" (mouseenter)="trigger.openMenu()" (mouseleave)="trigger.closeMenu()">
+                  <span>Name</span>
+                </button>
+                <mat-menu #nameSubMenu="matMenu">
+                  <ng-template matMenuContent>
+                    <button mat-menu-item>
+                      {{ document.title }}
+                    </button>
+                  </ng-template>
+                </mat-menu>
+
+                <!-- Submenu for Owner -->
+                <button mat-menu-item [matMenuTriggerFor]="ownerSubMenu" matMenuTriggerData="{item: item}"
+                  #ownerTrigger="matMenuTrigger" (mouseenter)="ownerTrigger.openMenu()"
+                  (mouseleave)="ownerTrigger.closeMenu()">
+                  <span>Owner</span>
+                </button>
+                <mat-menu #ownerSubMenu="matMenu">
+                  <ng-template matMenuContent>
+                    <button mat-menu-item>
+                      {{ owner }}
+                    </button>
+                  </ng-template>
+                </mat-menu>
+
+                <!-- Submenu for Date -->
+                <button mat-menu-item [matMenuTriggerFor]="dateSubMenu" matMenuTriggerData="{item: item}"
+                  #dateTrigger="matMenuTrigger" (mouseenter)="dateTrigger.openMenu()"
+                  (mouseleave)="dateTrigger.closeMenu()" *ngIf="document.type !== 'folder'">
+                  <span>Date</span>
+                </button>
+                <mat-menu #dateSubMenu="matMenu">
+                  <ng-template matMenuContent>
+                    <button mat-menu-item>
+                      {{ document.uploadDate| date:'medium' }}
+                    </button>
+                  </ng-template>
+                </mat-menu>
+
+                <!-- Submenu for Location -->
+                <button mat-menu-item [matMenuTriggerFor]="locationSubMenu" matMenuTriggerData="{item: item}"
+                  #locationTrigger="matMenuTrigger" (mouseenter)="locationTrigger.openMenu()"
+                  (mouseleave)="locationTrigger.closeMenu()">
+                  <span>Location</span>
+                </button>
+                <mat-menu #locationSubMenu="matMenu">
+                  <ng-template matMenuContent>
+                    <button mat-menu-item>
+                      {{ document.filePath }}
+                    </button>
+                  </ng-template>
+                </mat-menu>
+
+                <!-- Button for Move to Trash -->
+                <button mat-menu-item (click)="moveToTrash(document)">
+                  <span>Move to Trash</span>
+                </button>
+              </ng-template>
+            </mat-menu>
 
 
-          <!-- List view -->
-          <div *ngIf="!isGridView" class="content-list">
-            <div class="list-item">
-              <div class="item-icon">
-                <i class="material-icons">insert_drive_file</i>
+          </div>
+          <div class="item-image" *ngIf="document.type !== 'folder'">
+            <img alt="File image">
+          </div>
+          <div class="item-info" *ngIf="document.type !== 'folder'">
+            <div class="meta">{{ document.uploadDate| date:'medium' }}</div>
+          </div>
+        </div>
+
+
+        <!-- List view -->
+        <div *ngIf="!isGridView" class="content-list">
+          <div class="list-item">
+            <div class="item-icon">
+              <i class="material-icons">{{ document.type !== 'folder' ? 'picture_as_pdf' : 'folder' }}</i>
+            </div>
+            <div class="item-name">{{ document.title }}</div>
+            <div class="item-reason">{{ document.title }}</div>
+            <div class="item-owner">{{ owner }}</div>
+            <div class="item-location">{{ document.title }}</div>
+            <div class="item-actions">
+              <div class="item-hover-menu">
+                <button class="round-button"><i class="material-icons">share</i></button>
+                <button class="round-button"><i class="material-icons">download</i></button>
+                <button class="round-button"><i class="material-icons">edit</i></button>
+                <button class="round-button"><i class="material-icons">star</i></button>
               </div>
-              <div class="item-name">{{ document.title }}</div>
-              <div class="item-reason">{{ document.title }}</div>
-              <div class="item-owner">{{ owner }}</div>
-              <div class="item-location">{{ document.title }}</div>
-              <div class="item-actions">
-                <div class="item-hover-menu">
-                  <button class="round-button"><i class="material-icons">share</i></button>
-                  <button class="round-button"><i class="material-icons">download</i></button>
-                  <button class="round-button"><i class="material-icons">edit</i></button>
-                  <button class="round-button"><i class="material-icons">star</i></button>
-                </div>
-                <button class="round-button"><i class="material-icons">more_vert</i></button>
-              </div>
+              <button class="round-button"><i class="material-icons">more_vert</i></button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
