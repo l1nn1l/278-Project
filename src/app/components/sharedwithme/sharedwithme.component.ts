@@ -8,6 +8,7 @@ import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
 import { Router } from '@angular/router';
 import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { UtilityService } from '../../services/utility.service';
 
 
 @Component({
@@ -35,7 +36,7 @@ export class SharedwithmeComponent {
   documents:DocumentDTO[]=[];
   owner= localStorage.getItem('User_Email');
 
-  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService:DocumentService, private router:Router) { }
+  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService:DocumentService, private router:Router, private utilityService: UtilityService) { }
 
   ngOnInit() {
   this.getDocuments();
@@ -211,42 +212,9 @@ export class SharedwithmeComponent {
     });
   }
 
-  sortItemsByModifiedDate(): void {
-    this.documents.sort((a, b) => {
-      // Convert to date objects to compare
-      const dateA = new Date(a.uploadDate);
-      const dateB = new Date(b.uploadDate);
-      // Sort in descending order
-      return dateB.getTime() - dateA.getTime();
-    });
-  }
 
   getDateString(dateStr: string): string {
-    const date = new Date(dateStr);
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1));
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const startOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-    const startOfYear = new Date(today.getFullYear(), 0, 1);
-  
-    if (date.toDateString() === today.toDateString()) {
-      return 'Today';
-    } else if (date.toDateString() === yesterday.toDateString()) {
-      return 'Yesterday';
-    } else if (date >= startOfWeek) {
-      return 'Earlier this week';
-    } else if (date >= startOfMonth) {
-      return 'Earlier this month';
-    } else if (date < startOfMonth && date >= startOfLastMonth) {
-      return 'Last month';
-    } else if (date >= startOfYear) {
-      return 'Earlier this year';
-    } else {
-      return 'Older';
-    }
+    return this.utilityService.getDateString(dateStr);
   }
   
 
@@ -257,7 +225,8 @@ export class SharedwithmeComponent {
         console.log('Response:', response);
         this.documents = response.data;
         // this.isLoading = false;
-        this.sortItemsByModifiedDate(); // Sort after the documents are fetched
+        // Sort documents by the 'uploadDate' property
+        this.documents = this.utilityService.sortItemsByDateDesc(this.documents, 'uploadDate');
         console.log('These are the Shared Documents from the database', this.documents);
       },
       (error) => {
