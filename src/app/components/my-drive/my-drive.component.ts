@@ -74,6 +74,32 @@ export class MyDriveComponent {
     // View details logic
   }
 
+  toggleStarred(document: DocumentDTO) {
+    const localStorageKey = `starred_${document._id}`;
+    const currentStatus = localStorage.getItem(localStorageKey);
+
+    // Toggle the starred status
+    const newStatus = currentStatus === 'true' ? 'false' : 'true';
+
+    // Update local storage
+    localStorage.setItem(localStorageKey, newStatus);
+
+    // Update the UI
+    document.starred = newStatus === 'true';
+
+    // Update the backend
+    this.documentService.updateDocumentStarStatus(document._id, document.starred).subscribe({
+      next: (response) => {
+        console.log('Update successful:', response);
+      },
+      error: (error) => {
+        console.error('Update failed:', error);
+        // Revert the UI state if update fails
+        document.starred = !document.starred; 
+      }
+    });
+  }
+
   getFolders() {
     return this.displayedItems.filter((item) => item.type === 'folder');
   }

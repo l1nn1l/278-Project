@@ -12,6 +12,7 @@ export class DocumentService {
   private getOwnedDocumentsUrl: string = '/document/owned/';
   private getSharedDocumentsUrl: string = '/document/shared/';
   private getDocSizeUrl:string='/document//size/';
+  private putStar: string = '/document/';
 
   constructor(private http: HttpClient) {}
 
@@ -50,6 +51,29 @@ export class DocumentService {
     console.log("This is the URL were sending the API to ", urlWithId)
     return this.http.get<ApiResponse>(urlWithId, { headers: headers });
   }
-
+  
+  updateDocumentStarStatus(id: string, isStarred: boolean): Observable<any> {
+    const accessToken = localStorage.getItem('Access_Token');
+    if (!accessToken) {
+      console.error('Access token is missing');
+      return throwError(() => new Error('Authentication token is missing'));
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    });
+  
+    const urlWithId = `${this.baseUrl}${this.putStar}${id}`;
+    const data = { starred: isStarred };
+  
+    return this.http.put(urlWithId, data, { headers }).pipe(
+      catchError((error) => {
+        console.error('Failed to update the document status:', error);
+        return throwError(() => new Error('Failed to update document'));
+      })
+    );
+  }
+  
 
 }

@@ -1,44 +1,40 @@
+
 import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { DocumentService } from '../../services/document.service';
-import { AuthInterceptor } from '../../interceptors/auth.interceptor';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
 import { Router } from '@angular/router';
-
+import { AuthInterceptor } from '../../interceptors/auth.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 @Component({
-  selector: 'app-main-content',
+  selector: 'app-starred',
   standalone: true,
   imports: [CommonModule, MatMenuModule],
-  templateUrl: './main-content.component.html',
-  styleUrl: './main-content.component.css',
+  templateUrl: './starred.component.html',
+  styleUrl: './starred.component.css',
   encapsulation: ViewEncapsulation.None,
   providers: [
     DocumentService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ]
-
 })
-export class MainContentComponent {
+export class StarredComponent {
   showActions: boolean = false;
   selectedItem: DocumentDTO | null = null;
   isGridView: boolean = true;
-  contentType: 'file' | 'folder' = 'file';
+  contentType: 'files' | 'folders' = 'files';
   selectedItems: DocumentDTO[] = [];
   isSelecting: boolean = false;
   selectionBoxStyle = {};
   startSelectionPosition = { x: 0, y: 0 };
   isLoading: boolean = true;
-  isStarred: boolean | undefined;
-
 
   documents: DocumentDTO[] = [];
   owner = localStorage.getItem('User_Email');
-
 
   constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService: DocumentService, private router: Router) { }
 
@@ -54,19 +50,8 @@ export class MainContentComponent {
     this.isGridView = true;
   }
 
-  toggleContentType(type: 'file' | 'folder'): void {
+  toggleContentType(type: 'files' | 'folders'): void {
     this.contentType = type;
-  }
-
-  getDisplayedItems(): DocumentDTO[] {
-    console.log('All documents:', this.documents);
-    console.log('Current content type:', this.contentType);
-
-    const filteredItems = this.documents.filter(item =>
-      this.contentType === 'folder' ? item.type === 'folder' : item.type !== 'folder');
-
-    console.log('Filtered items:', filteredItems);
-    return filteredItems;
   }
 
 
@@ -104,7 +89,7 @@ export class MainContentComponent {
       width: '0px',
       height: '0px'
     };
-    event.preventDefault(); 
+    event.preventDefault();
   }
 
   updateSelection(event: MouseEvent): void {
@@ -183,46 +168,22 @@ export class MainContentComponent {
     this.cd.detectChanges();
   }
 
-
-  toggleStarred(document: DocumentDTO) {
-    if (document.starred !== undefined) {
-      document.starred = !document.starred;
-      console.log('Starred:', document.starred);
-      this.documentService.updateDocumentStarStatus(document._id, document.starred).subscribe({
-        next: (response) => {
-          console.log('Update successful:', response);
-        },
-        error: (error) => {
-          console.error('Update failed:', error);
-          document.starred = !document.starred; 
-        }
-      });
-    }
-  }
-
-
-  //HERE WE GETT ALL THE DOCUMENTS:
   getDocuments() {
     this.isLoading = true;
-    this.documentService.getOwnedDocuments(localStorage.getItem('id')).subscribe(
-      (response) => {
-        console.log('Response:', response);
-        this.documents = response.data;
+    this.documentService.getSharedDocuments(localStorage.getItem('id')).subscribe({
+      next: (response) => {
+        this.documents = response.data.filter((doc: DocumentDTO) => doc.starred);
         this.isLoading = false;
-        this.getDisplayedItems();
-        console.log('These are the Documents from the database', this.documents);
+        console.log('These are the Shared Documents from the database', this.documents);
       },
-      (error) => {
-        if (error.status == 401) {
-          console.error('Error:', error);
-          console.log('Authentication Token Expired');
-          console.log('Redirecting to Login Page');
+      error: (error) => {
+        console.error('Error:', error);
+        this.isLoading = false;
+        if (error.status === 401) {
+          console.log('Authentication Token Expired, Redirecting to Login Page');
           this.router.navigate(['/login']);
         }
       }
-    );
+    });
   }
-
-
 }
-

@@ -403,8 +403,9 @@
                     <button class="round-button"><i class="material-icons">share</i></button>
                     <button class="round-button"><i class="material-icons">download</i></button>
                     <button class="round-button"><i class="material-icons">edit</i></button>
-                    <button class="round-button" (click)="toggleStarred()"><i class="material-icons">{{ isStarred ?
-                        'star' : 'star_border' }}</i></button>
+                    <button class="round-button" (click)="toggleStarred(document)">
+                      <i class="material-icons">{{ document.starred === true ? 'star' : 'star_border' }}</i>
+                    </button>
                   </div>
                   <button class="round-button"><i class="material-icons">more_vert</i></button>
                 </div>

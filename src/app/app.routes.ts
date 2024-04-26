@@ -5,14 +5,15 @@ import { SignupComponent } from './components/signup/signup.component';
 import { MyDriveComponent } from './components/my-drive/my-drive.component';
 import { MainContentComponent } from './components/main-content/main-content.component';
 import { SharedwithmeComponent } from './components/sharedwithme/sharedwithme.component';
+import { StarredComponent } from './components/starred/starred.component';
 
 export const routes: Routes = [
     {path: 'main', component: MainPageComponent, 
         children:[
             {path:'mydrive', component:MyDriveComponent},
             {path:'home', component:MainContentComponent},
-            {path:'sharedwithme', component:SharedwithmeComponent}
-
+            {path:'sharedwithme', component:SharedwithmeComponent},
+            {path:'starred', component:StarredComponent}
         ]
     },
     {path: 'login', component: LoginComponent},
