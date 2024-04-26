@@ -6,6 +6,7 @@ import { DialogUploadFolderComponent } from '../dialog-new-folder/dialog-upload-
 import { CommonModule } from '@angular/common';
 import { DocumentService } from '../../services/document.service';
 import { AuthService } from '../../services/auth.service';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-upload-button',
@@ -22,7 +23,32 @@ export class UploadButtonComponent {
   isDropdownOpen: boolean = false;
   currentDirectoryId: string | null = null;
 
-  constructor(private eRef: ElementRef, public dialog: MatDialog, private documentService: DocumentService, private authService: AuthService) { }
+  constructor(
+    private eRef: ElementRef,
+    private dialog: MatDialog,
+    private documentService: DocumentService,
+    private authService: AuthService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router
+  ) {}
+
+  ngOnInit() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.updateCurrentDirectoryId();
+      }
+    });
+  }
+
+  private updateCurrentDirectoryId(): void {
+    const urlSegments = this.activatedRoute.root.snapshot.firstChild?.firstChild?.url;
+    if (urlSegments && urlSegments.length > 1 && urlSegments[0].path === 'folders') {
+      this.currentDirectoryId = urlSegments[1].path;
+      console.log('Current Directory ID:', this.currentDirectoryId);
+    } else {
+      this.currentDirectoryId = null; // Reset when navigating away from folder paths
+    }
+  }
 
   @HostListener('document:click', ['$event'])
   clickOutside(event : any) {
@@ -41,24 +67,23 @@ export class UploadButtonComponent {
   }
 
 
-  navigateToFolder(folderId: string) {
-    this.currentDirectoryId = folderId;
-  }
-
   createNew() {
     this.isDropdownOpen = false;
     const dialogRef = this.dialog.open(DialogNewFolderComponent, {
       data: {}
     });
-  
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.documentService.createFolder(result, this.authService.getCurrentUserID(), this.currentDirectoryId).subscribe({
+        const parentId = this.currentDirectoryId || 'base';
+        console.log("parent id of new folder:", parentId);
+        this.documentService.createFolder(result, this.authService.getCurrentUserID(), parentId).subscribe({
           next: response => console.log('Folder created:', response),
           error: error => console.error('Error creating folder:', error)
         });
       }
     });
   }
+  
   
 }

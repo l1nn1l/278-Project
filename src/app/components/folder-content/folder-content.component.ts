@@ -1,34 +1,26 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  HostListener,
-  OnDestroy,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DocumentService } from '../../services/document.service';
+import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
-import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
-import { DocumentService } from '../../services/document.service';
-import { Router } from '@angular/router';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 
-
 @Component({
-  selector: 'app-my-drive',
+  selector: 'app-folder-content',
   standalone: true,
   imports: [CommonModule, MatMenuModule],
-  templateUrl: './my-drive.component.html',
-  styleUrl: './my-drive.component.css',
+  templateUrl: './folder-content.component.html',
+  styleUrl: './folder-content.component.css',
   encapsulation: ViewEncapsulation.None,
   providers: [
     DocumentService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ]
 })
-export class MyDriveComponent {
+export class FolderContentComponent implements OnInit {
   showActions: boolean = false;
   selectedItem: DocumentDTO | null = null;
   isGridView: boolean = true;
@@ -40,13 +32,42 @@ export class MyDriveComponent {
   isLoading: boolean = true;
   documents: DocumentDTO[] = [];
   owner = localStorage.getItem('User_Email');
+  folderName: string = '';
 
 
-  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService: DocumentService, private router: Router) { }
+  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService: DocumentService, private router: Router, private route: ActivatedRoute) { }
 
 
   ngOnInit() {
-    this.getDocuments();
+    this.route.params.subscribe(params => {
+      const folderId = params['folderId'];
+      this.fetchFolderDetails(folderId);
+    });
+  }
+
+
+  fetchFolderDetails(folderId: string) {
+    this.isLoading = true;
+    this.documentService.getFolderDetails(folderId).subscribe({
+      next: (response) => {
+        if (response && response.data && response.data.folder) {
+          this.folderName = response.data.folder.title || '';
+          this.documents = response.data.content || [];
+        } else {
+          console.error('Folder details not found in response:', response);
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching folder details:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  //method that gets triggered when user clicks on folder icon
+  openFolder(document: DocumentDTO) {
+    this.router.navigate(['/main/folders', document._id]);
   }
 
   setListView(): void {
@@ -198,36 +219,6 @@ export class MyDriveComponent {
 
     this.showActions = this.selectedItems.length > 0;
     this.cd.detectChanges();
-  }
-
-  //HERE WE GETT ALL THE DOCUMENTS:
-  getDocuments() {
-    this.isLoading = true;
-    this.documentService.getOwnedDocuments(localStorage.getItem('id')).subscribe(
-      (response) => {
-        console.log('Response:', response);
-        this.documents = response.data;
-        this.isLoading = false;
-        this.getFolders();
-        this.getFiles();
-        console.log('These are the Documents from the database', this.documents);
-      },
-      (error) => {
-        if (error.status == 401) {
-          console.error('Error:', error);
-          console.log('Authentication Token Expired');
-          console.log('Redirecting to Login Page');
-          this.router.navigate(['/login']);
-        }
-      }
-    );
-  }
-
-  //method that gets triggered when user clicks on folder icon or double clicks folder 
-  //(dblclick currently only works in list view)
-  openFolder(document: DocumentDTO) {
-    console.log('Attempting to open folder:', document._id);
-    this.router.navigate(['/main/folders', document._id]);
   }
   
 }

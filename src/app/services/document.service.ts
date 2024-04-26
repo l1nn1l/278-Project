@@ -3,6 +3,7 @@ import { HttpClient , HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { ApiResponse } from '../../assets/Models/DTO/ApiResponse'; 
+import { DocumentDTO } from '../../assets/Models/DTO/DocumentDTO';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,7 @@ export class DocumentService {
   private getOwnedDocumentsUrl: string = '/document/owned/';
   private getSharedDocumentsUrl: string = '/document/shared/';
   private getDocSizeUrl:string='/document//size/';
+  private currentDirectoryId: string | null = null;
 
   constructor(private http: HttpClient) {}
 
@@ -55,6 +57,7 @@ export class DocumentService {
     const folderData = {
       folderTitle: title,
       ownerId: ownerId,
+      parentId: currentDirectoryId ? currentDirectoryId : "base",
       parentFolderId: currentDirectoryId ? currentDirectoryId : "base",
       type: 'folder'
     };
@@ -68,4 +71,14 @@ export class DocumentService {
       .pipe(catchError(error => throwError(() => new Error('Failed to create folder: ' + error.message))));
   }
 
+
+  getFolderDetails(folderId: string | null): Observable<any> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('Access_Token')}`
+    });
+
+    return this.http.get(`${this.baseUrl}/document/folder/${folderId}`, { headers })
+      .pipe(catchError(error => throwError(() => new Error('Failed to fetch folder details: ' + error.message))));
+  }
+  
 }
