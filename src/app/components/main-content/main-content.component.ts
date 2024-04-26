@@ -185,19 +185,24 @@ export class MainContentComponent {
 
 
   toggleStarred(document: DocumentDTO) {
-    if (document.starred !== undefined) {
-      document.starred = !document.starred;
-      console.log('Starred:', document.starred);
-      this.documentService.updateDocumentStarStatus(document._id, document.starred).subscribe({
-        next: (response) => {
-          console.log('Update successful:', response);
-        },
-        error: (error) => {
-          console.error('Update failed:', error);
-          document.starred = !document.starred; 
-        }
-      });
-    }
+    
+    console.log(document.starred);
+    // Toggle the starred status
+     document.starred=!document.starred;
+  
+  
+
+    // Update the backend
+    this.documentService.updateDocumentStarStatus(document._id, document.starred).subscribe({
+      next: (response) => {
+        console.log('Update successful:', response);
+      },
+      error: (error) => {
+        console.error('Update failed:', error);
+        // Revert the UI state if update fails
+        document.starred = !document.starred; 
+      }
+    });
   }
 
 

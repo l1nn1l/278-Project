@@ -75,17 +75,12 @@ export class MyDriveComponent {
   }
 
   toggleStarred(document: DocumentDTO) {
-    const localStorageKey = `starred_${document._id}`;
-    const currentStatus = localStorage.getItem(localStorageKey);
-
+    
+    console.log(document.starred);
     // Toggle the starred status
-    const newStatus = currentStatus === 'true' ? 'false' : 'true';
-
-    // Update local storage
-    localStorage.setItem(localStorageKey, newStatus);
-
-    // Update the UI
-    document.starred = newStatus === 'true';
+     document.starred=!document.starred;
+  
+  
 
     // Update the backend
     this.documentService.updateDocumentStarStatus(document._id, document.starred).subscribe({

@@ -65,7 +65,11 @@ export class DocumentService {
     });
   
     const urlWithId = `${this.baseUrl}${this.putStar}${id}`;
-    const data = { starred: isStarred };
+    const data = { 
+      starred: isStarred ,
+      ownerId: localStorage.getItem('id')
+    
+    };
   
     return this.http.put(urlWithId, data, { headers }).pipe(
       catchError((error) => {
