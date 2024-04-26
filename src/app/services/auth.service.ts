@@ -24,6 +24,7 @@ export class AuthService {
         console.log("API Response:", response);
         if (response && response.message === 'Login Successful') {
           localStorage.setItem('Access_Token', response.data.token);
+          localStorage.setItem('User_ID', response.data.id); 
           localStorage.setItem('User_Email', response.data.email);
           localStorage.setItem('User_Name', response.data.name);
           this.router.navigate(['/home']);
@@ -37,4 +38,9 @@ export class AuthService {
       })
     );
   }
+
+  getCurrentUserID(): string {
+    return localStorage.getItem('User_ID') || 'default-user-id';  
+  }
+  
 }

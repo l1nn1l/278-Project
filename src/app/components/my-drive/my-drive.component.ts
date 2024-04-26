@@ -236,4 +236,11 @@ export class MyDriveComponent {
     );
   }
 
+  //method that gets triggered when user clicks on folder icon or double clicks folder 
+  //(dblclick currently only works in list view)
+  openFolder(document: DocumentDTO) {
+    console.log('Attempting to open folder:', document._id);
+    this.router.navigate(['/main/folders', document._id]);
+  }
+  
 }

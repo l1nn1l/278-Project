@@ -71,7 +71,6 @@ app-my-drive {
   
   .left {
   display: flex;
-  padding: 1rem;
   align-items: center;
   gap: 0;
   }
@@ -379,13 +378,14 @@ app-my-drive {
   
   .MyDrive {
     background-color: white; 
-    color: black; 
-    padding: 10px 20px;
+    color: #3c4043; 
+    font-weight: 80;
     font-size: 25px; 
     text-align: center; 
     display: inline-block; 
     cursor: pointer;
-  border: none;}
+    border: none;
+  }
   
   .no-content-placeholder{
     text-align: center;

@@ -1,10 +1,10 @@
-<div class="create-folder-dialog" [formGroup]="createform">
+<div class="create-folder-dialog" [formGroup]="createForm">
     <h2>New folder</h2>
     <div class="input-field">
-        <input type="text" placeholder="Untitled Folder" formControlName="form">
+        <input type="text" placeholder="Untitled Folder" formControlName="folderName">
     </div>
 </div>
 <div class="dialog-actions">
-    <button type="button" class="cancel-button">Cancel</button>
-    <button type="submit" class="create-button">Create</button>
+    <button type="button" class="cancel-button" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="create-button" (click)="onCreate()">Create</button>
 </div>

@@ -1,45 +1,73 @@
-
-import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DocumentService } from '../../services/document.service';
+import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
-import { DocumentService } from '../../services/document.service';
-import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
-import { Router } from '@angular/router';
-import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-
+import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 
 @Component({
-  selector: 'app-starred',
+  selector: 'app-folder-content',
   standalone: true,
   imports: [CommonModule, MatMenuModule],
-  templateUrl: './starred.component.html',
-  styleUrl: './starred.component.css',
+  templateUrl: './folder-content.component.html',
+  styleUrl: './folder-content.component.css',
   encapsulation: ViewEncapsulation.None,
   providers: [
     DocumentService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ]
 })
-export class StarredComponent {
+export class FolderContentComponent implements OnInit {
   showActions: boolean = false;
   selectedItem: DocumentDTO | null = null;
   isGridView: boolean = true;
-  contentType: 'files' | 'folders' = 'files';
+  contentType: 'file' | 'folder' = 'file';
   selectedItems: DocumentDTO[] = [];
   isSelecting: boolean = false;
   selectionBoxStyle = {};
   startSelectionPosition = { x: 0, y: 0 };
   isLoading: boolean = true;
-
   documents: DocumentDTO[] = [];
   owner = localStorage.getItem('User_Email');
+  folderName: string = '';
 
-  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService: DocumentService, private router: Router) { }
+
+  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService: DocumentService, private router: Router, private route: ActivatedRoute) { }
+
 
   ngOnInit() {
-    this.getStarredDocuments();
+    this.route.params.subscribe(params => {
+      const folderId = params['folderId'];
+      this.fetchFolderDetails(folderId);
+    });
+  }
+
+
+  fetchFolderDetails(folderId: string) {
+    this.isLoading = true;
+    this.documentService.getFolderDetails(folderId).subscribe({
+      next: (response) => {
+        if (response && response.data && response.data.folder) {
+          this.folderName = response.data.folder.title || '';
+          this.documents = response.data.content || [];
+        } else {
+          console.error('Folder details not found in response:', response);
+        }
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching folder details:', error);
+        this.isLoading = false;
+      }
+    });
+  }
+
+  //method that gets triggered when user clicks on folder icon
+  openFolder(document: DocumentDTO) {
+    this.router.navigate(['/main/folders', document._id]);
   }
 
   setListView(): void {
@@ -50,8 +78,12 @@ export class StarredComponent {
     this.isGridView = true;
   }
 
-  toggleContentType(type: 'files' | 'folders'): void {
+  toggleContentType(type: 'file' | 'folder'): void {
     this.contentType = type;
+  }
+
+  get displayedItems(): DocumentDTO[] {
+    return this.documents;
   }
 
 
@@ -63,21 +95,38 @@ export class StarredComponent {
     // View details logic
   }
 
+  getFolders() {
+    return this.displayedItems.filter((item) => item.type === 'folder');
+  }
+
+  getFiles() {
+    return this.displayedItems.filter((item) => item.type !== 'folder');
+  }
+
+
   closeActions(): void {
     this.selectedItem = null;
     this.showActions = false;
   }
 
   clearSelection(): void {
-    console.log('Clearing selection. Previous selectedItems:', this.selectedItems);
+    console.log(
+      'Clearing selection. Previous selectedItems:',
+      this.selectedItems
+    );
     this.selectedItems = [];
     this.showActions = false;
     this.cd.detectChanges();
-    console.log('Selection cleared. Current selectedItems:', this.selectedItems);
+    console.log(
+      'Selection cleared. Current selectedItems:',
+      this.selectedItems
+    );
   }
 
   isSelected(item: DocumentDTO): boolean {
-    return this.selectedItems.some(selectedItem => selectedItem._id === item._id);
+    return this.selectedItems.some(
+      (selectedItem) => selectedItem._id === item._id
+    );
   }
   startSelection(event: MouseEvent): void {
     this.isSelecting = true;
@@ -87,7 +136,7 @@ export class StarredComponent {
       left: `${this.startSelectionPosition.x}px`,
       top: `${this.startSelectionPosition.y}px`,
       width: '0px',
-      height: '0px'
+      height: '0px',
     };
     event.preventDefault();
   }
@@ -103,7 +152,7 @@ export class StarredComponent {
       left: `${Math.min(currentX, this.startSelectionPosition.x)}px`,
       top: `${Math.min(currentY, this.startSelectionPosition.y)}px`,
       width: `${Math.abs(width)}px`,
-      height: `${Math.abs(height)}px`
+      height: `${Math.abs(height)}px`,
     };
     this.cd.detectChanges();
   }
@@ -117,17 +166,17 @@ export class StarredComponent {
       x1: this.startSelectionPosition.x,
       y1: this.startSelectionPosition.y,
       x2: event.clientX,
-      y2: event.clientY
+      y2: event.clientY,
     };
 
     const normalizedBounds = {
       x1: Math.min(selectionBounds.x1, selectionBounds.x2),
       y1: Math.min(selectionBounds.y1, selectionBounds.y2),
       x2: Math.max(selectionBounds.x1, selectionBounds.x2),
-      y2: Math.max(selectionBounds.y1, selectionBounds.y2)
+      y2: Math.max(selectionBounds.y1, selectionBounds.y2),
     };
 
-    this.selectedItems = this.documents.filter(item => {
+    this.selectedItems = this.documents.filter((item) => {
       const itemElement = document.getElementById(`item-${item._id}`);
       if (itemElement) {
         const rect = itemElement.getBoundingClientRect();
@@ -145,9 +194,11 @@ export class StarredComponent {
     this.showActions = this.selectedItems.length > 0;
     this.selectionBoxStyle = {};
     this.cd.detectChanges();
-    console.log('Selected items:', this.selectedItems.map(item => item._id));
+    console.log(
+      'Selected items:',
+      this.selectedItems.map((item) => item._id)
+    );
   }
-
 
   handleItemMouseDown(event: MouseEvent, item: DocumentDTO): void {
     event.stopPropagation();
@@ -156,7 +207,9 @@ export class StarredComponent {
 
     if (event.ctrlKey || event.metaKey) {
       if (isSelected) {
-        this.selectedItems = this.selectedItems.filter(selectedItem => selectedItem._id !== item._id);
+        this.selectedItems = this.selectedItems.filter(
+          (selectedItem) => selectedItem._id !== item._id
+        );
       } else {
         this.selectedItems = [...this.selectedItems, item];
       }
@@ -167,54 +220,5 @@ export class StarredComponent {
     this.showActions = this.selectedItems.length > 0;
     this.cd.detectChanges();
   }
-
-  toggleStarred(document: DocumentDTO) {
-     document.starred=!document.starred;
-      this.documentService.updateDocumentStarStatus(document._id, document.starred).subscribe({
-      next: (response) => {
-        console.log('Update successful:', response);
-      },
-      error: (error) => {
-        console.error('Update failed:', error);
-        document.starred = !document.starred; 
-      }
-    });
-  }
-
-  get displayedItems(): DocumentDTO[] {
-    return this.documents;
-  }
-
-  getFolders() {
-    return this.displayedItems.filter((item) => item.type === 'folder');
-  }
-
-  getFiles() {
-    return this.displayedItems.filter((item) => item.type !== 'folder');
-  }
-  getStarredDocuments() {
-    this.isLoading = true;
-    this.documentService.getStarredDocuments(localStorage.getItem('id')).subscribe({
-      next: (response) => {
-        this.documents = response.data.filter((doc: DocumentDTO) => doc.starred);
-        this.isLoading = false;
-        console.log('These are the Shared Documents from the database', this.documents);
-      },
-      error: (error) => {
-        console.error('Error:', error);
-        this.isLoading = false;
-        if (error.status === 401) {
-          console.log('Authentication Token Expired, Redirecting to Login Page');
-          this.router.navigate(['/login']);
-        }
-      }
-    });
-  }
-
-  //method that gets triggered when user clicks on folder icon or double clicks folder 
-  //(dblclick currently only works in list view)
-  openFolder(document: DocumentDTO) {
-    console.log('Attempting to open folder:', document._id);
-    this.router.navigate(['/main/folders', document._id]);
-  }
+  
 }

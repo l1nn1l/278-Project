@@ -82,14 +82,14 @@
 
           <!-- Items for grid or list view -->
           <div class="item" *ngFor="let document of getDisplayedItems()" [id]="'item-' + document._id"
-            [ngClass]="{'selected': isSelected(document)}" (mousedown)="handleItemMouseDown($event, document)">
+            [ngClass]="{'selected': isSelected(document)}" (mousedown)="handleItemMouseDown($event, document)" (dblclick)="openFolder(document)">
             <!-- Item content -->
             <!-- Grid view -->
             <div *ngIf="isGridView" class="content-grid">
               <div class="item-header">
                 <!-- First, check if it is a folder -->
                 <ng-container *ngIf="document.type === 'folder'; else fileTypeCheck">
-                  <i class="material-icons">folder</i>
+                  <i (click)="openFolder(document)" class="material-icons" style="cursor: pointer;">folder</i>
                 </ng-container>
                 <!-- If not a folder, check for the file type -->
                 <ng-template #fileTypeCheck>
@@ -319,7 +319,7 @@
                 <div class="item-icon">
                   <!-- First, check if it is a folder -->
                   <ng-container *ngIf="document.type === 'folder'; else fileTypeCheck">
-                    <i class="material-icons">folder</i>
+                    <i (click)="openFolder(document)" class="material-icons" style="cursor: pointer;">folder</i>
                   </ng-container>
                   <!-- If not a folder, check for the file type -->
                   <ng-template #fileTypeCheck>

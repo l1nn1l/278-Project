@@ -73,11 +73,12 @@
 
             <!-- Folders -->
             <div class="item" *ngFor="let document of getFolders()" [id]="'item-' + document._id"
-              [ngClass]="{'selected': isSelected(document)}" (mousedown)="handleItemMouseDown($event, document)">
+              [ngClass]="{'selected': isSelected(document)}" (mousedown)="handleItemMouseDown($event, document)" 
+              (dblclick)="openFolder(document)">
               <!-- Folder content -->
               <div *ngIf="isGridView" class="content-grid">
                 <div class="item-header">
-                  <i class="material-icons">folder</i>
+                  <i (click)="openFolder(document)" class="material-icons" style="cursor: pointer;">folder</i>
                   <div class="filename">{{ document.title }}</div>
                   <button class="round-button" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
                     <i class="material-icons">more_vert</i>
@@ -140,7 +141,7 @@
               <div *ngIf="!isGridView" class="content-list">
                 <div class="list-item">
                   <div class="item-icon">
-                    <i class="material-icons">folder</i>
+                    <i (click)="openFolder(document)" class="material-icons" style="cursor: pointer;">folder</i>
                   </div>
                   <div class="item-name">{{ document.title }}</div>
                   <div class="item-reason">{{ document.title }}</div>
