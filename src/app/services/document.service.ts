@@ -5,7 +5,7 @@ import { tap, catchError } from 'rxjs/operators';
 import { ApiResponse } from '../../assets/Models/DTO/ApiResponse'; 
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DocumentService {
   private baseUrl: string = 'https://googledriveclonebackend.onrender.com';
@@ -51,5 +51,21 @@ export class DocumentService {
     return this.http.get<ApiResponse>(urlWithId, { headers: headers });
   }
 
+  createFolder(title: string, ownerId: string, currentDirectoryId: string | null): Observable<any> {
+    const folderData = {
+      folderTitle: title,
+      ownerId: ownerId,
+      parentFolderId: currentDirectoryId ? currentDirectoryId : "base",
+      type: 'folder'
+    };
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('Access_Token')}`
+    });
+
+    console.log("folder data", folderData)
+    return this.http.post(`${this.baseUrl}/document/owned/folder`, folderData, { headers })
+      .pipe(catchError(error => throwError(() => new Error('Failed to create folder: ' + error.message))));
+  }
 
 }
