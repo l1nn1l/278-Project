@@ -8,7 +8,7 @@ app-main-content {
   margin-bottom: 20px;
   overflow: hidden;
   height: calc(100vh - 90px);
-  overflow-y: scroll; /* This part will scroll */
+  overflow-y: scroll;
   flex-grow: 1;
 }
 
@@ -18,8 +18,8 @@ app-main-content {
 
 
 .scrollable-content {
-  overflow-y: scroll; /* This part will scroll */
-  flex-grow: 1; /* Takes up the remaining space */
+  overflow-y: scroll; 
+  flex-grow: 1; 
 }
 
 .content-grid {
@@ -350,13 +350,20 @@ height: 200px !important; }
 }
 
 .item.selected {
-  background-color: #e3f2fd; /* Light blue background for selected items */
-  /* Add any other styling for selected items here */
+  background-color: #e3f2fd; 
 }
 
-/* ... Rest of your existing CSS */
-
-/* This style will be applied when an item is being selected */
 .item.being-selected {
   background-color: rgba(128, 128, 128, 0.5);
+}
+
+  
+.no-content-placeholder{
+  text-align: center;
+  font-size: large;
+}
+
+.no-content-placeholder > img{
+  width: auto; 
+  text-align: center; 
 }

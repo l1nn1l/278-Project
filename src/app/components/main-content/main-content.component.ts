@@ -32,6 +32,8 @@ export class MainContentComponent {
   isSelecting: boolean = false;
   selectionBoxStyle = {};
   startSelectionPosition = { x: 0, y: 0 };
+  isLoading: boolean = true;
+  isStarred: boolean = false;
 
 
   documents: DocumentDTO[] = [];
@@ -102,7 +104,7 @@ export class MainContentComponent {
       width: '0px',
       height: '0px'
     };
-    event.preventDefault(); // Prevent text selection
+    event.preventDefault(); 
   }
 
   updateSelection(event: MouseEvent): void {
@@ -126,7 +128,6 @@ export class MainContentComponent {
       console.log('Selection ended without starting');
       return;
     }
-    // Calculate the bounds of the selection box
     const selectionBounds = {
       x1: this.startSelectionPosition.x,
       y1: this.startSelectionPosition.y,
@@ -134,7 +135,6 @@ export class MainContentComponent {
       y2: event.clientY
     };
 
-    // Normalize the coordinates to always have the smallest values in x1/y1
     const normalizedBounds = {
       x1: Math.min(selectionBounds.x1, selectionBounds.x2),
       y1: Math.min(selectionBounds.y1, selectionBounds.y2),
@@ -142,7 +142,6 @@ export class MainContentComponent {
       y2: Math.max(selectionBounds.y1, selectionBounds.y2)
     };
 
-    // Filter the items to find which ones intersect with the selection box
     this.selectedItems = this.documents.filter(item => {
       const itemElement = document.getElementById(`item-${item._id}`);
       if (itemElement) {
@@ -157,14 +156,11 @@ export class MainContentComponent {
       return false;
     });
 
-    // Update the state to reflect the selection
     this.isSelecting = false;
     this.showActions = this.selectedItems.length > 0;
-    this.selectionBoxStyle = {}; // Reset the selection box style
+    this.selectionBoxStyle = {};
     this.cd.detectChanges();
     console.log('Selected items:', this.selectedItems.map(item => item._id));
-    // Optional: log selected items
-    this.logSelectedItems();
   }
 
 
@@ -188,19 +184,20 @@ export class MainContentComponent {
   }
 
 
-  logSelectedItems(): void {
-    this.selectedItems.forEach(item => {
-      console.log('Selected Item Name:', item.title);
-    });
+  toggleStarred() {
+    this.isStarred = !this.isStarred;
+    console.log('Starred:', this.isStarred); // Check if this logs correctly on clicks
   }
 
 
   //HERE WE GETT ALL THE DOCUMENTS:
   getDocuments() {
+    this.isLoading = true;
     this.documentService.getOwnedDocuments(localStorage.getItem('id')).subscribe(
       (response) => {
         console.log('Response:', response);
         this.documents = response.data;
+        this.isLoading = false;
         this.getDisplayedItems();
         console.log('These are the Documents from the database', this.documents);
       },

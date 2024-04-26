@@ -387,9 +387,12 @@ app-my-drive {
     cursor: pointer;
   border: none;}
   
-  /* .MyDrive:hover {
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1); 
-      background-color: #f8f8f8;
-      border-radius: 10px; 
-      border: 1px solid #e0e0e0; 
-  } */
+  .no-content-placeholder{
+    text-align: center;
+    font-size: large;
+}
+
+.no-content-placeholder > img{
+    width: auto; 
+    text-align: center; 
+}

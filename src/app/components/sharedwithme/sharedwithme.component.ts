@@ -31,6 +31,7 @@ export class SharedwithmeComponent {
   isSelecting: boolean = false;
   selectionBoxStyle = {};
   startSelectionPosition = { x: 0, y: 0 };
+  isLoading: boolean = true;
 
   documents: DocumentDTO[] = [];
   owner = localStorage.getItem('User_Email');
@@ -212,13 +213,13 @@ export class SharedwithmeComponent {
 
 
   getDocuments() {
-    // this.isLoading = true;
+    this.isLoading = true;
     this.documentService.getSharedDocuments(localStorage.getItem('id')).subscribe(
       (response) => {
         console.log('Response:', response);
         this.documents = response.data;
-        // this.isLoading = false;
-        this.sortItemsByModifiedDate(); // Sort after the documents are fetched
+        this.isLoading = false;
+        this.sortItemsByModifiedDate(); 
         console.log('These are the Shared Documents from the database', this.documents);
       },
       (error) => {

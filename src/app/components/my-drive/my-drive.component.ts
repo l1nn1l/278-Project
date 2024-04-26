@@ -37,6 +37,7 @@ export class MyDriveComponent {
   isSelecting: boolean = false;
   selectionBoxStyle = {};
   startSelectionPosition = { x: 0, y: 0 };
+  isLoading: boolean = true;
   documents: DocumentDTO[] = [];
   owner = localStorage.getItem('User_Email');
 
@@ -201,10 +202,12 @@ export class MyDriveComponent {
 
   //HERE WE GETT ALL THE DOCUMENTS:
   getDocuments() {
+    this.isLoading = true;
     this.documentService.getOwnedDocuments(localStorage.getItem('id')).subscribe(
       (response) => {
         console.log('Response:', response);
         this.documents = response.data;
+        this.isLoading = false;
         this.getFolders();
         this.getFiles();
         console.log('These are the Documents from the database', this.documents);

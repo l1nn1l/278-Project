@@ -97,4 +97,12 @@ progress::-webkit-progress-value {
 .outlined-button:focus {
     background: #f1f7ff;
 }
+.no-content-placeholder{
+    text-align: center;
+    font-size: large;
+}
 
+.no-content-placeholder > img{
+    width: auto; 
+    text-align: center; 
+}

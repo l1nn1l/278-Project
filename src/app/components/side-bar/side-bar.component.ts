@@ -38,6 +38,11 @@ export class SideBarComponent {
     this.router.navigate(['/main/sharedwithme']);
   }
 
+  goToStarred() {
+    this.router.navigate(['/main/starred']);
+  }
+
+
   getTotalSize() {
     // this.isLoading = true;
     this.documentService.getDocSize(localStorage.getItem('id')).subscribe(
