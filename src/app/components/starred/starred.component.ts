@@ -39,7 +39,7 @@ export class StarredComponent {
   constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService: DocumentService, private router: Router) { }
 
   ngOnInit() {
-    this.getDocuments();
+    this.getStarredDocuments();
   }
 
   setListView(): void {
@@ -168,9 +168,33 @@ export class StarredComponent {
     this.cd.detectChanges();
   }
 
-  getDocuments() {
+  toggleStarred(document: DocumentDTO) {
+     document.starred=!document.starred;
+      this.documentService.updateDocumentStarStatus(document._id, document.starred).subscribe({
+      next: (response) => {
+        console.log('Update successful:', response);
+      },
+      error: (error) => {
+        console.error('Update failed:', error);
+        document.starred = !document.starred; 
+      }
+    });
+  }
+
+  get displayedItems(): DocumentDTO[] {
+    return this.documents;
+  }
+
+  getFolders() {
+    return this.displayedItems.filter((item) => item.type === 'folder');
+  }
+
+  getFiles() {
+    return this.displayedItems.filter((item) => item.type !== 'folder');
+  }
+  getStarredDocuments() {
     this.isLoading = true;
-    this.documentService.getSharedDocuments(localStorage.getItem('id')).subscribe({
+    this.documentService.getStarredDocuments(localStorage.getItem('id')).subscribe({
       next: (response) => {
         this.documents = response.data.filter((doc: DocumentDTO) => doc.starred);
         this.isLoading = false;

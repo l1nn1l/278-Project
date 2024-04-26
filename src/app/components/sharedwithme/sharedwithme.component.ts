@@ -211,6 +211,19 @@ export class SharedwithmeComponent {
     }
   }
 
+  toggleStarred(document: DocumentDTO) {
+    document.starred=!document.starred;
+    this.documentService.updateDocumentStarStatus(document._id, document.starred).subscribe({
+      next: (response) => {
+        console.log('Update successful:', response);
+      },
+      error: (error) => {
+        console.error('Update failed:', error);
+        document.starred = !document.starred; 
+      }
+    });
+  }
+
 
   getDocuments() {
     this.isLoading = true;
