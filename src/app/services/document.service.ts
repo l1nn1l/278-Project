@@ -12,7 +12,7 @@ export class DocumentService {
   private getOwnedDocumentsUrl: string = '/document/owned/';
   private getSharedDocumentsUrl: string = '/document/shared/';
   private getDocSizeUrl:string='/document//size/';
-  private putStar: string = '/document/';
+  private update: string = '/document/';
   private getStarredDocumentUrl: string = '/document/starred/';
   constructor(private http: HttpClient) {}
 
@@ -64,7 +64,7 @@ export class DocumentService {
       'Content-Type': 'application/json'
     });
   
-    const urlWithId = `${this.baseUrl}${this.putStar}${id}`;
+    const urlWithId = `${this.baseUrl}${this.update}${id}`;
     const data = { 
       starred: isStarred ,
       ownerId: localStorage.getItem('id')
@@ -78,6 +78,33 @@ export class DocumentService {
       })
     );
   }
+
+  updateDocumentName(id: string, newName: string): Observable<any> {
+    const accessToken = localStorage.getItem('Access_Token');
+    if (!accessToken) {
+      console.error('Access token is missing');
+      return throwError(() => new Error('Authentication token is missing'));
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json'
+    });
+  
+    const urlWithId = `${this.baseUrl}${this.update}${id}`;
+    const data = {
+      title: newName,
+      ownerId: localStorage.getItem('id')
+    };
+  
+    return this.http.put(urlWithId, data, { headers }).pipe(
+      catchError((error) => {
+        console.error('Failed to update the document name:', error);
+        return throwError(() => new Error('Failed to update document name'));
+      })
+    );
+  }
+  
   
   getStarredDocuments(id: any): Observable<any> {
     const headers = new HttpHeaders().set(
