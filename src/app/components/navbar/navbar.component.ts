@@ -10,13 +10,14 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from '../../services/auth.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { HttpClientModule} from '@angular/common/http';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
-  imports: [CommonModule, DropdownModule, ReactiveFormsModule, InputTextModule, CheckboxModule, UserProfilePopupComponent, FormsModule],
+  imports: [CommonModule, DropdownModule, ReactiveFormsModule, InputTextModule, CheckboxModule, UserProfilePopupComponent, FormsModule, HttpClientModule],
   providers: [AuthService]
 })
 export class NavbarComponent {
@@ -61,7 +62,7 @@ export class NavbarComponent {
 
   toggleModal(): void {
     this.showModal = !this.showModal;
-    console.log('toggleModal called', this.showModal);
+    // console.log('toggleModal called', this.showModal);
   }
 
   onBackgroundClick(event: MouseEvent): void {
@@ -131,14 +132,14 @@ export class NavbarComponent {
 
   performSearch(term: string) {
     if (term) {
-      console.log('Performing search for:', term);
+      // console.log('Performing search for:', term);
       this.router.navigate(['/main/search'], { queryParams: { itemName: term } });
     }
-    console.log('Performing search for:', term);
+    // console.log('Performing search for:', term);
   }
   
   onSubmit(): void {
-    console.log(this.formGroup.value);
+    // console.log(this.formGroup.value);
     this.toggleModal();
   
     const formValues = this.formGroup.value;

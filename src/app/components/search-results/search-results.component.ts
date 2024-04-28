@@ -219,10 +219,6 @@ export class SearchResultsComponent {
     this.showActions = this.selectedItems.length > 0;
     this.selectionBoxStyle = {};
     this.cd.detectChanges();
-    console.log(
-      'Selected items:',
-      this.selectedItems.map((item) => item._id)
-    );
   }
 
   handleItemMouseDown(event: MouseEvent, item: DocumentDTO): void {

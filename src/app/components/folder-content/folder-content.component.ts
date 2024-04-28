@@ -110,17 +110,17 @@ export class FolderContentComponent implements OnInit {
   }
 
   clearSelection(): void {
-    console.log(
-      'Clearing selection. Previous selectedItems:',
-      this.selectedItems
-    );
+    // console.log(
+    //   'Clearing selection. Previous selectedItems:',
+    //   this.selectedItems
+    // );
     this.selectedItems = [];
     this.showActions = false;
     this.cd.detectChanges();
-    console.log(
-      'Selection cleared. Current selectedItems:',
-      this.selectedItems
-    );
+    // console.log(
+    //   'Selection cleared. Current selectedItems:',
+    //   this.selectedItems
+    // );
   }
 
   isSelected(item: DocumentDTO): boolean {
@@ -159,7 +159,7 @@ export class FolderContentComponent implements OnInit {
 
   endSelection(event: MouseEvent): void {
     if (!this.isSelecting) {
-      console.log('Selection ended without starting');
+      // console.log('Selection ended without starting');
       return;
     }
     const selectionBounds = {
@@ -194,10 +194,6 @@ export class FolderContentComponent implements OnInit {
     this.showActions = this.selectedItems.length > 0;
     this.selectionBoxStyle = {};
     this.cd.detectChanges();
-    console.log(
-      'Selected items:',
-      this.selectedItems.map((item) => item._id)
-    );
   }
 
   handleItemMouseDown(event: MouseEvent, item: DocumentDTO): void {

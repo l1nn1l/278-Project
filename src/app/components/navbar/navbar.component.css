@@ -287,3 +287,7 @@ p-dropdown{
 ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
   display: flex;
 }
+
+::ng-deep .p-inputtext{
+  border-color: var(--dark-grey);
+}

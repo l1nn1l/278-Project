@@ -16,19 +16,20 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 import { RenameDialogComponent } from '../rename-dialog/rename-dialog.component';
 import { catchError, forkJoin, of } from 'rxjs';
+import { FilterTabComponent } from "../filter-tab/filter-tab.component";
 
 
 @Component({
-  selector: 'app-my-drive',
-  standalone: true,
-  imports: [CommonModule, MatMenuModule],
-  templateUrl: './my-drive.component.html',
-  styleUrl: './my-drive.component.css',
-  encapsulation: ViewEncapsulation.None,
-  providers: [
-    DocumentService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-  ]
+    selector: 'app-my-drive',
+    standalone: true,
+    templateUrl: './my-drive.component.html',
+    styleUrl: './my-drive.component.css',
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        DocumentService,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    ],
+    imports: [CommonModule, MatMenuModule, FilterTabComponent]
 })
 export class MyDriveComponent {
   showActions: boolean = false;
