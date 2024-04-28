@@ -7,18 +7,19 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../../interceptors/auth.interceptor';
+import { FilterTabComponent } from "../filter-tab/filter-tab.component";
 
 @Component({
-  selector: 'app-folder-content',
-  standalone: true,
-  imports: [CommonModule, MatMenuModule],
-  templateUrl: './folder-content.component.html',
-  styleUrl: './folder-content.component.css',
-  encapsulation: ViewEncapsulation.None,
-  providers: [
-    DocumentService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-  ]
+    selector: 'app-folder-content',
+    standalone: true,
+    templateUrl: './folder-content.component.html',
+    styleUrl: './folder-content.component.css',
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        DocumentService,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    ],
+    imports: [CommonModule, MatMenuModule, FilterTabComponent]
 })
 export class FolderContentComponent implements OnInit {
   showActions: boolean = false;

@@ -106,3 +106,7 @@ progress::-webkit-progress-value {
     width: auto; 
     text-align: center; 
 }
+
+app-upload-button{
+    z-index: 10;
+}
