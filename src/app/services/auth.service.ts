@@ -28,7 +28,7 @@ export class AuthService {
           localStorage.setItem('User_ID', response.data.id); 
           localStorage.setItem('User_Email', response.data.email);
           localStorage.setItem('User_Name', response.data.name);
-          localStorage.setItem('RememberMe', response.data.rememberMe);
+          localStorage.setItem('rememberMe', response.data.rememberMe);
           this.router.navigate(['/home']);
         } else {
           console.error('Login failed:', response.message);
@@ -51,6 +51,7 @@ export class AuthService {
     localStorage.removeItem('User_ID');
     localStorage.removeItem('User_Email');
     localStorage.removeItem('User_Name');
+    localStorage.removeItem('rememberMe');
     this.router.navigate(['/login']);
   }
 
@@ -63,7 +64,7 @@ export class AuthService {
   }
 
   autoLogin(): boolean {
-    const rememberMe = localStorage.getItem('RememberMe') !== null; 
+    const rememberMe = localStorage.getItem('rememberMe') !== null; 
     if (rememberMe && !this.isTokenExpired()) {
       console.log("user is remembered (autologin)")
       return true;
