@@ -276,7 +276,7 @@ width: 100%;
 
 .list-header {
 display: grid;
-grid-template-columns: auto 2fr 2fr 2fr 2fr 1fr auto;
+grid-template-columns: auto 2fr 3fr 2fr 2fr auto;
 align-items: center;
 padding: 4px 0;
 background-color: var(--filter-button-color);
@@ -285,7 +285,7 @@ font-weight: bold;
 
 .list-item {
 display: grid;
-grid-template-columns: auto 2fr 2fr 2fr 2fr 1fr auto;
+grid-template-columns: auto 2fr 3fr 2fr 2fr auto;
 align-items: center;
 padding: 4px 0;
 }

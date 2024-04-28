@@ -68,7 +68,7 @@
               <div *ngIf="!isGridView" class="list-header">
                 <div class="item-icon-header"></div> <!-- Empty for the icon header -->
                 <div class="item-name-header">Name</div>
-                <div class="item-reason-header">Reason Suggested</div>
+                <!-- <div class="item-reason-header">Reason Suggested</div> -->
                 <div class="item-owner-header">Owner</div>
                 <div class="item-location-header">Location</div>
                 <div class="item-actions-header"></div> <!-- Empty for the actions header -->
@@ -148,7 +148,7 @@
                       <i (click)="openFolder(document)" class="material-icons" style="cursor: pointer;">folder</i>
                     </div>
                     <div class="item-name">{{ document.title }}</div>
-                    <div class="item-reason">{{ document.title }}</div>
+                    <!-- <div class="item-reason">{{ document.title }}</div> -->
                     <div class="item-owner">{{ owner }}</div>
                     <div class="item-location">{{ document.filePath }}</div>
                     <div class="item-actions">
