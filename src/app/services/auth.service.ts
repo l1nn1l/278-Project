@@ -7,6 +7,7 @@ import { tap, catchError } from 'rxjs/operators';
 import { ApiResponse } from '../../assets/Models/DTO/ApiResponse'; 
 import { LoginDTO } from '../../assets/Models/DTO/LoginDTO';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AuthService {
   private baseUrl: string = 'https://googledriveclonebackend.onrender.com';
   private signInUrl: string = 'auth';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private dialog: MatDialog) {}
 
   signIn(email: string, password: string): Observable<ApiResponse> {
     const loginDTO = new LoginDTO(email, password);
@@ -42,5 +43,23 @@ export class AuthService {
   getCurrentUserID(): string {
     return localStorage.getItem('User_ID') || 'default-user-id';  
   }
+
+  logout(): void {
+    this.dialog.closeAll();
+    localStorage.removeItem('Access_Token');
+    localStorage.removeItem('User_ID');
+    localStorage.removeItem('User_Email');
+    localStorage.removeItem('User_Name');
+    this.router.navigate(['/login']);
+  }
+
+  isTokenExpired(): boolean {
+    const token = localStorage.getItem('Access_Token');
+    if (!token) return true;
+  
+    const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
+    return (Math.floor((new Date).getTime() / 1000)) >= expiry;
+  }
+  
   
 }

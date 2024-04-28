@@ -79,6 +79,7 @@ img{
   width: 13rem;
   align-self: center;
   cursor: pointer;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1), 0 3px 8px 0 rgba(0, 0, 0, 0.1);
 }
 
 ::ng-deep .mat-mdc-dialog-container > div > div > app-user-profile-popup > button > i{
