@@ -60,8 +60,22 @@ export class TrashComponent {
   }
 
 
-  moveToTrash(item: any) {
-    // View details logic
+  moveToTrash(id: string): void {
+    this.documentService.hardDeleteDocument(id).pipe(
+      catchError((error: any) => {
+        return of(null);  
+      })
+    ).subscribe({
+      next: (response) => {
+        if (response) {
+          this.documents = this.documents.filter(doc => doc._id !== id);
+          this.cd.detectChanges();
+        }
+      },
+      error: (error) => {
+        console.error(`Error occurred when trying to move the document to trash:`, error);
+      }
+    });
   }
 
   viewDetails(item: any) {
