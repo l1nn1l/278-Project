@@ -383,8 +383,73 @@
                         <i class="material-icons">{{ document.starred ? 'star' : 'star_border' }}</i>
                       </button>
                     </div>
-                    <button class="round-button"><i class="material-icons">more_vert</i></button>
-                  </div>
+                    <button class="round-button" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+                        <i class="material-icons">more_vert</i>
+                      </button>
+                      <!-- Kebab Menu Structure -->
+                    <mat-menu #menu="matMenu">
+                      <ng-template matMenuContent>
+                        <!-- Submenu for Name -->
+                        <button mat-menu-item [matMenuTriggerFor]="nameSubMenu" matMenuTriggerData="{item: item}"
+                          #trigger="matMenuTrigger" (mouseenter)="trigger.openMenu()" (mouseleave)="trigger.closeMenu()">
+                          <span>Name</span>
+                        </button>
+                        <mat-menu #nameSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ document.title }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+    
+                        <!-- Submenu for Owner -->
+                        <button mat-menu-item [matMenuTriggerFor]="ownerSubMenu" matMenuTriggerData="{item: item}"
+                          #ownerTrigger="matMenuTrigger" (mouseenter)="ownerTrigger.openMenu()"
+                          (mouseleave)="ownerTrigger.closeMenu()">
+                          <span>Owner</span>
+                        </button>
+                        <mat-menu #ownerSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ owner }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+    
+                        <!-- Submenu for Date -->
+                        <button mat-menu-item [matMenuTriggerFor]="dateSubMenu" matMenuTriggerData="{item: item}"
+                          #dateTrigger="matMenuTrigger" (mouseenter)="dateTrigger.openMenu()"
+                          (mouseleave)="dateTrigger.closeMenu()" *ngIf="document.type !== 'folder'">
+                          <span>Date</span>
+                        </button>
+                        <mat-menu #dateSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ document.uploadDate| date:'medium' }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+    
+                        <!-- Submenu for Location -->
+                        <button mat-menu-item [matMenuTriggerFor]="locationSubMenu" matMenuTriggerData="{item: item}"
+                          #locationTrigger="matMenuTrigger" (mouseenter)="locationTrigger.openMenu()"
+                          (mouseleave)="locationTrigger.closeMenu()">
+                          <span>Location</span>
+                        </button>
+                        <mat-menu #locationSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ document.filePath }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+    
+                        <!-- Button for Move to Trash -->
+                        <button mat-menu-item (click)="moveToTrash(document)">
+                          <span>Move to Trash</span>
+                        </button>
+                      </ng-template>
+                    </mat-menu>                  </div>
                 </div>
               </div>
             </div>

@@ -1,410 +1,195 @@
 <div *ngIf="!showActions" class="tab-section">
-    <!-- Layout switch buttons -->
-    <div class="left">
-      <button class="MyDrive">My Drive</button>
-    </div>
-    <div class="right">
-      <button class="layout-button" [ngClass]="{'active': !isGridView}" (click)="setListView()">
-        <i class="material-icons">{{ !isGridView ? 'check' : 'menu' }}</i>
-      </button>
-      <button class="layout-button" [ngClass]="{'active': isGridView}" (click)="setGridView()">
-        <i class="material-icons">{{ isGridView ? 'check' : 'apps' }}</i>
-      </button>
-    </div>
+  <!-- Layout switch buttons -->
+  <div class="left">
+    <button class="MyDrive">My Drive</button>
+  </div>
+  <div class="right">
+    <button class="layout-button" [ngClass]="{'active': !isGridView}" (click)="setListView()">
+      <i class="material-icons">{{ !isGridView ? 'check' : 'menu' }}</i>
+    </button>
+    <button class="layout-button" [ngClass]="{'active': isGridView}" (click)="setGridView()">
+      <i class="material-icons">{{ isGridView ? 'check' : 'apps' }}</i>
+    </button>
+  </div>
+</div>
+
+<div class="filter-header">
+  <!-- Filter options -->
+  <div class="filter-item">
+    <button class="filter-button"><i class="material-icons">topic</i>Type<i
+        class="material-icons">arrow_drop_down</i></button>
+  </div>
+  <div class="filter-item">
+    <button class="filter-button"><i class="material-icons">person</i>People<i
+        class="material-icons">arrow_drop_down</i></button>
+  </div>
+  <div class="filter-item">
+    <button class="filter-button"><i class="material-icons">calendar_today</i>Modified<i
+        class="material-icons">arrow_drop_down</i></button>
   </div>
 
-  <div class="filter-header">
-    <!-- Filter options -->
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">topic</i>Type<i
-          class="material-icons">arrow_drop_down</i></button>
-    </div>
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">person</i>People<i
-          class="material-icons">arrow_drop_down</i></button>
-    </div>
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">calendar_today</i>Modified<i
-          class="material-icons">arrow_drop_down</i></button>
-    </div>
+</div>
 
-  </div>
-
-  <div *ngIf="showActions" class="actions-section">
-    <!-- Actions when an item is selected -->
-    <div class="actions">
-      <div *ngIf="selectedItems.length > 0" class="actions-section">
-        <div class="actions-section-content">
-          {{ selectedItems.length }} selected
-          <div>
-            <button class="round-button" (click)="clearSelection()"><i class="material-icons">close</i></button>
-            <!-- Additional action buttons -->
-            <button class="round-button"><i class="material-icons">person_add</i></button>
-            <button class="round-button"><i class="material-icons">download</i></button>
-            <button class="round-button"><i class="material-icons">input</i></button>
-            <button class="round-button" (click)="deleteSelectedDocuments()"><i class="material-icons">delete</i></button>
-            <button class="round-button"><i class="material-icons">link</i></button>
-            <button class="round-button"><i class="material-icons">more_vert</i></button>
-          </div>
+<div *ngIf="showActions" class="actions-section">
+  <!-- Actions when an item is selected -->
+  <div class="actions">
+    <div *ngIf="selectedItems.length > 0" class="actions-section">
+      <div class="actions-section-content">
+        {{ selectedItems.length }} selected
+        <div>
+          <button class="round-button" (click)="clearSelection()"><i class="material-icons">close</i></button>
+          <!-- Additional action buttons -->
+          <button class="round-button"><i class="material-icons">person_add</i></button>
+          <button class="round-button"><i class="material-icons">download</i></button>
+          <button class="round-button"><i class="material-icons">input</i></button>
+          <button class="round-button" (click)="deleteSelectedDocuments()"><i class="material-icons">delete</i></button>
+          <button class="round-button"><i class="material-icons">link</i></button>
+          <button class="round-button"><i class="material-icons">more_vert</i></button>
         </div>
       </div>
     </div>
   </div>
-  <div class="main-content-div" (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)"
+</div>
+<div class="main-content-div" (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)"
   (mouseup)="endSelection($event)">
   <div *ngIf="isSelecting" [ngStyle]="selectionBoxStyle" class="selection-box"></div>
   <div *ngIf="!isLoading">
     <div *ngIf="documents.length > 0; else noContent">
       <div class="scrollable-content">
         <!-- Folders content -->
-        <span class="span">Folders</span><br><br>
-        <div class="folders-content">
-          <!-- Main content area with conditional grid or list view -->
-          <div class="content-area" [ngClass]="{'content-grid': isGridView, 'content-list': !isGridView}">
-            <!-- Headers for the list view -->
-            <div *ngIf="!isGridView" class="list-header">
-              <div class="item-icon-header"></div> <!-- Empty for the icon header -->
-              <div class="item-name-header">Name</div>
-              <div class="item-reason-header">Reason Suggested</div>
-              <div class="item-owner-header">Owner</div>
-              <div class="item-location-header">Location</div>
-              <div class="item-actions-header"></div> <!-- Empty for the actions header -->
-            </div>
-
-            <!-- Folders -->
-            <div class="item" *ngFor="let document of getFolders()" [id]="'item-' + document._id"
-              [ngClass]="{'selected': isSelected(document)}" (mousedown)="handleItemMouseDown($event, document)" 
-              (dblclick)="openFolder(document)">
-              <!-- Folder content -->
-              <div *ngIf="isGridView" class="content-grid">
-                <div class="item-header">
-                  <i (click)="openFolder(document)" class="material-icons" style="cursor: pointer;">folder</i>
-                  <div class="filename">{{ document.title }}</div>
-                  <button class="round-button" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
-                    <i class="material-icons">more_vert</i>
-                  </button>
-
-                  <!-- Kebab Menu Structure -->
-                  <mat-menu #menu="matMenu">
-                    <ng-template matMenuContent>
-                      <!-- Submenu for Name -->
-                      <button mat-menu-item [matMenuTriggerFor]="nameSubMenu" matMenuTriggerData="{item: item}"
-                        #trigger="matMenuTrigger" (mouseenter)="trigger.openMenu()" (mouseleave)="trigger.closeMenu()">
-                        <span>Name</span>
-                      </button>
-                      <mat-menu #nameSubMenu="matMenu">
-                        <ng-template matMenuContent>
-                          <button mat-menu-item>
-                            {{ document.title }}
-                          </button>
-                        </ng-template>
-                      </mat-menu>
-
-                      <!-- Submenu for Owner -->
-                      <button mat-menu-item [matMenuTriggerFor]="ownerSubMenu" matMenuTriggerData="{item: item}"
-                        #ownerTrigger="matMenuTrigger" (mouseenter)="ownerTrigger.openMenu()"
-                        (mouseleave)="ownerTrigger.closeMenu()">
-                        <span>Owner</span>
-                      </button>
-                      <mat-menu #ownerSubMenu="matMenu">
-                        <ng-template matMenuContent>
-                          <button mat-menu-item>
-                            {{ owner }}
-                          </button>
-                        </ng-template>
-                      </mat-menu>
-
-                      <!-- Submenu for Location -->
-                      <button mat-menu-item [matMenuTriggerFor]="locationSubMenu" matMenuTriggerData="{item: item}"
-                        #locationTrigger="matMenuTrigger" (mouseenter)="locationTrigger.openMenu()"
-                        (mouseleave)="locationTrigger.closeMenu()">
-                        <span>Location</span>
-                      </button>
-                      <mat-menu #locationSubMenu="matMenu">
-                        <ng-template matMenuContent>
-                          <button mat-menu-item>
-                            {{ document.filePath }}
-                          </button>
-                        </ng-template>
-                      </mat-menu>
-
-                      <!-- Button for Move to Trash -->
-                      <button mat-menu-item (click)="moveToTrash(document)">
-                        <span>Move to Trash</span>
-                      </button>
-                    </ng-template>
-                  </mat-menu>
-                </div>
+        <div *ngIf="getFolders().length > 0">
+          <span class="span">Folders</span><br><br>
+          <div class="folders-content">
+            <!-- Main content area with conditional grid or list view -->
+            <div class="content-area" [ngClass]="{'content-grid': isGridView, 'content-list': !isGridView}">
+              <!-- Headers for the list view -->
+              <div *ngIf="!isGridView" class="list-header">
+                <div class="item-icon-header"></div> <!-- Empty for the icon header -->
+                <div class="item-name-header">Name</div>
+                <div class="item-reason-header">Reason Suggested</div>
+                <div class="item-owner-header">Owner</div>
+                <div class="item-location-header">Location</div>
+                <div class="item-actions-header"></div> <!-- Empty for the actions header -->
               </div>
 
-              <!-- List view -->
-              <div *ngIf="!isGridView" class="content-list">
-                <div class="list-item">
-                  <div class="item-icon">
+              <!-- Folders -->
+              <div class="item" *ngFor="let document of getFolders()" [id]="'item-' + document._id"
+                [ngClass]="{'selected': isSelected(document)}" (mousedown)="handleItemMouseDown($event, document)"
+                (dblclick)="openFolder(document)">
+                <!-- Folder content -->
+                <div *ngIf="isGridView" class="content-grid">
+                  <div class="item-header">
                     <i (click)="openFolder(document)" class="material-icons" style="cursor: pointer;">folder</i>
+                    <div class="filename">{{ document.title }}</div>
+                    <button class="round-button" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+                      <i class="material-icons">more_vert</i>
+                    </button>
+
+                    <!-- Kebab Menu Structure -->
+                    <mat-menu #menu="matMenu">
+                      <ng-template matMenuContent>
+                        <!-- Submenu for Name -->
+                        <button mat-menu-item [matMenuTriggerFor]="nameSubMenu" matMenuTriggerData="{item: item}"
+                          #trigger="matMenuTrigger" (mouseenter)="trigger.openMenu()"
+                          (mouseleave)="trigger.closeMenu()">
+                          <span>Name</span>
+                        </button>
+                        <mat-menu #nameSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ document.title }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+
+                        <!-- Submenu for Owner -->
+                        <button mat-menu-item [matMenuTriggerFor]="ownerSubMenu" matMenuTriggerData="{item: item}"
+                          #ownerTrigger="matMenuTrigger" (mouseenter)="ownerTrigger.openMenu()"
+                          (mouseleave)="ownerTrigger.closeMenu()">
+                          <span>Owner</span>
+                        </button>
+                        <mat-menu #ownerSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ owner }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+
+                        <!-- Submenu for Location -->
+                        <button mat-menu-item [matMenuTriggerFor]="locationSubMenu" matMenuTriggerData="{item: item}"
+                          #locationTrigger="matMenuTrigger" (mouseenter)="locationTrigger.openMenu()"
+                          (mouseleave)="locationTrigger.closeMenu()">
+                          <span>Location</span>
+                        </button>
+                        <mat-menu #locationSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ document.filePath }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+
+                        <!-- Button for Move to Trash -->
+                        <button mat-menu-item (click)="moveToTrash(document)">
+                          <span>Move to Trash</span>
+                        </button>
+                      </ng-template>
+                    </mat-menu>
                   </div>
-                  <div class="item-name">{{ document.title }}</div>
-                  <div class="item-reason">{{ document.title }}</div>
-                  <div class="item-owner">{{ owner }}</div>
-                  <div class="item-location">{{ document.filePath }}</div>
-                  <div class="item-actions">
-                    <div class="item-hover-menu">
-                      <button class="round-button"><i class="material-icons">share</i></button>
-                      <button class="round-button"><i class="material-icons">download</i></button>
-                      <button class="round-button" (click)="openRenameDialog(document)"><i class="material-icons">edit</i></button>
-                      <button class="round-button" (click)="toggleStarred(document)">
-                        <i class="material-icons">{{ document.starred ? 'star' : 'star_border' }}</i>
-                      </button>
+                </div>
+
+                <!-- List view -->
+                <div *ngIf="!isGridView" class="content-list">
+                  <div class="list-item">
+                    <div class="item-icon">
+                      <i (click)="openFolder(document)" class="material-icons" style="cursor: pointer;">folder</i>
                     </div>
-                    <button class="round-button"><i class="material-icons">more_vert</i></button>
+                    <div class="item-name">{{ document.title }}</div>
+                    <div class="item-reason">{{ document.title }}</div>
+                    <div class="item-owner">{{ owner }}</div>
+                    <div class="item-location">{{ document.filePath }}</div>
+                    <div class="item-actions">
+                      <div class="item-hover-menu">
+                        <button class="round-button"><i class="material-icons">share</i></button>
+                        <button class="round-button"><i class="material-icons">download</i></button>
+                        <button class="round-button" (click)="openRenameDialog(document)"><i
+                            class="material-icons">edit</i></button>
+                        <button class="round-button" (click)="toggleStarred(document)">
+                          <i class="material-icons">{{ document.starred ? 'star' : 'star_border' }}</i>
+                        </button>
+                      </div>
+                      <button class="round-button"><i class="material-icons">more_vert</i></button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div><br><br>
+          </div><br><br>
+        </div>
+
 
         <!-- Files content -->
-        <span class="span">Files</span><br><br>
-        <div class="files-content">
+        <div *ngIf="getFiles().length > 0">
+          <span class="span">Files</span><br><br>
+          <div class="files-content">
 
-          <div class="content-area" [ngClass]="{'content-grid': isGridView, 'content-list': !isGridView}">
-            <!-- Headers for the list view -->
-            <div *ngIf="!isGridView" class="list-header">
-              <div class="item-icon-header"></div> <!-- Empty for the icon header -->
-              <div class="item-name-header">Name</div>
-              <div class="item-reason-header">Reason Suggested</div>
-              <div class="item-owner-header">Owner</div>
-              <div class="item-location-header">Location</div>
-              <div class="item-actions-header"></div> <!-- Empty for the actions header -->
-            </div>
-            <!-- Items for grid or list view -->
-            <div class="item" *ngFor="let document of getFiles()" [id]="'item-' + document._id"
-              [ngClass]="{'selected': isSelected(document)}" (mousedown)="handleItemMouseDown($event, document)">
-              <!-- Item content -->
-              <div *ngIf="isGridView" class="content-grid">
-                <div class="item-header">
-                  <div [ngSwitch]="document.type">
-                    <!-- Word Document SVG -->
-                    <ng-container
-                      *ngSwitchCase="'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"><svg
-                        viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="word-logo"
-                        style="width: 16px; height: 16px;">
-                        <path
-                          d="M14.222 0H1.778C.8 0 0 .8 0 1.778v12.444C0 15.2.8 16 1.778 16h12.444C15.2 16 16 15.2 16 14.222V1.778C16 .8 15.2 0 14.222 0zm-3.11 12.444H9.777L8 5.778l-1.778 6.666H4.89L2.756 3.556h1.51l1.37 6.675 1.742-6.675h1.244l1.751 6.675 1.36-6.675h1.511l-2.133 8.888z">
-                        </path>
-                      </svg></ng-container>
-                    <!-- Excel Document SVG -->
-                    <ng-container
-                      *ngSwitchCase="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"><svg
-                        viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="excel-logo"
-                        style="width: 16px; height: 16px;">
-                        <path
-                          d="M14.222 0H1.778C.796 0 0 .796 0 1.778v12.444C0 15.204.796 16 1.778 16h12.444c.982 0 1.778-.796 1.778-1.778V1.778C16 .796 15.204 0 14.222 0zm-2.489 12.444H9.956L8 9.067l-1.956 3.377H4.267L7.11 8 4.267 3.556h1.777L8 6.933l1.956-3.377h1.777L8.89 8l2.844 4.444z">
-                        </path>
-                      </svg></ng-container>
-                    <!-- Text File SVG -->
-                    <ng-container *ngSwitchCase="'text/plain'"><svg viewBox="0 0 12 16"
-                        xmlns="http://www.w3.org/2000/svg" class="txt-logo" style="width: 16px; height: 16px;">
-                        <path
-                          d="M8 0H1.6C.72 0 .008.72.008 1.6L0 14.4c0 .88.712 1.6 1.592 1.6H11.2c.88 0 1.6-.72 1.6-1.6V4.8L8 0zm1.6 12.8H3.2v-1.6h6.4v1.6zm0-3.2H3.2V8h6.4v1.6zm-2.4-4V1.2l4.4 4.4H7.2z">
-                        </path>
-                      </svg></ng-container>
-                    <!-- PDF Document SVG -->
-                    <ng-container *ngSwitchCase="'application/pdf'"><svg viewBox="0 0 16 16"
-                        xmlns="http://www.w3.org/2000/svg" class="pdf-logo" style="width: 16px; height: 16px;">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M1.778 0h12.444C15.2 0 16 .8 16 1.778v12.444C16 15.2 15.2 16 14.222 16H1.778C.8 16 0 15.2 0 14.222V1.778C0 .8.8 0 1.778 0zm2.666 7.556h-.888v-.89h.888v.89zm1.334 0c0 .737-.596 1.333-1.334 1.333h-.888v1.778H2.222V5.333h2.222c.738 0 1.334.596 1.334 1.334v.889zm6.666-.89h2.223V5.334H11.11v5.334h1.333V8.889h1.334V7.556h-1.334v-.89zm-2.222 2.667c0 .738-.595 1.334-1.333 1.334H6.667V5.333h2.222c.738 0 1.333.596 1.333 1.334v2.666zm-1.333 0H8V6.667h.889v2.666z">
-                        </path>
-                      </svg></ng-container>
-                    <!-- Image File SVG -->
-                    <ng-container *ngSwitchCase="'image/png'"><svg viewBox="0 0 16 16"
-                        xmlns="http://www.w3.org/2000/svg" class="image-logo" style="width: 16px; height: 16px;">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M16 14.222V1.778C16 .796 15.204 0 14.222 0H1.778C.796 0 0 .796 0 1.778v12.444C0 15.204.796 16 1.778 16h12.444c.982 0 1.778-.796 1.778-1.778zM4.889 9.333l2.222 2.671L10.222 8l4 5.333H1.778l3.11-4z">
-                        </path>
-                      </svg></ng-container>
-                    <ng-container *ngSwitchCase="'image/jpg'"><svg viewBox="0 0 16 16"
-                        xmlns="http://www.w3.org/2000/svg" class="image-logo" style="width: 16px; height: 16px;">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M16 14.222V1.778C16 .796 15.204 0 14.222 0H1.778C.796 0 0 .796 0 1.778v12.444C0 15.204.796 16 1.778 16h12.444c.982 0 1.778-.796 1.778-1.778zM4.889 9.333l2.222 2.671L10.222 8l4 5.333H1.778l3.11-4z">
-                        </path>
-                      </svg></ng-container>
-                    <!-- Video File SVG -->
-                    <ng-container *ngSwitchCase="'video/mp4'"><svg viewBox="0 0 16 12"
-                        xmlns="http://www.w3.org/2000/svg" class="video-logo" style="width: 16px; height: 16px;">
-                        <path
-                          d="M12.8 0l1.6 3.2H12L10.4 0H8.8l1.6 3.2H8L6.4 0H4.8l1.6 3.2H4L2.4 0h-.8C.72 0 .008.72.008 1.6L0 11.2c0 .88.72 1.6 1.6 1.6h12.8c.88 0 1.6-.72 1.6-1.6V0h-3.2z">
-                        </path>
-                      </svg></ng-container>
-                    <ng-container *ngSwitchCase="'video/quicktime'"><svg viewBox="0 0 16 12"
-                        xmlns="http://www.w3.org/2000/svg" class="video-logo" style="width: 16px; height: 16px;">
-                        <path
-                          d="M12.8 0l1.6 3.2H12L10.4 0H8.8l1.6 3.2H8L6.4 0H4.8l1.6 3.2H4L2.4 0h-.8C.72 0 .008.72.008 1.6L0 11.2c0 .88.72 1.6 1.6 1.6h12.8c.88 0 1.6-.72 1.6-1.6V0h-3.2z">
-                        </path>
-                      </svg></ng-container>
-                    <!-- Archive File Icon -->
-                    <ng-container *ngSwitchCase="'application/zip'"><i
-                        class="material-icons">download</i></ng-container>
-                    <ng-container *ngSwitchCase="'application/rar'"><i
-                        class="material-icons">download</i></ng-container>
-                    <!-- Default File Icon -->
-                    <ng-container *ngSwitchDefault>
-                      <i class="material-icons">insert_drive_file</i>
-                    </ng-container>
-                  </div>
-                  <div class="filename">{{ document.title }}</div>
-                  <button class="round-button" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
-                    <i class="material-icons">more_vert</i>
-                  </button>
-
-                  <!-- Kebab Menu Structure -->
-                  <mat-menu #menu="matMenu">
-                    <ng-template matMenuContent>
-                      <!-- Submenu for Name -->
-                      <button mat-menu-item [matMenuTriggerFor]="nameSubMenu" matMenuTriggerData="{item: item}"
-                        #trigger="matMenuTrigger" (mouseenter)="trigger.openMenu()" (mouseleave)="trigger.closeMenu()">
-                        <span>Name</span>
-                      </button>
-                      <mat-menu #nameSubMenu="matMenu">
-                        <ng-template matMenuContent>
-                          <button mat-menu-item>
-                            {{ document.title }}
-                          </button>
-                        </ng-template>
-                      </mat-menu>
-
-                      <!-- Submenu for Owner -->
-                      <button mat-menu-item [matMenuTriggerFor]="ownerSubMenu" matMenuTriggerData="{item: item}"
-                        #ownerTrigger="matMenuTrigger" (mouseenter)="ownerTrigger.openMenu()"
-                        (mouseleave)="ownerTrigger.closeMenu()">
-                        <span>Owner</span>
-                      </button>
-                      <mat-menu #ownerSubMenu="matMenu">
-                        <ng-template matMenuContent>
-                          <button mat-menu-item>
-                            {{ owner }}
-                          </button>
-                        </ng-template>
-                      </mat-menu>
-
-                      <!-- Submenu for Date -->
-                      <button mat-menu-item [matMenuTriggerFor]="dateSubMenu" matMenuTriggerData="{item: item}"
-                        #dateTrigger="matMenuTrigger" (mouseenter)="dateTrigger.openMenu()"
-                        (mouseleave)="dateTrigger.closeMenu()">
-                        <span>Date</span>
-                      </button>
-                      <mat-menu #dateSubMenu="matMenu">
-                        <ng-template matMenuContent>
-                          <button mat-menu-item>
-                            {{ document.uploadDate | date:'medium' }}
-                          </button>
-                        </ng-template>
-                      </mat-menu>
-
-                      <!-- Submenu for Location -->
-                      <button mat-menu-item [matMenuTriggerFor]="locationSubMenu" matMenuTriggerData="{item: item}"
-                        #locationTrigger="matMenuTrigger" (mouseenter)="locationTrigger.openMenu()"
-                        (mouseleave)="locationTrigger.closeMenu()">
-                        <span>Location</span>
-                      </button>
-                      <mat-menu #locationSubMenu="matMenu">
-                        <ng-template matMenuContent>
-                          <button mat-menu-item>
-                            {{ document.filePath }}
-                          </button>
-                        </ng-template>
-                      </mat-menu>
-
-                      <!-- Button for Move to Trash -->
-                      <button mat-menu-item (click)="moveToTrash(document)">
-                        <span>Move to Trash</span>
-                      </button>
-                    </ng-template>
-                  </mat-menu>
-                </div>
-                <div class="item-image">
-                  <div class="file-icon" [ngSwitch]="document.type">
-                    <!-- Word Document SVG -->
-                    <ng-container
-                      *ngSwitchCase="'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"><svg
-                        viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="word-logo"
-                        style="width: 64px; height: 64px;">
-                        <path
-                          d="M14.222 0H1.778C.8 0 0 .8 0 1.778v12.444C0 15.2.8 16 1.778 16h12.444C15.2 16 16 15.2 16 14.222V1.778C16 .8 15.2 0 14.222 0zm-3.11 12.444H9.777L8 5.778l-1.778 6.666H4.89L2.756 3.556h1.51l1.37 6.675 1.742-6.675h1.244l1.751 6.675 1.36-6.675h1.511l-2.133 8.888z">
-                        </path>
-                      </svg></ng-container>
-                    <!-- Excel Document SVG -->
-                    <ng-container
-                      *ngSwitchCase="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"><svg
-                        viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="excel-logo"
-                        style="width: 64px; height: 64px;">
-                        <path
-                          d="M14.222 0H1.778C.796 0 0 .796 0 1.778v12.444C0 15.204.796 16 1.778 16h12.444c.982 0 1.778-.796 1.778-1.778V1.778C16 .796 15.204 0 14.222 0zm-2.489 12.444H9.956L8 9.067l-1.956 3.377H4.267L7.11 8 4.267 3.556h1.777L8 6.933l1.956-3.377h1.777L8.89 8l2.844 4.444z">
-                        </path>
-                      </svg></ng-container>
-                    <!-- Text File SVG -->
-                    <ng-container *ngSwitchCase="'text/plain'"><svg viewBox="0 0 12 16"
-                        xmlns="http://www.w3.org/2000/svg" class="txt-logo" style="width: 64px; height: 64px;">
-                        <path
-                          d="M8 0H1.6C.72 0 .008.72.008 1.6L0 14.4c0 .88.712 1.6 1.592 1.6H11.2c.88 0 1.6-.72 1.6-1.6V4.8L8 0zm1.6 12.8H3.2v-1.6h6.4v1.6zm0-3.2H3.2V8h6.4v1.6zm-2.4-4V1.2l4.4 4.4H7.2z">
-                        </path>
-                      </svg></ng-container>
-                    <!-- PDF Document SVG -->
-                    <ng-container *ngSwitchCase="'application/pdf'"><svg viewBox="0 0 16 16"
-                        xmlns="http://www.w3.org/2000/svg" class="pdf-logo" style="width: 64px; height: 64px;">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M1.778 0h12.444C15.2 0 16 .8 16 1.778v12.444C16 15.2 15.2 16 14.222 16H1.778C.8 16 0 15.2 0 14.222V1.778C0 .8.8 0 1.778 0zm2.666 7.556h-.888v-.89h.888v.89zm1.334 0c0 .737-.596 1.333-1.334 1.333h-.888v1.778H2.222V5.333h2.222c.738 0 1.334.596 1.334 1.334v.889zm6.666-.89h2.223V5.334H11.11v5.334h1.333V8.889h1.334V7.556h-1.334v-.89zm-2.222 2.667c0 .738-.595 1.334-1.333 1.334H6.667V5.333h2.222c.738 0 1.333.596 1.333 1.334v2.666zm-1.333 0H8V6.667h.889v2.666z">
-                        </path>
-                      </svg></ng-container>
-                    <!-- Image File SVG -->
-                    <ng-container *ngSwitchCase="'image/png'"><svg viewBox="0 0 16 16"
-                        xmlns="http://www.w3.org/2000/svg" class="image-logo" style="width: 64px; height: 64px;">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M16 14.222V1.778C16 .796 15.204 0 14.222 0H1.778C.796 0 0 .796 0 1.778v12.444C0 15.204.796 16 1.778 16h12.444c.982 0 1.778-.796 1.778-1.778zM4.889 9.333l2.222 2.671L10.222 8l4 5.333H1.778l3.11-4z">
-                        </path>
-                      </svg></ng-container>
-                    <ng-container *ngSwitchCase="'image/jpg'"><svg viewBox="0 0 16 16"
-                        xmlns="http://www.w3.org/2000/svg" class="image-logo" style="width: 64px; height: 64px;">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M16 14.222V1.778C16 .796 15.204 0 14.222 0H1.778C.796 0 0 .796 0 1.778v12.444C0 15.204.796 16 1.778 16h12.444c.982 0 1.778-.796 1.778-1.778zM4.889 9.333l2.222 2.671L10.222 8l4 5.333H1.778l3.11-4z">
-                        </path>
-                      </svg></ng-container>
-                    <!-- Video File SVG -->
-                    <ng-container *ngSwitchCase="'video/mp4'"><svg viewBox="0 0 16 12"
-                        xmlns="http://www.w3.org/2000/svg" class="video-logo" style="width: 64px; height: 64px;">
-                        <path
-                          d="M12.8 0l1.6 3.2H12L10.4 0H8.8l1.6 3.2H8L6.4 0H4.8l1.6 3.2H4L2.4 0h-.8C.72 0 .008.72.008 1.6L0 11.2c0 .88.72 1.6 1.6 1.6h12.8c.88 0 1.6-.72 1.6-1.6V0h-3.2z">
-                        </path>
-                      </svg></ng-container>
-                    <ng-container *ngSwitchCase="'video/quicktime'"><svg viewBox="0 0 16 12"
-                        xmlns="http://www.w3.org/2000/svg" class="video-logo" style="width: 64px; height: 64px;">
-                        <path
-                          d="M12.8 0l1.6 3.2H12L10.4 0H8.8l1.6 3.2H8L6.4 0H4.8l1.6 3.2H4L2.4 0h-.8C.72 0 .008.72.008 1.6L0 11.2c0 .88.72 1.6 1.6 1.6h12.8c.88 0 1.6-.72 1.6-1.6V0h-3.2z">
-                        </path>
-                      </svg></ng-container>
-                    <!-- Archive File Icon -->
-                    <ng-container *ngSwitchCase="'application/zip'">
-                      <div class="archive-placeholder"></div>
-                    </ng-container>
-                    <ng-container *ngSwitchCase="'application/rar'">
-                      <div class="archive-placeholder"></div>
-                    </ng-container>
-                    <!-- Default File Icon -->
-                    <ng-container *ngSwitchDefault>
-                      <i class="material-icons">insert_drive_file</i>
-                    </ng-container>
-                  </div>
-                </div>
-                <div class="item-info">
-                  <div class="meta">{{ document.uploadDate | date:'medium' }}</div>
-                </div>
+            <div class="content-area" [ngClass]="{'content-grid': isGridView, 'content-list': !isGridView}">
+              <!-- Headers for the list view -->
+              <div *ngIf="!isGridView" class="list-header">
+                <div class="item-icon-header"></div> <!-- Empty for the icon header -->
+                <div class="item-name-header">Name</div>
+                <div class="item-reason-header">Reason Suggested</div>
+                <div class="item-owner-header">Owner</div>
+                <div class="item-location-header">Location</div>
+                <div class="item-actions-header"></div> <!-- Empty for the actions header -->
               </div>
-
-              <!-- List view -->
-              <div *ngIf="!isGridView" class="content-list">
-                <div class="list-item">
-                  <div class="item-icon">
+              <!-- Items for grid or list view -->
+              <div class="item" *ngFor="let document of getFiles()" [id]="'item-' + document._id"
+                [ngClass]="{'selected': isSelected(document)}" (mousedown)="handleItemMouseDown($event, document)">
+                <!-- Item content -->
+                <div *ngIf="isGridView" class="content-grid">
+                  <div class="item-header">
                     <div [ngSwitch]="document.type">
                       <!-- Word Document SVG -->
                       <ng-container
@@ -474,21 +259,310 @@
                         <i class="material-icons">insert_drive_file</i>
                       </ng-container>
                     </div>
+                    <div class="filename">{{ document.title }}</div>
+                    <button class="round-button" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+                      <i class="material-icons">more_vert</i>
+                    </button>
+
+                    <!-- Kebab Menu Structure -->
+                    <mat-menu #menu="matMenu">
+                      <ng-template matMenuContent>
+                        <!-- Submenu for Name -->
+                        <button mat-menu-item [matMenuTriggerFor]="nameSubMenu" matMenuTriggerData="{item: item}"
+                          #trigger="matMenuTrigger" (mouseenter)="trigger.openMenu()"
+                          (mouseleave)="trigger.closeMenu()">
+                          <span>Name</span>
+                        </button>
+                        <mat-menu #nameSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ document.title }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+
+                        <!-- Submenu for Owner -->
+                        <button mat-menu-item [matMenuTriggerFor]="ownerSubMenu" matMenuTriggerData="{item: item}"
+                          #ownerTrigger="matMenuTrigger" (mouseenter)="ownerTrigger.openMenu()"
+                          (mouseleave)="ownerTrigger.closeMenu()">
+                          <span>Owner</span>
+                        </button>
+                        <mat-menu #ownerSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ owner }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+
+                        <!-- Submenu for Date -->
+                        <button mat-menu-item [matMenuTriggerFor]="dateSubMenu" matMenuTriggerData="{item: item}"
+                          #dateTrigger="matMenuTrigger" (mouseenter)="dateTrigger.openMenu()"
+                          (mouseleave)="dateTrigger.closeMenu()">
+                          <span>Date</span>
+                        </button>
+                        <mat-menu #dateSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ document.uploadDate | date:'medium' }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+
+                        <!-- Submenu for Location -->
+                        <button mat-menu-item [matMenuTriggerFor]="locationSubMenu" matMenuTriggerData="{item: item}"
+                          #locationTrigger="matMenuTrigger" (mouseenter)="locationTrigger.openMenu()"
+                          (mouseleave)="locationTrigger.closeMenu()">
+                          <span>Location</span>
+                        </button>
+                        <mat-menu #locationSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ document.filePath }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+
+                        <!-- Button for Move to Trash -->
+                        <button mat-menu-item (click)="moveToTrash(document)">
+                          <span>Move to Trash</span>
+                        </button>
+                      </ng-template>
+                    </mat-menu>
                   </div>
-                  <div class="item-name">{{ document.title }}</div>
-                  <div class="item-reason">{{ document.title }}</div>
-                  <div class="item-owner">{{ owner}}</div>
-                  <div class="item-location">{{ document.title }}</div>
-                  <div class="item-actions">
-                    <div class="item-hover-menu">
-                      <button class="round-button"><i class="material-icons">share</i></button>
-                      <button class="round-button"><i class="material-icons">download</i></button>
-                      <button class="round-button" (click)="openRenameDialog(document)"><i class="material-icons">edit</i></button>
-                      <button class="round-button" (click)="toggleStarred(document)">
-                        <i class="material-icons">{{ document.starred ? 'star' : 'star_border' }}</i>
-                      </button>
+                  <div class="item-image">
+                    <div class="file-icon" [ngSwitch]="document.type">
+                      <!-- Word Document SVG -->
+                      <ng-container
+                        *ngSwitchCase="'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"><svg
+                          viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="word-logo"
+                          style="width: 64px; height: 64px;">
+                          <path
+                            d="M14.222 0H1.778C.8 0 0 .8 0 1.778v12.444C0 15.2.8 16 1.778 16h12.444C15.2 16 16 15.2 16 14.222V1.778C16 .8 15.2 0 14.222 0zm-3.11 12.444H9.777L8 5.778l-1.778 6.666H4.89L2.756 3.556h1.51l1.37 6.675 1.742-6.675h1.244l1.751 6.675 1.36-6.675h1.511l-2.133 8.888z">
+                          </path>
+                        </svg></ng-container>
+                      <!-- Excel Document SVG -->
+                      <ng-container
+                        *ngSwitchCase="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"><svg
+                          viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="excel-logo"
+                          style="width: 64px; height: 64px;">
+                          <path
+                            d="M14.222 0H1.778C.796 0 0 .796 0 1.778v12.444C0 15.204.796 16 1.778 16h12.444c.982 0 1.778-.796 1.778-1.778V1.778C16 .796 15.204 0 14.222 0zm-2.489 12.444H9.956L8 9.067l-1.956 3.377H4.267L7.11 8 4.267 3.556h1.777L8 6.933l1.956-3.377h1.777L8.89 8l2.844 4.444z">
+                          </path>
+                        </svg></ng-container>
+                      <!-- Text File SVG -->
+                      <ng-container *ngSwitchCase="'text/plain'"><svg viewBox="0 0 12 16"
+                          xmlns="http://www.w3.org/2000/svg" class="txt-logo" style="width: 64px; height: 64px;">
+                          <path
+                            d="M8 0H1.6C.72 0 .008.72.008 1.6L0 14.4c0 .88.712 1.6 1.592 1.6H11.2c.88 0 1.6-.72 1.6-1.6V4.8L8 0zm1.6 12.8H3.2v-1.6h6.4v1.6zm0-3.2H3.2V8h6.4v1.6zm-2.4-4V1.2l4.4 4.4H7.2z">
+                          </path>
+                        </svg></ng-container>
+                      <!-- PDF Document SVG -->
+                      <ng-container *ngSwitchCase="'application/pdf'"><svg viewBox="0 0 16 16"
+                          xmlns="http://www.w3.org/2000/svg" class="pdf-logo" style="width: 64px; height: 64px;">
+                          <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M1.778 0h12.444C15.2 0 16 .8 16 1.778v12.444C16 15.2 15.2 16 14.222 16H1.778C.8 16 0 15.2 0 14.222V1.778C0 .8.8 0 1.778 0zm2.666 7.556h-.888v-.89h.888v.89zm1.334 0c0 .737-.596 1.333-1.334 1.333h-.888v1.778H2.222V5.333h2.222c.738 0 1.334.596 1.334 1.334v.889zm6.666-.89h2.223V5.334H11.11v5.334h1.333V8.889h1.334V7.556h-1.334v-.89zm-2.222 2.667c0 .738-.595 1.334-1.333 1.334H6.667V5.333h2.222c.738 0 1.333.596 1.333 1.334v2.666zm-1.333 0H8V6.667h.889v2.666z">
+                          </path>
+                        </svg></ng-container>
+                      <!-- Image File SVG -->
+                      <ng-container *ngSwitchCase="'image/png'"><svg viewBox="0 0 16 16"
+                          xmlns="http://www.w3.org/2000/svg" class="image-logo" style="width: 64px; height: 64px;">
+                          <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M16 14.222V1.778C16 .796 15.204 0 14.222 0H1.778C.796 0 0 .796 0 1.778v12.444C0 15.204.796 16 1.778 16h12.444c.982 0 1.778-.796 1.778-1.778zM4.889 9.333l2.222 2.671L10.222 8l4 5.333H1.778l3.11-4z">
+                          </path>
+                        </svg></ng-container>
+                      <ng-container *ngSwitchCase="'image/jpg'"><svg viewBox="0 0 16 16"
+                          xmlns="http://www.w3.org/2000/svg" class="image-logo" style="width: 64px; height: 64px;">
+                          <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M16 14.222V1.778C16 .796 15.204 0 14.222 0H1.778C.796 0 0 .796 0 1.778v12.444C0 15.204.796 16 1.778 16h12.444c.982 0 1.778-.796 1.778-1.778zM4.889 9.333l2.222 2.671L10.222 8l4 5.333H1.778l3.11-4z">
+                          </path>
+                        </svg></ng-container>
+                      <!-- Video File SVG -->
+                      <ng-container *ngSwitchCase="'video/mp4'"><svg viewBox="0 0 16 12"
+                          xmlns="http://www.w3.org/2000/svg" class="video-logo" style="width: 64px; height: 64px;">
+                          <path
+                            d="M12.8 0l1.6 3.2H12L10.4 0H8.8l1.6 3.2H8L6.4 0H4.8l1.6 3.2H4L2.4 0h-.8C.72 0 .008.72.008 1.6L0 11.2c0 .88.72 1.6 1.6 1.6h12.8c.88 0 1.6-.72 1.6-1.6V0h-3.2z">
+                          </path>
+                        </svg></ng-container>
+                      <ng-container *ngSwitchCase="'video/quicktime'"><svg viewBox="0 0 16 12"
+                          xmlns="http://www.w3.org/2000/svg" class="video-logo" style="width: 64px; height: 64px;">
+                          <path
+                            d="M12.8 0l1.6 3.2H12L10.4 0H8.8l1.6 3.2H8L6.4 0H4.8l1.6 3.2H4L2.4 0h-.8C.72 0 .008.72.008 1.6L0 11.2c0 .88.72 1.6 1.6 1.6h12.8c.88 0 1.6-.72 1.6-1.6V0h-3.2z">
+                          </path>
+                        </svg></ng-container>
+                      <!-- Archive File Icon -->
+                      <ng-container *ngSwitchCase="'application/zip'">
+                        <div class="archive-placeholder"></div>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'application/rar'">
+                        <div class="archive-placeholder"></div>
+                      </ng-container>
+                      <!-- Default File Icon -->
+                      <ng-container *ngSwitchDefault>
+                        <i class="material-icons">insert_drive_file</i>
+                      </ng-container>
                     </div>
-                    <button class="round-button"><i class="material-icons">more_vert</i></button>
+                  </div>
+                  <div class="item-info">
+                    <div class="meta">{{ document.uploadDate | date:'medium' }}</div>
+                  </div>
+                </div>
+
+                <!-- List view -->
+                <div *ngIf="!isGridView" class="content-list">
+                  <div class="list-item">
+                    <div class="item-icon">
+                      <div [ngSwitch]="document.type">
+                        <!-- Word Document SVG -->
+                        <ng-container
+                          *ngSwitchCase="'application/vnd.openxmlformats-officedocument.wordprocessingml.document'"><svg
+                            viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="word-logo"
+                            style="width: 16px; height: 16px;">
+                            <path
+                              d="M14.222 0H1.778C.8 0 0 .8 0 1.778v12.444C0 15.2.8 16 1.778 16h12.444C15.2 16 16 15.2 16 14.222V1.778C16 .8 15.2 0 14.222 0zm-3.11 12.444H9.777L8 5.778l-1.778 6.666H4.89L2.756 3.556h1.51l1.37 6.675 1.742-6.675h1.244l1.751 6.675 1.36-6.675h1.511l-2.133 8.888z">
+                            </path>
+                          </svg></ng-container>
+                        <!-- Excel Document SVG -->
+                        <ng-container
+                          *ngSwitchCase="'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'"><svg
+                            viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="excel-logo"
+                            style="width: 16px; height: 16px;">
+                            <path
+                              d="M14.222 0H1.778C.796 0 0 .796 0 1.778v12.444C0 15.204.796 16 1.778 16h12.444c.982 0 1.778-.796 1.778-1.778V1.778C16 .796 15.204 0 14.222 0zm-2.489 12.444H9.956L8 9.067l-1.956 3.377H4.267L7.11 8 4.267 3.556h1.777L8 6.933l1.956-3.377h1.777L8.89 8l2.844 4.444z">
+                            </path>
+                          </svg></ng-container>
+                        <!-- Text File SVG -->
+                        <ng-container *ngSwitchCase="'text/plain'"><svg viewBox="0 0 12 16"
+                            xmlns="http://www.w3.org/2000/svg" class="txt-logo" style="width: 16px; height: 16px;">
+                            <path
+                              d="M8 0H1.6C.72 0 .008.72.008 1.6L0 14.4c0 .88.712 1.6 1.592 1.6H11.2c.88 0 1.6-.72 1.6-1.6V4.8L8 0zm1.6 12.8H3.2v-1.6h6.4v1.6zm0-3.2H3.2V8h6.4v1.6zm-2.4-4V1.2l4.4 4.4H7.2z">
+                            </path>
+                          </svg></ng-container>
+                        <!-- PDF Document SVG -->
+                        <ng-container *ngSwitchCase="'application/pdf'"><svg viewBox="0 0 16 16"
+                            xmlns="http://www.w3.org/2000/svg" class="pdf-logo" style="width: 16px; height: 16px;">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M1.778 0h12.444C15.2 0 16 .8 16 1.778v12.444C16 15.2 15.2 16 14.222 16H1.778C.8 16 0 15.2 0 14.222V1.778C0 .8.8 0 1.778 0zm2.666 7.556h-.888v-.89h.888v.89zm1.334 0c0 .737-.596 1.333-1.334 1.333h-.888v1.778H2.222V5.333h2.222c.738 0 1.334.596 1.334 1.334v.889zm6.666-.89h2.223V5.334H11.11v5.334h1.333V8.889h1.334V7.556h-1.334v-.89zm-2.222 2.667c0 .738-.595 1.334-1.333 1.334H6.667V5.333h2.222c.738 0 1.333.596 1.333 1.334v2.666zm-1.333 0H8V6.667h.889v2.666z">
+                            </path>
+                          </svg></ng-container>
+                        <!-- Image File SVG -->
+                        <ng-container *ngSwitchCase="'image/png'"><svg viewBox="0 0 16 16"
+                            xmlns="http://www.w3.org/2000/svg" class="image-logo" style="width: 16px; height: 16px;">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M16 14.222V1.778C16 .796 15.204 0 14.222 0H1.778C.796 0 0 .796 0 1.778v12.444C0 15.204.796 16 1.778 16h12.444c.982 0 1.778-.796 1.778-1.778zM4.889 9.333l2.222 2.671L10.222 8l4 5.333H1.778l3.11-4z">
+                            </path>
+                          </svg></ng-container>
+                        <ng-container *ngSwitchCase="'image/jpg'"><svg viewBox="0 0 16 16"
+                            xmlns="http://www.w3.org/2000/svg" class="image-logo" style="width: 16px; height: 16px;">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                              d="M16 14.222V1.778C16 .796 15.204 0 14.222 0H1.778C.796 0 0 .796 0 1.778v12.444C0 15.204.796 16 1.778 16h12.444c.982 0 1.778-.796 1.778-1.778zM4.889 9.333l2.222 2.671L10.222 8l4 5.333H1.778l3.11-4z">
+                            </path>
+                          </svg></ng-container>
+                        <!-- Video File SVG -->
+                        <ng-container *ngSwitchCase="'video/mp4'"><svg viewBox="0 0 16 12"
+                            xmlns="http://www.w3.org/2000/svg" class="video-logo" style="width: 16px; height: 16px;">
+                            <path
+                              d="M12.8 0l1.6 3.2H12L10.4 0H8.8l1.6 3.2H8L6.4 0H4.8l1.6 3.2H4L2.4 0h-.8C.72 0 .008.72.008 1.6L0 11.2c0 .88.72 1.6 1.6 1.6h12.8c.88 0 1.6-.72 1.6-1.6V0h-3.2z">
+                            </path>
+                          </svg></ng-container>
+                        <ng-container *ngSwitchCase="'video/quicktime'"><svg viewBox="0 0 16 12"
+                            xmlns="http://www.w3.org/2000/svg" class="video-logo" style="width: 16px; height: 16px;">
+                            <path
+                              d="M12.8 0l1.6 3.2H12L10.4 0H8.8l1.6 3.2H8L6.4 0H4.8l1.6 3.2H4L2.4 0h-.8C.72 0 .008.72.008 1.6L0 11.2c0 .88.72 1.6 1.6 1.6h12.8c.88 0 1.6-.72 1.6-1.6V0h-3.2z">
+                            </path>
+                          </svg></ng-container>
+                        <!-- Archive File Icon -->
+                        <ng-container *ngSwitchCase="'application/zip'"><i
+                            class="material-icons">download</i></ng-container>
+                        <ng-container *ngSwitchCase="'application/rar'"><i
+                            class="material-icons">download</i></ng-container>
+                        <!-- Default File Icon -->
+                        <ng-container *ngSwitchDefault>
+                          <i class="material-icons">insert_drive_file</i>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="item-name">{{ document.title }}</div>
+                    <div class="item-reason">{{ document.title }}</div>
+                    <div class="item-owner">{{ owner}}</div>
+                    <div class="item-location">{{ document.title }}</div>
+                    <div class="item-actions">
+                      <div class="item-hover-menu">
+                        <button class="round-button"><i class="material-icons">share</i></button>
+                        <button class="round-button"><i class="material-icons">download</i></button>
+                        <button class="round-button" (click)="openRenameDialog(document)"><i
+                            class="material-icons">edit</i></button>
+                        <button class="round-button" (click)="toggleStarred(document)">
+                          <i class="material-icons">{{ document.starred ? 'star' : 'star_border' }}</i>
+                        </button>
+                      </div>
+                      <button class="round-button" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+                        <i class="material-icons">more_vert</i>
+                      </button>
+                      <!-- Kebab Menu Structure -->
+                    <mat-menu #menu="matMenu">
+                      <ng-template matMenuContent>
+                        <!-- Submenu for Name -->
+                        <button mat-menu-item [matMenuTriggerFor]="nameSubMenu" matMenuTriggerData="{item: item}"
+                          #trigger="matMenuTrigger" (mouseenter)="trigger.openMenu()" (mouseleave)="trigger.closeMenu()">
+                          <span>Name</span>
+                        </button>
+                        <mat-menu #nameSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ document.title }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+    
+                        <!-- Submenu for Owner -->
+                        <button mat-menu-item [matMenuTriggerFor]="ownerSubMenu" matMenuTriggerData="{item: item}"
+                          #ownerTrigger="matMenuTrigger" (mouseenter)="ownerTrigger.openMenu()"
+                          (mouseleave)="ownerTrigger.closeMenu()">
+                          <span>Owner</span>
+                        </button>
+                        <mat-menu #ownerSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ owner }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+    
+                        <!-- Submenu for Date -->
+                        <button mat-menu-item [matMenuTriggerFor]="dateSubMenu" matMenuTriggerData="{item: item}"
+                          #dateTrigger="matMenuTrigger" (mouseenter)="dateTrigger.openMenu()"
+                          (mouseleave)="dateTrigger.closeMenu()" *ngIf="document.type !== 'folder'">
+                          <span>Date</span>
+                        </button>
+                        <mat-menu #dateSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ document.uploadDate| date:'medium' }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+    
+                        <!-- Submenu for Location -->
+                        <button mat-menu-item [matMenuTriggerFor]="locationSubMenu" matMenuTriggerData="{item: item}"
+                          #locationTrigger="matMenuTrigger" (mouseenter)="locationTrigger.openMenu()"
+                          (mouseleave)="locationTrigger.closeMenu()">
+                          <span>Location</span>
+                        </button>
+                        <mat-menu #locationSubMenu="matMenu">
+                          <ng-template matMenuContent>
+                            <button mat-menu-item>
+                              {{ document.filePath }}
+                            </button>
+                          </ng-template>
+                        </mat-menu>
+    
+                        <!-- Button for Move to Trash -->
+                        <button mat-menu-item (click)="moveToTrash(document)">
+                          <span>Move to Trash</span>
+                        </button>
+                      </ng-template>
+                    </mat-menu>                    </div>
                   </div>
                 </div>
               </div>
