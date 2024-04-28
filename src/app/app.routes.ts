@@ -8,10 +8,11 @@ import { SharedwithmeComponent } from './components/sharedwithme/sharedwithme.co
 import { StarredComponent } from './components/starred/starred.component';
 import { FolderContentComponent } from './components/folder-content/folder-content.component';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
+import { AuthGuardService } from './services/auth-guard.service';
 import { TrashComponent } from './components/trash/trash.component';
 
 export const routes: Routes = [
-    {path: 'main', component: MainPageComponent, 
+    {path: 'main', component: MainPageComponent, canActivate: [AuthGuardService],
         children:[
             {path:'mydrive', component:MyDriveComponent},
             {path:'home', component:MainContentComponent},
