@@ -105,7 +105,7 @@ export class MainContentComponent {
       width: '0px',
       height: '0px'
     };
-    event.preventDefault(); 
+    event.preventDefault();
   }
 
   updateSelection(event: MouseEvent): void {
@@ -186,14 +186,14 @@ export class MainContentComponent {
 
 
   toggleStarred(document: DocumentDTO) {
-    document.starred=!document.starred;
+    document.starred = !document.starred;
     this.documentService.updateDocumentStarStatus(document._id, document.starred).subscribe({
       next: (response) => {
         console.log('Update successful:', response);
       },
       error: (error) => {
         console.error('Update failed:', error);
-        document.starred = !document.starred; 
+        document.starred = !document.starred;
       }
     });
   }
@@ -225,23 +225,21 @@ export class MainContentComponent {
     console.log('openRenameDialog called with document:', document);
 
     const dialogRef = this.dialog.open(RenameDialogComponent, {
-        data: { documentId: document._id }
+      data: { documentId: document._id }
     });
 
     console.log('Dialog opened');
 
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-  //         const updatedDocumentIndex = this.documents.findIndex(doc => doc._id === document._id);
-  //         if (updatedDocumentIndex !== -1) {
-  //             this.documents[updatedDocumentIndex].title = result;
-  //             this.cd.markForCheck(); // Trigger change detection to update the view.
-  //         }
-  //     }
-  // });
-  
-}
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const updatedDocumentIndex = this.documents.findIndex(doc => doc._id === document._id);
+        if (updatedDocumentIndex !== -1) {
+          this.documents[updatedDocumentIndex].title = result;
+          this.cd.markForCheck();
+        }
+      }
+    });
+  }
 
-  
 }
 

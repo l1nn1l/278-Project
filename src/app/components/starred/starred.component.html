@@ -154,7 +154,7 @@
                             <div class="item-hover-menu">
                               <button class="round-button"><i class="material-icons">share</i></button>
                               <button class="round-button"><i class="material-icons">download</i></button>
-                              <button class="round-button"><i class="material-icons">edit</i></button>
+                              <button class="round-button" (click)="openRenameDialog(document)"><i class="material-icons">edit</i></button>
                               <button class="round-button" (click)="toggleStarred(document)">
                                 <i class="material-icons">{{ document.starred ? 'star' : 'star_border' }}</i>
                               </button>
@@ -486,7 +486,7 @@
                             <div class="item-hover-menu">
                               <button class="round-button"><i class="material-icons">share</i></button>
                               <button class="round-button"><i class="material-icons">download</i></button>
-                              <button class="round-button"><i class="material-icons">edit</i></button>
+                              <button class="round-button" (click)="openRenameDialog(document)"><i class="material-icons">edit</i></button>
                               <button class="round-button" (click)="toggleStarred(document)">
                                 <i class="material-icons">{{ document.starred ? 'star' : 'star_border' }}</i>
                               </button>

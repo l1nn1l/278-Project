@@ -32,6 +32,8 @@ export class RenameDialogComponent {
   createForm: FormGroup;
   documents: DocumentDTO[] = [];
   owner = localStorage.getItem('User_Email');
+  isLoading: boolean = true;
+  contentType: 'file' | 'folder' = 'file';
 
   constructor(
     public dialogRef: MatDialogRef<RenameDialogComponent>,
@@ -49,19 +51,15 @@ export class RenameDialogComponent {
   }
 
   rename() {
-    console.log('Document ID:', this.data.documentId); // Ensure document ID is correctly received
     const newName = this.createForm.value.newName;
-    console.log('New name:', newName); // Verify new name
-    const documentId = this.data.documentId;
-    console.log('Owner ID:', localStorage.getItem('id')); // Verify owner ID
-    this.documentService.updateDocumentName(documentId, newName).subscribe({
+    this.documentService.updateDocumentName(this.data.documentId, newName).subscribe({
       next: (response) => {
         console.log('Update successful:', response);
+        this.dialogRef.close(newName);
       },
       error: (error) => {
         console.error('Update failed:', error);
       }
     });
-}
-
+  }
 }

@@ -8,6 +8,7 @@ import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
 import { Router } from '@angular/router';
 import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { RenameDialogComponent } from '../../rename-dialog/rename-dialog.component';
 
 
 @Component({
@@ -246,4 +247,23 @@ export class SharedwithmeComponent {
     );
   }
 
+  openRenameDialog(document: DocumentDTO): void {
+    console.log('openRenameDialog called with document:', document);
+
+    const dialogRef = this.dialog.open(RenameDialogComponent, {
+      data: { documentId: document._id }
+    });
+
+    console.log('Dialog opened');
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const updatedDocumentIndex = this.documents.findIndex(doc => doc._id === document._id);
+        if (updatedDocumentIndex !== -1) {
+          this.documents[updatedDocumentIndex].title = result;
+          this.cd.markForCheck();
+        }
+      }
+    });
+  }
 }

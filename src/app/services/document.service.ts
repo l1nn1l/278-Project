@@ -93,7 +93,7 @@ export class DocumentService {
   
     const urlWithId = `${this.baseUrl}${this.update}${id}`;
     const data = {
-      title: newName,
+      docName: newName,
       ownerId: localStorage.getItem('id')
     };
   
