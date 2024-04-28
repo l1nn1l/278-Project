@@ -18,6 +18,7 @@ export class DocumentService {
   private softDeleteDocumentUrl = '/document/delete/soft/'; 
   private getDeletedDocumentUrl: string = '/document/deleted/';
   private hardDeleteDocumentUrl = '/document/delete/hard/'; 
+  private downloadDocumentUrl='/document/download/'
 
   constructor(private http: HttpClient) {}
 
@@ -228,6 +229,20 @@ export class DocumentService {
     const urlWithId = `${this.baseUrl}${this.getDeletedDocumentUrl}${id}`;
     console.log("This is the URL were sending the API to ", urlWithId)
     return this.http.get<ApiResponse>(urlWithId, { headers: headers });
+  }
+
+  downloadDoc(id: any): Observable<Blob> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${localStorage.getItem('Access_Token')}`
+    );
+
+    const urlWithId = `${this.baseUrl}${this.downloadDocumentUrl}${id}`;
+
+    return this.http.get(urlWithId, {
+      headers: headers,
+      responseType: 'blob' // Set responseType to 'blob' to receive binary data
+    });
   }
   
 }
