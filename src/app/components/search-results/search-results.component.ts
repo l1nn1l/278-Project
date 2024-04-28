@@ -1,29 +1,29 @@
-import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { DocumentService } from '../../services/document.service';
+import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
-import { Router } from '@angular/router';
 import { FilterTabComponent } from "../filter-tab/filter-tab.component";
-
-
+import { SearchAndFilterService } from '../../services/search-and-filter.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
-    selector: 'app-main-content',
-    standalone: true,
-    imports: [CommonModule, MatMenuModule, FilterTabComponent],
-    templateUrl: './main-content.component.html',
-    styleUrl: './main-content.component.css',
-    encapsulation: ViewEncapsulation.None,
-    providers: [
-        DocumentService,
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    ]
+  selector: 'app-search-results',
+  standalone: true,
+  templateUrl: './search-results.component.html',
+  styleUrl: './search-results.component.css',
+  encapsulation: ViewEncapsulation.None,
+  providers: [
+    SearchAndFilterService, AuthService, DocumentService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
+  imports: [CommonModule, MatMenuModule, FilterTabComponent]
 })
-export class MainContentComponent {
+export class SearchResultsComponent {
   showActions: boolean = false;
   selectedItem: DocumentDTO | null = null;
   isGridView: boolean = true;
@@ -33,18 +33,54 @@ export class MainContentComponent {
   selectionBoxStyle = {};
   startSelectionPosition = { x: 0, y: 0 };
   isLoading: boolean = true;
-  isStarred: boolean | undefined;
-
-
   documents: DocumentDTO[] = [];
   owner = localStorage.getItem('User_Email');
 
-
-  constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService: DocumentService, private router: Router) { }
+  constructor(
+    public dialog: MatDialog, 
+    private cd: ChangeDetectorRef, 
+    private documentService: DocumentService, 
+    private router: Router, 
+    private searchService: SearchAndFilterService,
+    private route: ActivatedRoute,
+    private authService: AuthService
+    ) { }
 
   ngOnInit() {
-    this.getDocuments();
+    this.route.queryParams.subscribe(params => {
+      if (params) {
+        this.performSearch(params);
+      }
+    });
+
   }
+
+  performSearch(params: any) {
+    const userId = this.authService.getCurrentUserID();
+    this.isLoading = true;  
+    this.searchService.performSearch(params, userId).subscribe(
+      response => {
+        console.log("data received", response);
+        if (response.status === 200 && response.data) {
+          this.documents = response.data;  
+          console.log("Search results received:", this.documents);
+        } else {
+          this.documents = [];  // Clear documents if no data is returned
+          console.log("No results found");
+        }
+        this.isLoading = false;
+        this.cd.markForCheck();  // Force change detection to update the view
+      },
+      error => {
+        console.error('Search failed:', error);
+        this.documents = [];  // Clear documents on error
+        this.isLoading = false;
+        this.cd.markForCheck();  // Force change detection to update the view
+      }
+    );
+  }
+
+
 
   setListView(): void {
     this.isGridView = false;
@@ -58,15 +94,8 @@ export class MainContentComponent {
     this.contentType = type;
   }
 
-  getDisplayedItems(): DocumentDTO[] {
-    // console.log('All documents:', this.documents);
-    // console.log('Current content type:', this.contentType);
-
-    const filteredItems = this.documents.filter(item =>
-      this.contentType === 'folder' ? item.type === 'folder' : item.type !== 'folder');
-
-    // console.log('Filtered items:', filteredItems);
-    return filteredItems;
+  get displayedItems(): DocumentDTO[] {
+    return this.documents;
   }
 
 
@@ -78,21 +107,51 @@ export class MainContentComponent {
     // View details logic
   }
 
+  toggleStarred(document: DocumentDTO) {
+    document.starred=!document.starred;
+    this.documentService.updateDocumentStarStatus(document._id, document.starred).subscribe({
+      next: (response) => {
+        console.log('Update successful:', response);
+      },
+      error: (error) => {
+        console.error('Update failed:', error);
+        document.starred = !document.starred; 
+      }
+    });
+  }
+
+  getFolders() {
+    return this.displayedItems.filter((item) => item.type === 'folder');
+  }
+
+  getFiles() {
+    return this.displayedItems.filter((item) => item.type !== 'folder');
+  }
+
+
   closeActions(): void {
     this.selectedItem = null;
     this.showActions = false;
   }
 
   clearSelection(): void {
-    console.log('Clearing selection. Previous selectedItems:', this.selectedItems);
+    console.log(
+      'Clearing selection. Previous selectedItems:',
+      this.selectedItems
+    );
     this.selectedItems = [];
     this.showActions = false;
     this.cd.detectChanges();
-    console.log('Selection cleared. Current selectedItems:', this.selectedItems);
+    console.log(
+      'Selection cleared. Current selectedItems:',
+      this.selectedItems
+    );
   }
 
   isSelected(item: DocumentDTO): boolean {
-    return this.selectedItems.some(selectedItem => selectedItem._id === item._id);
+    return this.selectedItems.some(
+      (selectedItem) => selectedItem._id === item._id
+    );
   }
   startSelection(event: MouseEvent): void {
     this.isSelecting = true;
@@ -102,9 +161,9 @@ export class MainContentComponent {
       left: `${this.startSelectionPosition.x}px`,
       top: `${this.startSelectionPosition.y}px`,
       width: '0px',
-      height: '0px'
+      height: '0px',
     };
-    event.preventDefault(); 
+    event.preventDefault();
   }
 
   updateSelection(event: MouseEvent): void {
@@ -118,7 +177,7 @@ export class MainContentComponent {
       left: `${Math.min(currentX, this.startSelectionPosition.x)}px`,
       top: `${Math.min(currentY, this.startSelectionPosition.y)}px`,
       width: `${Math.abs(width)}px`,
-      height: `${Math.abs(height)}px`
+      height: `${Math.abs(height)}px`,
     };
     this.cd.detectChanges();
   }
@@ -132,17 +191,17 @@ export class MainContentComponent {
       x1: this.startSelectionPosition.x,
       y1: this.startSelectionPosition.y,
       x2: event.clientX,
-      y2: event.clientY
+      y2: event.clientY,
     };
 
     const normalizedBounds = {
       x1: Math.min(selectionBounds.x1, selectionBounds.x2),
       y1: Math.min(selectionBounds.y1, selectionBounds.y2),
       x2: Math.max(selectionBounds.x1, selectionBounds.x2),
-      y2: Math.max(selectionBounds.y1, selectionBounds.y2)
+      y2: Math.max(selectionBounds.y1, selectionBounds.y2),
     };
 
-    this.selectedItems = this.documents.filter(item => {
+    this.selectedItems = this.documents.filter((item) => {
       const itemElement = document.getElementById(`item-${item._id}`);
       if (itemElement) {
         const rect = itemElement.getBoundingClientRect();
@@ -160,9 +219,11 @@ export class MainContentComponent {
     this.showActions = this.selectedItems.length > 0;
     this.selectionBoxStyle = {};
     this.cd.detectChanges();
-    console.log('Selected items:', this.selectedItems.map(item => item._id));
+    console.log(
+      'Selected items:',
+      this.selectedItems.map((item) => item._id)
+    );
   }
-
 
   handleItemMouseDown(event: MouseEvent, item: DocumentDTO): void {
     event.stopPropagation();
@@ -171,7 +232,9 @@ export class MainContentComponent {
 
     if (event.ctrlKey || event.metaKey) {
       if (isSelected) {
-        this.selectedItems = this.selectedItems.filter(selectedItem => selectedItem._id !== item._id);
+        this.selectedItems = this.selectedItems.filter(
+          (selectedItem) => selectedItem._id !== item._id
+        );
       } else {
         this.selectedItems = [...this.selectedItems, item];
       }
@@ -183,50 +246,10 @@ export class MainContentComponent {
     this.cd.detectChanges();
   }
 
-
-  toggleStarred(document: DocumentDTO) {
-    document.starred=!document.starred;
-    this.documentService.updateDocumentStarStatus(document._id, document.starred).subscribe({
-      next: (response) => {
-        console.log('Update successful:', response);
-      },
-      error: (error) => {
-        console.error('Update failed:', error);
-        document.starred = !document.starred; 
-      }
-    });
-  }
-
-
-  //HERE WE GETT ALL THE DOCUMENTS:
-  getDocuments() {
-    this.isLoading = true;
-    this.documentService.getOwnedDocuments(localStorage.getItem('id')).subscribe(
-      (response) => {
-        console.log('Response:', response);
-        this.documents = response.data;
-        this.isLoading = false;
-        this.getDisplayedItems();
-        console.log('These are the Documents from the database', this.documents);
-      },
-      (error) => {
-        if (error.status == 401) {
-          console.error('Error:', error);
-          console.log('Authentication Token Expired');
-          console.log('Redirecting to Login Page');
-          this.router.navigate(['/login']);
-        }
-      }
-    );
-  }
-
   //method that gets triggered when user clicks on folder icon or double clicks folder 
   //(dblclick currently only works in list view)
   openFolder(document: DocumentDTO) {
     console.log('Attempting to open folder:', document._id);
     this.router.navigate(['/main/folders', document._id]);
   }
-
-
 }
-

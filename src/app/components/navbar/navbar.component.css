@@ -278,3 +278,12 @@ p-dropdown{
 ::ng-deep span{
   margin-right: 0 !important;
 }
+
+::ng-deep .p-checkbox-label {
+  margin-left: 0.25rem !important;
+  margin-right: 0.5rem !important;
+}
+
+::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  display: flex;
+}

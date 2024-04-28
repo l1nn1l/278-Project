@@ -4,12 +4,12 @@
         <span class="title">Drive</span>
     </div>
     <div class="searchbar">
-        <button class="round-button">
+        <button class="round-button" (click)="performSearch(searchTerm)">
             <i class="material-icons">search</i>
         </button>
 
         <form action="">
-            <input type="text" placeholder="Search in Drive" id="search-bar-input">
+            <input type="text" id="search-bar-input" placeholder="Search in Drive" [(ngModel)]="searchTerm" (keyup.enter)="performSearch(searchTerm)" name="searchInput">
         </form>
         <button (click)="toggleModal()" class="round-button">
             <i class="material-icons">tune</i>
@@ -39,13 +39,17 @@
         <div style="display: flex; justify-content: flex-end;">
             <span class="close" (click)="toggleModal()"><i class="material-icons">close</i></span>
         </div>
-        
+
         <!-- Advanced search form fields -->
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" id="advanced-search-form">
             <div class="form-group">
                 <label for="typeDropdown">Type</label>
-                <p-dropdown id="typeDropdown" [options]="types" optionLabel="label"  name="type" formControlName="type"
-                    placeholder="Select a Type"></p-dropdown>
+                <p-dropdown id="typeDropdown" [options]="types" optionLabel="label" name="type" formControlName="type"
+                    placeholder="Select a Type">
+                    <ng-template let-type pTemplate="item">
+                        <div [innerHtml]="type.icon"></div> {{ type.label }}
+                    </ng-template>
+                </p-dropdown>
             </div>
             <div class="form-group">
                 <label for="owner">Owner</label>
@@ -53,26 +57,28 @@
                     placeholder="Select an Owner"></p-dropdown>
             </div>
             <div class="form-group">
-                <label for="includes_words">Includes the words</label>
-                <input pInputText type="text" id="includes_words" name="includes_words" formControlName="includes_words"
-                    placeholder="Enter words found in the file" />
+                <label for="textSearchString">Includes the words</label>
+                <input pInputText type="text" id="textSearchString" name="textSearchString"
+                    formControlName="textSearchString" placeholder="Enter words found in the file" />
             </div>
             <div class="form-group">
-                <label for="item_name">Item name</label>
-                <input pInputText type="text" id="item_name" name="item_name" formControlName="item_name"
+                <label for="itemName">Item name</label>
+                <input pInputText type="text" id="itemName" name="itemName" formControlName="itemName"
                     placeholder="Enter a term that matches part of the file name" />
             </div>
             <div class="form-group">
                 <label for="location">Location</label>
                 <div class="col-group">
-                    <p-dropdown id="location" [options]="driveLocations" optionLabel="label"  name="location" formControlName="location"
-                        placeholder="Select a location"></p-dropdown>
+                    <p-dropdown id="location" [options]="driveLocations" optionLabel="label" name="location"
+                        formControlName="location" placeholder="Select a location"></p-dropdown>
+
                     <div class="form-group">
                         <div class="radio-options">
-                            <p-radioButton id="fileStatusInBin" name="fileStatus" value="inBin" formControlName="fileStatus"
-                                label="In bin"></p-radioButton>
-                            <p-radioButton id="fileStatusStarred" name="fileStatus" value="starred" formControlName="fileStatus"
-                                label="Starred"></p-radioButton>
+                            <p-checkbox id="deleted" name="deleted" formControlName="deleted" [binary]="true"
+                                label="In bin"></p-checkbox>
+
+                            <p-checkbox id="starred" name="starred" formControlName="starred" [binary]="true"
+                                label="Starred"></p-checkbox>
                         </div>
                     </div>
                 </div>

@@ -8,19 +8,20 @@ import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
 import { Router } from '@angular/router';
 import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FilterTabComponent } from "../filter-tab/filter-tab.component";
 
 
 @Component({
-  selector: 'app-sharedwithme',
-  standalone: true,
-  imports: [CommonModule, MatMenuModule],
-  templateUrl: './sharedwithme.component.html',
-  styleUrl: './sharedwithme.component.css',
-  encapsulation: ViewEncapsulation.None,
-  providers: [
-    DocumentService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-  ]
+    selector: 'app-sharedwithme',
+    standalone: true,
+    templateUrl: './sharedwithme.component.html',
+    styleUrl: './sharedwithme.component.css',
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        DocumentService,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    ],
+    imports: [CommonModule, MatMenuModule, FilterTabComponent]
 })
 export class SharedwithmeComponent {
   showActions: boolean = false;

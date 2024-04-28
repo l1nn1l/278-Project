@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient , HttpHeaders } from '@angular/common/http';
+import { HttpClient , HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { ApiResponse } from '../../assets/Models/DTO/ApiResponse'; 
@@ -119,5 +119,29 @@ export class DocumentService {
     return this.http.get(`${this.baseUrl}/document/folder/${folderId}`, { headers })
       .pipe(catchError(error => throwError(() => new Error('Failed to fetch folder details: ' + error.message))));
   }
+
+
+  getSearchResultDocuments(searchParams: any, userId: string): Observable<DocumentDTO[]> {
+    let params = new HttpParams();
+    Object.keys(searchParams).forEach(key => {
+      const value = searchParams[key];
+      if (value !== null && value !== undefined && value !== '') {
+        params = params.append(key, value);
+      }
+    });
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${localStorage.getItem('Access_Token')}`
+    });
+    const url = `${this.baseUrl}/document/search/${userId}`;
+
+    return this.http.get<DocumentDTO[]>(url, { params, headers }).pipe(
+      catchError(error => {
+        console.error('Failed to retrieve search results:', error);
+        return throwError(() => new Error('Failed to retrieve search results'));
+      })
+    );
+  }
+
   
 }

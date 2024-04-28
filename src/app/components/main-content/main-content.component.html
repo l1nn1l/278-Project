@@ -1,25 +1,7 @@
 <div class="main-content-div" (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)"
   (mouseup)="endSelection($event)">
   <div *ngIf="isSelecting" [ngStyle]="selectionBoxStyle" class="selection-box"></div>
-  <div class="filter-header">
-    <!-- Filter options -->
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">topic</i>Type<i
-          class="material-icons">arrow_drop_down</i></button>
-    </div>
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">person</i>People<i
-          class="material-icons">arrow_drop_down</i></button>
-    </div>
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">calendar_today</i>Modified<i
-          class="material-icons">arrow_drop_down</i></button>
-    </div>
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">folder_open</i>Location<i
-          class="material-icons">arrow_drop_down</i></button>
-    </div>
-  </div>
+  <app-filter-tab></app-filter-tab>
 
   <div *ngIf="!showActions" class="tab-section">
     <!-- Tab navigation -->
