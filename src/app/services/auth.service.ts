@@ -18,8 +18,8 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router, private dialog: MatDialog) {}
 
-  signIn(email: string, password: string): Observable<ApiResponse> {
-    const loginDTO = new LoginDTO(email, password);
+  signIn(email: string, password: string, rememberMe: boolean): Observable<ApiResponse> {
+    const loginDTO = new LoginDTO(email, password, rememberMe);
     return this.http.post<ApiResponse>(`${this.baseUrl}/${this.signInUrl}`, loginDTO).pipe(
       tap((response: ApiResponse) => {
         console.log("API Response:", response);
@@ -28,6 +28,7 @@ export class AuthService {
           localStorage.setItem('User_ID', response.data.id); 
           localStorage.setItem('User_Email', response.data.email);
           localStorage.setItem('User_Name', response.data.name);
+          localStorage.setItem('RememberMe', response.data.rememberMe);
           this.router.navigate(['/home']);
         } else {
           console.error('Login failed:', response.message);
@@ -59,6 +60,15 @@ export class AuthService {
   
     const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
     return (Math.floor((new Date).getTime() / 1000)) >= expiry;
+  }
+
+  autoLogin(): boolean {
+    const rememberMe = localStorage.getItem('RememberMe') !== null; 
+    if (rememberMe && !this.isTokenExpired()) {
+      console.log("user is remembered (autologin)")
+      return true;
+    }
+    return false;
   }
   
   

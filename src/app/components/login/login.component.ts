@@ -61,10 +61,11 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       const email = this.loginForm.value.email;
       const password = this.loginForm.value.password;
+      const rememberMe = this.loginForm.value.rememberMe;
 
-      this.authService.signIn(email, password).subscribe(
+      this.authService.signIn(email, password, rememberMe).subscribe(
         (response: any) => {
-          console.log('Sign-in response:', response); // Log the response to see its structure
+          // console.log('Sign-in response:', response); 
           if (response && response.message === 'Login Successful') {
             localStorage.setItem('Access_Token', response.data.token);
             localStorage.setItem('id', response.data.id);
