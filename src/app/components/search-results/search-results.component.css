@@ -1,4 +1,4 @@
-app-my-drive {
+app-search-results {
     background-color: white;
     width: 100%;
     border-radius: 20px;
@@ -15,6 +15,20 @@ app-my-drive {
   .scrollable-content {
     overflow-y: scroll;
     flex-grow: 1; 
+  }
+
+  .date-separator {
+    grid-column: 1 / -1; /* Makes the separator span all columns */
+    font-size: 18px;
+    padding: 16px;
+    border-radius: 4px;
+  }
+  
+  /* Use a pseudo-element for the 'Yesterday', 'Earlier this week' labels */
+  .date-separator::before {
+    content: attr(data-date-label);
+    font-weight: bold;
+    display: block;
   }
   
   .content-grid {
@@ -135,6 +149,10 @@ app-my-drive {
   height: 35px;
   }
   
+  .main-content-shared{
+    height: 100vh;
+  }
+  
   div.right > button:nth-child(2) {
   display: flex;
   align-items: center;
@@ -153,10 +171,6 @@ app-my-drive {
   div.right > button:nth-child(2) > i:nth-child(1){  
   margin: 0%;
   }
-  
-  /* div.left > button:hover, div.left > button:active {
-  background-color: #e6e6e6;
-  } */
   
   div.right > button:hover {
   background-color: #e6e6e6;
@@ -376,7 +390,7 @@ app-my-drive {
     color: #333; 
   }
   
-  .MyDrive {
+  .Page-title {
     background-color: white; 
     color: #3c4043; 
     font-weight: 80;
@@ -387,9 +401,10 @@ app-my-drive {
     border: none;
   }
   
-  .no-content-placeholder{
+.no-content-placeholder{
     text-align: center;
     font-size: large;
+    margin-top: 8rem;
 }
 
 .no-content-placeholder > img{

@@ -16,25 +16,7 @@
       </button>
     </div>
   </div>
-  <div class="filter-header">
-    <!-- Filter options -->
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">topic</i>Type<i
-          class="material-icons">arrow_drop_down</i></button>
-    </div>
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">person</i>People<i
-          class="material-icons">arrow_drop_down</i></button>
-    </div>
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">calendar_today</i>Modified<i
-          class="material-icons">arrow_drop_down</i></button>
-    </div>
-    <div class="filter-item">
-      <button class="filter-button"><i class="material-icons">folder_open</i>Location<i
-          class="material-icons">arrow_drop_down</i></button>
-    </div>
-  </div>
+  <app-filter-tab></app-filter-tab>
   <div *ngIf="showActions" class="actions-section">
     <!-- Actions when an item is selected -->
     <div class="actions">
@@ -80,14 +62,14 @@
             </ng-container>
             <!-- Items for grid or list view -->
             <div class="item" [id]="'item-' + document._id" [ngClass]="{'selected': isSelected(document)}"
-              (mousedown)="handleItemMouseDown($event, document)">
+              (mousedown)="handleItemMouseDown($event, document)" (dblclick)="openFolder(document)">
               <!-- Item content -->
               <!-- Grid view -->
               <div *ngIf="isGridView" class="content-grid">
                 <div class="item-header">
                   <!-- First, check if it is a folder -->
                   <ng-container *ngIf="document.type === 'folder'; else fileTypeCheck">
-                    <i class="material-icons">folder</i>
+                    <i (click)="openFolder(document)" class="material-icons" style="cursor: pointer;">folder</i>
                   </ng-container>
                   <!-- If not a folder, check for the file type -->
                   <ng-template #fileTypeCheck>
@@ -318,7 +300,7 @@
                   <div class="item-icon">
                     <!-- First, check if it is a folder -->
                     <ng-container *ngIf="document.type === 'folder'; else fileTypeCheck">
-                      <i class="material-icons">folder</i>
+                      <i (click)="openFolder(document)" class="material-icons" style="cursor: pointer;">folder</i>
                     </ng-container>
                     <!-- If not a folder, check for the file type -->
                     <ng-template #fileTypeCheck>

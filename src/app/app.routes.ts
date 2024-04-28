@@ -6,6 +6,8 @@ import { MyDriveComponent } from './components/my-drive/my-drive.component';
 import { MainContentComponent } from './components/main-content/main-content.component';
 import { SharedwithmeComponent } from './components/sharedwithme/sharedwithme.component';
 import { StarredComponent } from './components/starred/starred.component';
+import { FolderContentComponent } from './components/folder-content/folder-content.component';
+import { SearchResultsComponent } from './components/search-results/search-results.component';
 
 export const routes: Routes = [
     {path: 'main', component: MainPageComponent, 
@@ -13,7 +15,9 @@ export const routes: Routes = [
             {path:'mydrive', component:MyDriveComponent},
             {path:'home', component:MainContentComponent},
             {path:'sharedwithme', component:SharedwithmeComponent},
-            {path:'starred', component:StarredComponent}
+            {path:'starred', component:StarredComponent},
+            {path:'folders/:folderId', component:FolderContentComponent},
+            {path: 'search', component: SearchResultsComponent},
         ]
     },
     {path: 'login', component: LoginComponent},

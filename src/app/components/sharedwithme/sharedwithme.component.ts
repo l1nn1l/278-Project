@@ -8,20 +8,21 @@ import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
 import { Router } from '@angular/router';
 import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FilterTabComponent } from "../filter-tab/filter-tab.component";
 import { RenameDialogComponent } from '../../rename-dialog/rename-dialog.component';
 
 
 @Component({
-  selector: 'app-sharedwithme',
-  standalone: true,
-  imports: [CommonModule, MatMenuModule],
-  templateUrl: './sharedwithme.component.html',
-  styleUrl: './sharedwithme.component.css',
-  encapsulation: ViewEncapsulation.None,
-  providers: [
-    DocumentService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-  ]
+    selector: 'app-sharedwithme',
+    standalone: true,
+    templateUrl: './sharedwithme.component.html',
+    styleUrl: './sharedwithme.component.css',
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        DocumentService,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    ],
+    imports: [CommonModule, MatMenuModule, FilterTabComponent]
 })
 export class SharedwithmeComponent {
   showActions: boolean = false;
@@ -245,6 +246,13 @@ export class SharedwithmeComponent {
         }
       }
     );
+  }
+
+  //method that gets triggered when user clicks on folder icon or double clicks folder 
+  //(dblclick currently only works in list view)
+  openFolder(document: DocumentDTO) {
+    console.log('Attempting to open folder:', document._id);
+    this.router.navigate(['/main/folders', document._id]);
   }
 
   openRenameDialog(document: DocumentDTO): void {

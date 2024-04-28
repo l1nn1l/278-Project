@@ -7,22 +7,22 @@ import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
 import { Router } from '@angular/router';
+import { FilterTabComponent } from "../filter-tab/filter-tab.component";
 import { RenameDialogComponent } from '../../rename-dialog/rename-dialog.component';
 
 
 
 @Component({
-  selector: 'app-main-content',
-  standalone: true,
-  imports: [CommonModule, MatMenuModule],
-  templateUrl: './main-content.component.html',
-  styleUrl: './main-content.component.css',
-  encapsulation: ViewEncapsulation.None,
-  providers: [
-    DocumentService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-  ]
-
+    selector: 'app-main-content',
+    standalone: true,
+    imports: [CommonModule, MatMenuModule, FilterTabComponent],
+    templateUrl: './main-content.component.html',
+    styleUrl: './main-content.component.css',
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        DocumentService,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    ]
 })
 export class MainContentComponent {
   showActions: boolean = false;
@@ -60,13 +60,13 @@ export class MainContentComponent {
   }
 
   getDisplayedItems(): DocumentDTO[] {
-    console.log('All documents:', this.documents);
-    console.log('Current content type:', this.contentType);
+    // console.log('All documents:', this.documents);
+    // console.log('Current content type:', this.contentType);
 
     const filteredItems = this.documents.filter(item =>
       this.contentType === 'folder' ? item.type === 'folder' : item.type !== 'folder');
 
-    console.log('Filtered items:', filteredItems);
+    // console.log('Filtered items:', filteredItems);
     return filteredItems;
   }
 
@@ -219,6 +219,13 @@ export class MainContentComponent {
         }
       }
     );
+  }
+
+  //method that gets triggered when user clicks on folder icon or double clicks folder 
+  //(dblclick currently only works in list view)
+  openFolder(document: DocumentDTO) {
+    console.log('Attempting to open folder:', document._id);
+    this.router.navigate(['/main/folders', document._id]);
   }
 
   openRenameDialog(document: DocumentDTO): void {
