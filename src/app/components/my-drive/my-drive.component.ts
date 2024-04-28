@@ -314,4 +314,43 @@ export class MyDriveComponent {
     });
   }
 
+  onClickDownload() {
+    if (this.selectedItems[0] != null) {
+      this.isLoading = true;
+      this.documentService.downloadDoc(this.selectedItems[0]._id).subscribe(
+        (response: Blob) => {
+          this.isLoading = false;
+  
+          // Create a blob URL from the received binary data
+          const url = window.URL.createObjectURL(response);
+  
+          // Create a temporary anchor element to trigger the download
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = this.selectedItems[0].title; // Set default file name
+          document.body.appendChild(a);
+          a.click();
+  
+          // Clean up
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        },
+        (error) => {
+          if (error.status == 401) {
+            console.error('Error:', error);
+            console.log('Authentication Token Expired');
+            console.log('Redirecting to Login Page');
+            this.router.navigate(['/login']);
+          } else {
+            console.error('Error downloading document:', error);
+          }
+          this.isLoading = false;
+        }
+      );
+    } else {
+      console.log("The Selected Document is Null");
+    }
+  }
+  
+
 }
