@@ -55,6 +55,10 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required]],
       rememberMe: [false],
     });
+
+    if (this.authService.autoLogin()) {
+      this.router.navigate(['/main/home']);
+    }
   }
 
   onSignIn() {

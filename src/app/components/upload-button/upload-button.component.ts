@@ -78,7 +78,10 @@ export class UploadButtonComponent {
         const parentId = this.currentDirectoryId || 'base';
         console.log("parent id of new folder:", parentId);
         this.documentService.createFolder(result, this.authService.getCurrentUserID(), parentId).subscribe({
-          next: response => console.log('Folder created:', response),
+          next: response => {
+            console.log('Folder created:', response);
+            window.location.reload(); 
+          },          
           error: error => console.error('Error creating folder:', error)
         });
       }

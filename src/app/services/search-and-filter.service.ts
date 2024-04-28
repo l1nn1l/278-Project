@@ -31,6 +31,8 @@ export class SearchAndFilterService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${localStorage.getItem('Access_Token')}`
     });
+    // const paramString = params.toString();
+    // console.log('Full URL sent to server:', `${searchUrl}?${paramString}`);
 
     return this.http.get<{status: number, message: string, data: DocumentDTO[]}>(searchUrl, { headers, params }).pipe(
       tap(response => {

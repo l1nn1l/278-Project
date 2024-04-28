@@ -1,15 +1,21 @@
-<div class="filter-header">
+<form [formGroup]="filterForm" class="filter-header">
+
     <!-- Filter options -->
     <div class="filter-item">
-        <button class="filter-button"><i class="material-icons">topic</i>Type<i
-                class="material-icons">arrow_drop_down</i></button>
+        <p-dropdown id="typeDropdown" [options]="types" optionLabel="label" name="type" formControlName="type"
+            placeholder="Type">
+            <ng-template let-type pTemplate="item">
+                <div [innerHtml]="type.icon"></div> {{ type.label }}
+            </ng-template>
+        </p-dropdown>
     </div>
     <div class="filter-item">
-        <button class="filter-button"><i class="material-icons">person</i>People<i
-                class="material-icons">arrow_drop_down</i></button>
+        <p-autoComplete [dropdown]="true" [suggestions]="filterPeople" optionLabel="label" (onSelect)="onUserSelect($event)" id="filter" name="filter" formControlName="filter"
+            placeholder="People"></p-autoComplete>
     </div>
+
     <div class="filter-item">
-        <button class="filter-button"><i class="material-icons">folder_open</i>Location<i
-                class="material-icons">arrow_drop_down</i></button>
+        <p-dropdown id="location" [options]="driveLocations" optionLabel="label" name="location"
+            formControlName="location" placeholder="Location"></p-dropdown>
     </div>
-</div>
+</form>

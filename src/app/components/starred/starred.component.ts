@@ -10,19 +10,20 @@ import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RenameDialogComponent } from '../rename-dialog/rename-dialog.component';
 import { catchError, forkJoin, of } from 'rxjs';
+import { FilterTabComponent } from "../filter-tab/filter-tab.component";
 
 
 @Component({
-  selector: 'app-starred',
-  standalone: true,
-  imports: [CommonModule, MatMenuModule],
-  templateUrl: './starred.component.html',
-  styleUrl: './starred.component.css',
-  encapsulation: ViewEncapsulation.None,
-  providers: [
-    DocumentService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-  ]
+    selector: 'app-starred',
+    standalone: true,
+    templateUrl: './starred.component.html',
+    styleUrl: './starred.component.css',
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        DocumentService,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    ],
+    imports: [CommonModule, MatMenuModule, FilterTabComponent]
 })
 export class StarredComponent {
   showActions: boolean = false;

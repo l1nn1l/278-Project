@@ -7,18 +7,19 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../../interceptors/auth.interceptor';
+import { FilterTabComponent } from "../filter-tab/filter-tab.component";
 
 @Component({
-  selector: 'app-folder-content',
-  standalone: true,
-  imports: [CommonModule, MatMenuModule],
-  templateUrl: './folder-content.component.html',
-  styleUrl: './folder-content.component.css',
-  encapsulation: ViewEncapsulation.None,
-  providers: [
-    DocumentService,
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-  ]
+    selector: 'app-folder-content',
+    standalone: true,
+    templateUrl: './folder-content.component.html',
+    styleUrl: './folder-content.component.css',
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        DocumentService,
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    ],
+    imports: [CommonModule, MatMenuModule, FilterTabComponent]
 })
 export class FolderContentComponent implements OnInit {
   showActions: boolean = false;
@@ -110,17 +111,17 @@ export class FolderContentComponent implements OnInit {
   }
 
   clearSelection(): void {
-    console.log(
-      'Clearing selection. Previous selectedItems:',
-      this.selectedItems
-    );
+    // console.log(
+    //   'Clearing selection. Previous selectedItems:',
+    //   this.selectedItems
+    // );
     this.selectedItems = [];
     this.showActions = false;
     this.cd.detectChanges();
-    console.log(
-      'Selection cleared. Current selectedItems:',
-      this.selectedItems
-    );
+    // console.log(
+    //   'Selection cleared. Current selectedItems:',
+    //   this.selectedItems
+    // );
   }
 
   isSelected(item: DocumentDTO): boolean {
@@ -159,7 +160,7 @@ export class FolderContentComponent implements OnInit {
 
   endSelection(event: MouseEvent): void {
     if (!this.isSelecting) {
-      console.log('Selection ended without starting');
+      // console.log('Selection ended without starting');
       return;
     }
     const selectionBounds = {
@@ -194,10 +195,6 @@ export class FolderContentComponent implements OnInit {
     this.showActions = this.selectedItems.length > 0;
     this.selectionBoxStyle = {};
     this.cd.detectChanges();
-    console.log(
-      'Selected items:',
-      this.selectedItems.map((item) => item._id)
-    );
   }
 
   handleItemMouseDown(event: MouseEvent, item: DocumentDTO): void {

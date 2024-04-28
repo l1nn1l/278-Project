@@ -1,9 +1,9 @@
-import { Component, OnInit} from '@angular/core';
+import { Component} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { AuthService } from './services/auth.service';
+import { UserService } from './services/user.service';
 
 
 @Component({
@@ -12,17 +12,10 @@ import { AuthService } from './services/auth.service';
   imports: [RouterOutlet, MainPageComponent, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-  providers: [AuthService]
+  providers: [AuthService, UserService]
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
-  constructor(private authService: AuthService, private router: Router) {}
+  title = '278proj';
 
-  ngOnInit() {
-    if (this.authService.autoLogin()) {
-      this.router.navigate(['/main/home']);
-    } else {
-      this.router.navigate(['/login']);
-    }
-  }
 }
