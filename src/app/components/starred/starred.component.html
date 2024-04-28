@@ -1,7 +1,4 @@
-<div class="main-content-starred" (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)"
-    (mouseup)="endSelection($event)">
-    <div *ngIf="isSelecting" [ngStyle]="selectionBoxStyle" class="selection-box"></div>
-    <div *ngIf="!showActions" class="tab-section">
+<div *ngIf="!showActions" class="tab-section">
         <!-- Tab navigation -->
         <div class="left">
             <button class="Starred">Starred</button>
@@ -48,7 +45,7 @@
                         <button class="round-button"><i class="material-icons">person_add</i></button>
                         <button class="round-button"><i class="material-icons">download</i></button>
                         <button class="round-button"><i class="material-icons">input</i></button>
-                        <button class="round-button"><i class="material-icons">delete</i></button>
+                        <button class="round-button" (click)="deleteSelectedDocuments()"><i class="material-icons">delete</i></button>
                         <button class="round-button"><i class="material-icons">link</i></button>
                         <button class="round-button"><i class="material-icons">more_vert</i></button>
                     </div>
@@ -57,6 +54,9 @@
         </div>
 
     </div>
+    <div class="main-content-starred" (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)"
+    (mouseup)="endSelection($event)">
+    <div *ngIf="isSelecting" [ngStyle]="selectionBoxStyle" class="selection-box"></div>
     <div *ngIf="!isLoading">
         <div *ngIf="documents.length > 0; else noContent">
             <div class="scrollable-content">

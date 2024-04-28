@@ -8,7 +8,8 @@ import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
 import { Router } from '@angular/router';
 import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { RenameDialogComponent } from '../../rename-dialog/rename-dialog.component';
+import { RenameDialogComponent } from '../rename-dialog/rename-dialog.component';
+import { catchError, forkJoin, of } from 'rxjs';
 
 
 @Component({
@@ -236,6 +237,40 @@ export class StarredComponent {
           this.cd.markForCheck();
         }
       }
+    });
+  }
+
+  deleteSelectedDocuments(): void {
+    console.log('Starting deletion of selected documents:', this.selectedItems.map(item => item._id));
+    
+    const deletionRequests = this.selectedItems.map((item: DocumentDTO) =>
+      this.documentService.softDeleteDocument(item._id).pipe(
+        catchError((error: any) => {
+          console.error(`Failed to delete document with ID ${item._id}:`, error);
+          return of(null); 
+        })
+      )
+    );
+  
+    forkJoin(deletionRequests).subscribe((results: any[]) => {
+      console.log('Deletion results:', results);
+  
+      results.forEach((result, index: number) => {
+        if (result !== null) {
+          const itemId = this.selectedItems[index]._id;
+          console.log(`Document with ID ${itemId} deleted successfully`, result);
+        } else {
+          console.log(`Failed to delete document with ID ${this.selectedItems[index]._id}`);
+        }
+      });
+  
+      // Update documents after deletion
+      const remainingDocs = this.documents.filter(doc => !this.selectedItems.some(item => item._id === doc._id));
+      console.log('Documents remaining after deletion:', remainingDocs.map(doc => doc._id));
+  
+      this.documents = remainingDocs;
+      this.clearSelection();
+      this.cd.detectChanges();
     });
   }
 }

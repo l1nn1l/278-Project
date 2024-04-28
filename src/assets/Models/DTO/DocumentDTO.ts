@@ -13,6 +13,8 @@ export class DocumentDTO {
     public starred: boolean,
     public refDocs: any[],
     public parentDir: string,
-    public dateOfLastModified: string
+    public dateOfLastModified: string,
+    public dateOfDeletion: string
+
   ) {}
 }

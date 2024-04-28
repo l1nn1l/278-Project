@@ -8,6 +8,7 @@ import { SharedwithmeComponent } from './components/sharedwithme/sharedwithme.co
 import { StarredComponent } from './components/starred/starred.component';
 import { FolderContentComponent } from './components/folder-content/folder-content.component';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
+import { TrashComponent } from './components/trash/trash.component';
 
 export const routes: Routes = [
     {path: 'main', component: MainPageComponent, 
@@ -18,6 +19,8 @@ export const routes: Routes = [
             {path:'starred', component:StarredComponent},
             {path:'folders/:folderId', component:FolderContentComponent},
             {path: 'search', component: SearchResultsComponent},
+            {path: 'trash', component: TrashComponent},
+
         ]
     },
     {path: 'login', component: LoginComponent},

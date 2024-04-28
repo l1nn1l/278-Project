@@ -1,52 +1,50 @@
-<div class="main-content-div" (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)"
-  (mouseup)="endSelection($event)">
-  <div *ngIf="isSelecting" [ngStyle]="selectionBoxStyle" class="selection-box"></div>
-  <app-filter-tab></app-filter-tab>
+<app-filter-tab></app-filter-tab>
 
-  <div *ngIf="!showActions" class="tab-section">
-    <!-- Tab navigation -->
-    <div class="left">
-      <span></span>
-      <button class="type-button" [ngClass]="{'active': contentType !== 'folder'}" (click)="toggleContentType('file')">
-        <i class="material-icons">{{ contentType !== 'folder' ? 'check' : 'description' }}</i>Files
-      </button>
-      <button class="type-button" [ngClass]="{'active': contentType === 'folder'}"
-        (click)="toggleContentType('folder')">
-        <i class="material-icons">{{ contentType === 'folder' ? 'check' : 'folder_open' }}</i>Folders
-      </button>
-    </div>
-    <div class="right">
-      <!-- Layout switch buttons -->
-      <button class="layout-button" [ngClass]="{'active': !isGridView}" (click)="setListView()">
-        <i class="material-icons">{{ !isGridView ? 'check' : 'menu' }}</i>
-      </button>
-      <button class="layout-button" [ngClass]="{'active': isGridView}" (click)="setGridView()">
-        <i class="material-icons">{{ isGridView ? 'check' : 'apps' }}</i>
-      </button>
-    </div>
+<div *ngIf="!showActions" class="tab-section">
+  <!-- Tab navigation -->
+  <div class="left">
+    <span></span>
+    <button class="type-button" [ngClass]="{'active': contentType !== 'folder'}" (click)="toggleContentType('file')">
+      <i class="material-icons">{{ contentType !== 'folder' ? 'check' : 'description' }}</i>Files
+    </button>
+    <button class="type-button" [ngClass]="{'active': contentType === 'folder'}" (click)="toggleContentType('folder')">
+      <i class="material-icons">{{ contentType === 'folder' ? 'check' : 'folder_open' }}</i>Folders
+    </button>
   </div>
+  <div class="right">
+    <!-- Layout switch buttons -->
+    <button class="layout-button" [ngClass]="{'active': !isGridView}" (click)="setListView()">
+      <i class="material-icons">{{ !isGridView ? 'check' : 'menu' }}</i>
+    </button>
+    <button class="layout-button" [ngClass]="{'active': isGridView}" (click)="setGridView()">
+      <i class="material-icons">{{ isGridView ? 'check' : 'apps' }}</i>
+    </button>
+  </div>
+</div>
 
-  <div *ngIf="showActions" class="actions-section">
-    <!-- Actions when an item is selected -->
-    <div class="actions">
-      <div *ngIf="selectedItems.length > 0" class="actions-section">
-        <div class="actions-section-content">
-          {{ selectedItems.length }} selected
-          <div>
-            <button class="round-button" (click)="clearSelection()"><i class="material-icons">close</i></button>
-            <!-- Additional action buttons -->
-            <button class="round-button"><i class="material-icons">person_add</i></button>
-            <button class="round-button"><i class="material-icons">download</i></button>
-            <button class="round-button"><i class="material-icons">input</i></button>
-            <button class="round-button"><i class="material-icons">delete</i></button>
-            <button class="round-button"><i class="material-icons">link</i></button>
-            <button class="round-button"><i class="material-icons">more_vert</i></button>
-          </div>
+<div *ngIf="showActions" class="actions-section">
+  <!-- Actions when an item is selected -->
+  <div class="actions">
+    <div *ngIf="selectedItems.length > 0" class="actions-section">
+      <div class="actions-section-content">
+        {{ selectedItems.length }} selected
+        <div>
+          <button class="round-button" (click)="clearSelection()"><i class="material-icons">close</i></button>
+          <!-- Additional action buttons -->
+          <button class="round-button"><i class="material-icons">person_add</i></button>
+          <button class="round-button"><i class="material-icons">download</i></button>
+          <button class="round-button"><i class="material-icons">input</i></button>
+          <button class="round-button" (click)="deleteSelectedDocuments()"><i class="material-icons">delete</i></button>
+          <button class="round-button"><i class="material-icons">link</i></button>
+          <button class="round-button"><i class="material-icons">more_vert</i></button>
         </div>
       </div>
     </div>
-
   </div>
+</div>
+<div class="main-content-div" (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)"
+  (mouseup)="endSelection($event)">
+  <div *ngIf="isSelecting" [ngStyle]="selectionBoxStyle" class="selection-box"></div>
   <div *ngIf="!isLoading">
     <div *ngIf="documents.length > 0; else noContent">
       <div class="scrollable-content">
@@ -64,7 +62,8 @@
 
           <!-- Items for grid or list view -->
           <div class="item" *ngFor="let document of getDisplayedItems()" [id]="'item-' + document._id"
-            [ngClass]="{'selected': isSelected(document)}" (mousedown)="handleItemMouseDown($event, document)" (dblclick)="openFolder(document)">
+            [ngClass]="{'selected': isSelected(document)}" (mousedown)="handleItemMouseDown($event, document)"
+            (dblclick)="openFolder(document)">
             <!-- Item content -->
             <!-- Grid view -->
             <div *ngIf="isGridView" class="content-grid">
@@ -384,7 +383,8 @@
                   <div class="item-hover-menu">
                     <button class="round-button"><i class="material-icons">share</i></button>
                     <button class="round-button"><i class="material-icons">download</i></button>
-                    <button class="round-button" (click)="openRenameDialog(document)"><i class="material-icons">edit</i></button>
+                    <button class="round-button" (click)="openRenameDialog(document)"><i
+                        class="material-icons">edit</i></button>
                     <button class="round-button" (click)="toggleStarred(document)">
                       <i class="material-icons">{{ document.starred === true ? 'star' : 'star_border' }}</i>
                     </button>

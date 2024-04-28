@@ -1,7 +1,7 @@
 <div *ngIf="!showActions" class="tab-section">
     <!-- Tab navigation -->
     <div class="left">
-      <button class="Shared-w-me">Shared with me</button>
+      <button class="trash">Trash</button>
     </div>
     <div class="right">
       <!-- Layout switch buttons -->
@@ -23,19 +23,14 @@
           <div>
             <button class="round-button" (click)="clearSelection()"><i class="material-icons">close</i></button>
             <!-- Additional action buttons -->
-            <button class="round-button"><i class="material-icons">person_add</i></button>
-            <button class="round-button"><i class="material-icons">download</i></button>
-            <button class="round-button"><i class="material-icons">input</i></button>
-            <button class="round-button" (click)="deleteSelectedDocuments()"><i class="material-icons">delete</i></button>
-            <button class="round-button"><i class="material-icons">link</i></button>
-            <button class="round-button"><i class="material-icons">more_vert</i></button>
-          </div>
+            <button class="round-button" (click)="hardDeleteSelectedDocuments()"><i class="material-icons">delete</i></button>
+        </div>
         </div>
       </div>
     </div>
 
   </div>
-  <div class="main-content-shared" (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)"
+  <div class="main-content-trash" (mousedown)="startSelection($event)" (mousemove)="updateSelection($event)"
   (mouseup)="endSelection($event)">
   <div *ngIf="isSelecting" [ngStyle]="selectionBoxStyle" class="selection-box"></div>
   <div *ngIf="!isLoading">
@@ -55,9 +50,9 @@
           <ng-container *ngFor="let document of documents; let i = index">
             <!-- Use the function to get the date string -->
             <ng-container
-              *ngIf="i === 0 || getDateString(documents[i - 1].uploadDate) !== getDateString(document.uploadDate)">
+              *ngIf="i === 0 || getDateString(documents[i - 1].dateOfDeletion) !== getDateString(document.dateOfDeletion)">
               <div class="date-separator">
-                {{ getDateString(document.uploadDate) }}
+                {{ getDateString(document.dateOfDeletion) }}
               </div>
             </ng-container>
             <!-- Items for grid or list view -->
@@ -400,8 +395,8 @@
   </div>
   <ng-template #noContent>
     <div class="no-content-placeholder">
-      <img src="assets/images/no-sharred-content.png" alt="No sharred documents with you available">
-      <p>Nothing has been shared with you yet</p>
+      <img src="assets/images/no-trash-content.png" alt="No sharred documents with you available">
+      <p>Nothing in Trash</p>
     </div>
   </ng-template>
 </div>

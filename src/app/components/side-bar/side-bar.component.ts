@@ -42,6 +42,10 @@ export class SideBarComponent {
     this.router.navigate(['/main/starred']);
   }
 
+  goToTrash(){
+    this.router.navigate(['/main/trash']);
+  }
+
 
   getTotalSize() {
     // this.isLoading = true;

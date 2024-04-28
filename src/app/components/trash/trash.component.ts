@@ -1,52 +1,51 @@
+
 import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { DocumentService } from '../../services/document.service';
-import { AuthInterceptor } from '../../interceptors/auth.interceptor';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
 import { Router } from '@angular/router';
+import { AuthInterceptor } from '../../interceptors/auth.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FilterTabComponent } from "../filter-tab/filter-tab.component";
 import { RenameDialogComponent } from '../rename-dialog/rename-dialog.component';
 import { catchError, forkJoin, of } from 'rxjs';
 
 
-
 @Component({
-    selector: 'app-main-content',
+    selector: 'app-trash',
     standalone: true,
-    imports: [CommonModule, MatMenuModule, FilterTabComponent],
-    templateUrl: './main-content.component.html',
-    styleUrl: './main-content.component.css',
+    templateUrl: './trash.component.html',
+    styleUrl: './trash.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [
         DocumentService,
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    ]
+    ],
+    imports: [CommonModule, MatMenuModule, FilterTabComponent]
 })
-export class MainContentComponent {
+export class TrashComponent {
   showActions: boolean = false;
   selectedItem: DocumentDTO | null = null;
   isGridView: boolean = true;
-  contentType: 'file' | 'folder' = 'file';
+  contentType: 'files' | 'folders' = 'files';
   selectedItems: DocumentDTO[] = [];
   isSelecting: boolean = false;
   selectionBoxStyle = {};
   startSelectionPosition = { x: 0, y: 0 };
   isLoading: boolean = true;
-  isStarred: boolean | undefined;
-
 
   documents: DocumentDTO[] = [];
+  trashDocuments: DocumentDTO[] = [];
   owner = localStorage.getItem('User_Email');
-
 
   constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private documentService: DocumentService, private router: Router) { }
 
-  ngOnInit() {
-    this.getDocuments();
+  ngOnInit(): void {
+    this.getDeletedDocuments();
   }
+
 
   setListView(): void {
     this.isGridView = false;
@@ -56,19 +55,8 @@ export class MainContentComponent {
     this.isGridView = true;
   }
 
-  toggleContentType(type: 'file' | 'folder'): void {
+  toggleContentType(type: 'files' | 'folders'): void {
     this.contentType = type;
-  }
-
-  getDisplayedItems(): DocumentDTO[] {
-    // console.log('All documents:', this.documents);
-    // console.log('Current content type:', this.contentType);
-
-    const filteredItems = this.documents.filter(item =>
-      this.contentType === 'folder' ? item.type === 'folder' : item.type !== 'folder');
-
-    // console.log('Filtered items:', filteredItems);
-    return filteredItems;
   }
 
 
@@ -96,7 +84,6 @@ export class MainContentComponent {
   isSelected(item: DocumentDTO): boolean {
     return this.selectedItems.some(selectedItem => selectedItem._id === item._id);
   }
-
   startSelection(event: MouseEvent): void {
     this.isSelecting = true;
     this.startSelectionPosition.x = event.clientX;
@@ -168,64 +155,101 @@ export class MainContentComponent {
 
 
   handleItemMouseDown(event: MouseEvent, item: DocumentDTO): void {
-    event.stopPropagation(); // Prevents event bubbling which might trigger unwanted behavior
-  
+    event.stopPropagation();
+
     const isSelected = this.isSelected(item);
-    console.log(`Item ${item._id} is initially selected: ${isSelected}`);
-  
+
     if (event.ctrlKey || event.metaKey) {
       if (isSelected) {
         this.selectedItems = this.selectedItems.filter(selectedItem => selectedItem._id !== item._id);
-        console.log('Item deselected:', item._id);
       } else {
-        this.selectedItems.push(item);
-        console.log('Item selected:', item._id);
+        this.selectedItems = [...this.selectedItems, item];
       }
     } else {
       this.selectedItems = isSelected ? [] : [item];
-      console.log('New selection set:', this.selectedItems.map(it => it._id));
     }
-  
-    this.showActions = this.selectedItems.length > 0;
-    this.cd.detectChanges();  // Ensure view updates to reflect the new state
-  }
-  
 
+    this.showActions = this.selectedItems.length > 0;
+    this.cd.detectChanges();
+  }
+
+
+  logSelectedItems(): void {
+    this.selectedItems.forEach(item => {
+      console.log('Selected Item Name:', item.title);
+    });
+  }
+
+  sortItemsByModifiedDate(): void {
+    this.documents.sort((a, b) => {
+      const dateA = new Date(a.uploadDate);
+      const dateB = new Date(b.uploadDate);
+      return dateB.getTime() - dateA.getTime();
+    });
+  }
+
+  getDateString(dateStr: string): string {
+    const date = new Date(dateStr);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1));
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const startOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    const startOfYear = new Date(today.getFullYear(), 0, 1);
+
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today';
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
+    } else if (date >= startOfWeek) {
+      return 'Earlier this week';
+    } else if (date >= startOfMonth) {
+      return 'Earlier this month';
+    } else if (date < startOfMonth && date >= startOfLastMonth) {
+      return 'Last month';
+    } else if (date >= startOfYear) {
+      return 'Earlier this year';
+    } else {
+      return 'Older';
+    }
+  }
 
   toggleStarred(document: DocumentDTO) {
-    document.starred = !document.starred;
+    document.starred=!document.starred;
     this.documentService.updateDocumentStarStatus(document._id, document.starred).subscribe({
       next: (response) => {
         console.log('Update successful:', response);
       },
       error: (error) => {
         console.error('Update failed:', error);
-        document.starred = !document.starred;
+        document.starred = !document.starred; 
       }
     });
   }
 
 
-  //HERE WE GETT ALL THE DOCUMENTS:
-  getDocuments() {
+
+
+  getDeletedDocuments() {
     this.isLoading = true;
-    this.documentService.getOwnedDocuments(localStorage.getItem('id')).subscribe(
-      (response) => {
-        console.log('Response:', response);
-        this.documents = response.data;
+    this.documentService.getTrashDocuments(localStorage.getItem('id')).subscribe({
+      next: (response) => {
+        this.documents = response.data.filter((doc: DocumentDTO) => doc.deleted);
         this.isLoading = false;
-        this.getDisplayedItems();
-        console.log('These are the Documents from the database', this.documents);
+        this.sortItemsByModifiedDate(); 
+        console.log('These are the Deleted Documents from the database', this.documents);
       },
-      (error) => {
-        if (error.status == 401) {
-          console.error('Error:', error);
-          console.log('Authentication Token Expired');
-          console.log('Redirecting to Login Page');
+      error: (error) => {
+        console.error('Error:', error);
+        this.isLoading = false;
+        if (error.status === 401) {
+          console.log('Authentication Token Expired, Redirecting to Login Page');
           this.router.navigate(['/login']);
         }
       }
-    );
+    });
   }
 
   //method that gets triggered when user clicks on folder icon or double clicks folder 
@@ -255,13 +279,11 @@ export class MainContentComponent {
     });
   }
 
-
-  
-  deleteSelectedDocuments(): void {
+  hardDeleteSelectedDocuments(): void {
     console.log('Starting deletion of selected documents:', this.selectedItems.map(item => item._id));
     
     const deletionRequests = this.selectedItems.map((item: DocumentDTO) =>
-      this.documentService.softDeleteDocument(item._id).pipe(
+      this.documentService.hardDeleteDocument(item._id).pipe(
         catchError((error: any) => {
           console.error(`Failed to delete document with ID ${item._id}:`, error);
           return of(null); 
@@ -285,10 +307,9 @@ export class MainContentComponent {
       const remainingDocs = this.documents.filter(doc => !this.selectedItems.some(item => item._id === doc._id));
       console.log('Documents remaining after deletion:', remainingDocs.map(doc => doc._id));
   
-      this.documents = remainingDocs;
-      this.clearSelection();
-      this.cd.detectChanges();
+      this.documents = remainingDocs; // Remove deleted items from the list
+      this.clearSelection(); // Clear the selection
+      this.cd.detectChanges(); // Trigger change detection
     });
   }
-  
 }

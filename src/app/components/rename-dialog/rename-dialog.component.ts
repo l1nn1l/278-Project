@@ -1,13 +1,13 @@
 import { Component, Inject, NgModule, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { DocumentDTO } from '../../assets/Models/DTO/DocumentDTO';
-import { DocumentService } from '../services/document.service';
+import { DocumentDTO } from '../../../assets/Models/DTO/DocumentDTO';
+import { DocumentService } from '../../services/document.service';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { AuthInterceptor } from '../interceptors/auth.interceptor';
+import { AuthInterceptor } from '../../interceptors/auth.interceptor';
 
 @Component({
   selector: 'app-rename-dialog',
